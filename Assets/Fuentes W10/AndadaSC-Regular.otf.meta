@@ -1,0 +1,24 @@
+fileFormatVersion: 2
+guid: c54b4a893a3c8b644bfa4b5d07776c4c
+TrueTypeFontImporter:
+  externalObjects: {}
+  serializedVersion: 4
+  fontSize: 16
+  forceTextureCase: -2
+  characterSpacing: 0
+  characterPadding: 1
+  includeFontData: 1
+  fontName: Andada SC
+  fontNames:
+  - Andada SC
+  fallbackFontReferences:
+  - {fileID: 12800000, guid: b5c5d10491b71db41bc0583431b99497, type: 3}
+  - {fileID: 12800000, guid: 544b9e8ffe3f37344b23457a06eec24c, type: 3}
+  customCharacters: 
+  fontRenderingMode: 0
+  ascentCalculationMode: 1
+  useLegacyBoundsCalculation: 0
+  shouldRoundAdvanceValue: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

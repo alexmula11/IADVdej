@@ -1,0 +1,23 @@
+fileFormatVersion: 2
+guid: eb9139332c48e8b43861c0e40b2766ba
+TrueTypeFontImporter:
+  externalObjects: {}
+  serializedVersion: 4
+  fontSize: 16
+  forceTextureCase: -2
+  characterSpacing: 0
+  characterPadding: 1
+  includeFontData: 1
+  fontName: Al Nile
+  fontNames:
+  - Al Nile
+  fallbackFontReferences:
+  - {fileID: 12800000, guid: 565f5d28f5c37f34490d763b0cc3f89c, type: 3}
+  customCharacters: 
+  fontRenderingMode: 0
+  ascentCalculationMode: 1
+  useLegacyBoundsCalculation: 0
+  shouldRoundAdvanceValue: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
