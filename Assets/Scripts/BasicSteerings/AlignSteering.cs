@@ -8,7 +8,7 @@ public class AlignSteering : SteeringBehaviour
 
     internal override Steering getSteering(PersonajeBase personaje)
     {
-        float timeToTarget = 0.1f;
+        //float timeToTarget = 0.1f;
         float rotation = 0;
         float rotationSize = 0;
         float targetRotation = 0;
@@ -17,7 +17,6 @@ public class AlignSteering : SteeringBehaviour
         
 
         rotation = SimulationManager.TurnAmountInDirection(personaje.orientacion,SimulationManager.VectorToDirection(_target.posicion-personaje.posicion));
-
         rotationSize = Mathf.Abs(rotation);
 
         if(rotationSize < target.innerAngleVision)
@@ -28,48 +27,23 @@ public class AlignSteering : SteeringBehaviour
 
         if(rotationSize > personaje.outterAngleVision)
         {
-            targetRotation = personaje.rotSpeed; //maxima velocidad?
+            targetRotation = System.Math.Sign(rotation) * personaje.rotSpeed; //maxima velocidad?
         }
         else
         {
-            targetRotation = personaje.rotSpeed * rotationSize / personaje.outterAngleVision;
+            targetRotation = System.Math.Sign(rotation) * personaje.rotSpeed * rotationSize / personaje.outterAngleVision;
         }
 
-        targetRotation *= (rotation/rotationSize);
-
-        st.angular = (target.rotacion - personaje.rotacion) / timeToTarget;
+        st.angular = targetRotation;
 
         float angularAcelleration = Mathf.Abs(st.angular);
 
-        if(angularAcelleration > personaje.maxAngAcc)
+        if(angularAcelleration > personaje.rotSpeed)
         {
-            st.angular /= angularAcelleration;
-            st.angular *= personaje.maxAngAcc;
+            st.angular = System.Math.Sign(st.angular) * personaje.rotSpeed;
         }
 
-
-
-        /*if (st.angular < 0.5f)
-        {
-            st.angular = 0f;
-        }
-        /*Vector3 distance = _target.posicion - personaje.posicion;
-        float faceDirection = SimulationManager.VectorToDirection(new Vector2(distance.x,distance.z));
-        float turnSide = SimulationManager.TurnAmountInDirection(personaje.orientacion, faceDirection);
-        st.angular = turnSide;
-        float turnAmount = personaje.rotSpeed * Time.fixedDeltaTime;
-        if (System.Math.Abs(turnSide) <= turnAmount)
-        {
-            st.angular = faceDirection;
-        }
-        else
-        {
-            float newAngle = personaje.orientacion + turnAmount * System.Math.Sign(turnSide);
-            if (newAngle > 180) newAngle = -(180 - (newAngle - 180));
-            else if (newAngle < -180) newAngle = 180 + (newAngle + 180);
-            st.angular = newAngle;
-            //transform.eulerAngles = new Vector3(0, newAngle, 0); //ASK IF CAN TO PROF
-        }*/
+        
         return st;
     }
 

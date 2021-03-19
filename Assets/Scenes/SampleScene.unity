@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0.44657898, g: 0.4964133, b: 0.5748178, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657844, g: 0.49641222, b: 0.57481694, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -443,11 +443,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 613a0175c0a7a0142b9e5149ab3afbc2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rotationSpeed: 120
+  rotationSpeed: 2
   maxMovementSpeed: 10
   movementAccel: 2
   mass: 1
-  maxAngularAcelleration: 5
   nombre: Base Character
   fakeObjetive: {fileID: 1577903699}
   halo: {fileID: 338154253}
@@ -978,11 +977,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 613a0175c0a7a0142b9e5149ab3afbc2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rotationSpeed: 120
+  rotationSpeed: 2
   maxMovementSpeed: 10
   movementAccel: 2
   mass: 1
-  maxAngularAcelleration: 5
   nombre: Base Character
   fakeObjetive: {fileID: 1577903699}
   halo: {fileID: 1615806004}
@@ -1006,7 +1004,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 370511153}
-  m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -19.098854, y: 0, z: 38.10147}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -1014,7 +1012,7 @@ Transform:
   - {fileID: 1615806007}
   m_Father: {fileID: 0}
   m_RootOrder: 10
-  m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &403845420
 GameObject:
   m_ObjectHideFlags: 0
@@ -2323,7 +2321,6 @@ MonoBehaviour:
   maxMovementSpeed: 0
   movementAccel: 0
   mass: 0
-  maxAngularAcelleration: 5
   nombre: Fake Target
   fakeObjetive: {fileID: 0}
 --- !u!1 &1615806003

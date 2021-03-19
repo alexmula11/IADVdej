@@ -5,17 +5,19 @@ using UnityEngine;
 public class Bodi : MonoBehaviour
 {
     [SerializeField]
-    protected float rotationSpeed = 180f, maxMovementSpeed = 3f, movementAccel = 0.5f, mass = 1f, maxAngularAcelleration=5f;    //HOW MANY DEGREES IN A SECOND
+    protected float rotationSpeed = (float)System.Math.PI, maxMovementSpeed = 3f, movementAccel = 0.5f, mass = 1f;    //HOW MANY DEGREES IN A SECOND
     internal float rotSpeed { get { return rotationSpeed; } }
     internal float maxMovSpeed { get { return maxMovementSpeed; } }
     internal float movAcc { get { return movementAccel; } }
-    internal float maxAngAcc { get {return maxAngularAcelleration;}}
 
     internal float rotacion;
     internal float orientacion;
     internal Vector3 velocidad;
     internal Vector3 aceleracion;
     internal Vector3 posicion;
+
+    internal static float GradosARadianes = 2 * (float)System.Math.PI / 360;
+    internal static float RadianesAGrados = 360 / (2 * (float)System.Math.PI);
 
     internal void moveTo(Vector3 pos)
     {

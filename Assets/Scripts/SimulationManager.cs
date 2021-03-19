@@ -107,7 +107,21 @@ public class SimulationManager : MonoBehaviour
                     if (Input.GetMouseButton(0))
                     {
                         RaycastHit hit;
-                        if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit, 10000f, 1 << 9))
+                        if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit, 10000f, 1 << 8))
+                        {
+                            PersonajeBase personajeObjetivo = hit.collider.gameObject.GetComponent<PersonajeBase>();
+                            foreach (PersonajeBase person in selectedUnits)
+                            {
+                                person.setAction(new AgentActionMove(new Vector2(hit.point.x, hit.point.z), person.innerDetector, person.outterDetector));
+                                AntiAlignSteering pursueSD = new AntiAlignSteering();
+                                pursueSD.target = personajeObjetivo;
+                                person.fake.posicion = hit.point;
+                                person.fake.moveTo(hit.point);
+                                person.fake.innerDetector = person.innerDetector;
+                                person.newTask(pursueSD);
+                            }
+                        }
+                        else if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit, 10000f, 1 << 9))
                         {
                             foreach (PersonajeBase person in selectedUnits)
                             {
@@ -236,18 +250,11 @@ public class SimulationManager : MonoBehaviour
 
     internal static float VectorToDirection(Vector3 direction)
     {
-        //return (float)(System.Math.Atan(direction.y/direction.x)*360/(2*System.Math.PI));
-        if (direction.x >= 0)
-            //return 90 - (float)(System.Math.Atan(direction.x / direction.z) * 360 / (2 * System.Math.PI));
-            return (float)(System.Math.Atan2(direction.x , direction.z) * 360 / (2 * System.Math.PI));
-        else
-            //return -90 - (float)(System.Math.Atan(direction.x / direction.z) * 360 / (2 * System.Math.PI));
-            return (float)(System.Math.Atan2(direction.x , direction.z) * 360 / (2 * System.Math.PI));
+            return (float)(System.Math.Atan2(direction.x , direction.z));
     }
     internal static Vector3 DirectionToVector(float direction)
     {
         return new Vector3((float)System.Math.Cos(direction), 0,(float)System.Math.Sin(direction));
-        //return new Vector3((float)System.Math.Sin(direction), 0,(float)System.Math.Cos(direction)); //Cambio de coordenadas
     }
 
     internal static float TurnAmountInDirection(float originAngle, float destAngle)
@@ -256,9 +263,9 @@ public class SimulationManager : MonoBehaviour
         {
             if (destAngle >= 0)
             {
-                if (destAngle - 180 >= originAngle)
+                if (destAngle - System.Math.PI >= originAngle)
                 {
-                    return (-180 - originAngle) - (180 - destAngle);
+                    return (float)((-System.Math.PI - originAngle) - (System.Math.PI - destAngle));
                 }
                 else
                 {
@@ -278,13 +285,13 @@ public class SimulationManager : MonoBehaviour
             }
             else
             {
-                if (destAngle + 180 >= originAngle)
+                if (destAngle + System.Math.PI >= originAngle)
                 {
                     return -originAngle + destAngle;
                 }
                 else
                 {
-                    return (180 - originAngle) + (destAngle + 180);
+                    return (float)((System.Math.PI - originAngle) + (destAngle + System.Math.PI));
                 }
             }
         }

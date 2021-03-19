@@ -14,7 +14,7 @@ public abstract class PersonajeBase : Bodi
 
     //SENSORS
     internal float innerDetector=2f, outterDetector=10f;
-    internal float innerAngleVision=Mathf.PI/6 , outterAngleVision=Mathf.PI/2/(2/3); //30grad -- 60grad
+    internal float innerAngleVision=15*GradosARadianes, outterAngleVision=30*GradosARadianes; //30grad -- 60grad
 
     
     
@@ -38,9 +38,9 @@ public abstract class PersonajeBase : Bodi
 
     private void Start()
     {
-        orientacion = transform.eulerAngles.y;
+        orientacion = transform.eulerAngles.y * GradosARadianes;
         actionList.AddFirst(new AgentActionStay(orientacion));
-        kinetic.Add(new WanderSteering(360,20));
+        kinetic.Add(new WanderSteering(2*(float)System.Math.PI,20));
     }
 
 
@@ -82,13 +82,13 @@ public abstract class PersonajeBase : Bodi
             //ACTUALIZAMOS
             posicion += velocidad * Time.fixedDeltaTime;                        // Fórmulas de Newton 
             transform.position = posicion;
-            orientacion += rotacion  * Time.fixedDeltaTime;
+            orientacion += rotacion * Time.fixedDeltaTime;
             
             orientacionTo360();
 
             //transform.rotation = new Quaternion(); //Quaternion.identity;
             //transform.Rotate(Vector3.up, orientacion);
-            transform.eulerAngles = new Vector3(0, orientacion, 0);
+            transform.eulerAngles = new Vector3(0, orientacion * RadianesAGrados, 0);
             /*if (selectedBehaviour.steeringType == SteeringBehaviour.MOV_TYPE.ACCELERATED)
             {
                 
