@@ -8,10 +8,9 @@ public class VelocityMatchingSteering : SteeringBehaviour
     internal override Steering getSteering(PersonajeBase personaje)
     {
         Steering st = new Steering();
-        float timeToTarget = 0.1f;
 
-        st.linear = _target.velocidad - personaje.velocidad;
-        st.linear /= timeToTarget;
+        //st.linear = _target.velocidad - personaje.velocidad; <-- ESTO ES HACERLO POR SUMA DE COMPONENTES
+        st.linear = _target.velocidad; // <-- ESTO ES HACERLO POR SUMA DE DESTINO, O LO HACEMOS TODO POR COMPONENTE O TODO POR SUMA DE DESTINO
 
         if(st.linear.magnitude > personaje.movAcc)
         {

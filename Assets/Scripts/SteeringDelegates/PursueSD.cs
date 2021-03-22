@@ -5,12 +5,10 @@ using UnityEngine;
 public class PursueSD : SteeringBehaviour
 {
     private FaceSD face = new FaceSD();
-    private SeekAcceleratedSteering skAccSt = new SeekAcceleratedSteering();
+    //private SeekAcceleratedSteering skAccSt = new SeekAcceleratedSteering();
+    private ArriveSteering skAccSt = new ArriveSteering();
 
-    public PursueSD(PersonajeBase target)
-    {
-        skAccSt.target = face.target = _target = target;
-    }
+    internal new PersonajeBase target { get { return _target; } set { _target = value; face.target = value; skAccSt.target = value; } }
 
     internal override Steering getSteering(PersonajeBase personaje)
     {

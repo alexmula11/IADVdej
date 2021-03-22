@@ -67,6 +67,9 @@
     <Compile Include="Assets\Scripts\AgentAction.cs" />
     <Compile Include="Assets\Scripts\BasicSteerings\AlignSteering.cs" />
     <Compile Include="Assets\Scripts\BasicSteerings\AntiAlignSteering.cs" />
+    <Compile Include="Assets\Scripts\BasicSteerings\ArriveSteering.cs" />
+    <Compile Include="Assets\Scripts\BasicSteerings\FleeSteering.cs" />
+    <Compile Include="Assets\Scripts\BasicSteerings\LeaveSteering.cs" />
     <Compile Include="Assets\Scripts\BasicSteerings\SeekAcceleratedSteering.cs" />
     <Compile Include="Assets\Scripts\BasicSteerings\VelocityMatchingSteering.cs" />
     <Compile Include="Assets\Scripts\BasicSteerings\WanderSteering.cs" />
@@ -82,6 +85,7 @@
     <Compile Include="Assets\Scripts\SteeringDelegates\FaceSD.cs" />
     <Compile Include="Assets\Scripts\SteeringDelegates\LookWhereYouGoingSD.cs" />
     <Compile Include="Assets\Scripts\SteeringDelegates\PursueSD.cs" />
+    <Compile Include="Assets\Scripts\SteeringDelegates\WanderSD.cs" />
     <Compile Include="Assets\Scripts\UIManager.cs" />
     <Reference Include="UnityEngine">
       <HintPath>P:/Programas/UnityEditors/2019.4.21f1/Editor/Data/Managed/UnityEngine/UnityEngine.dll</HintPath>

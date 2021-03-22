@@ -113,11 +113,11 @@ public class SimulationManager : MonoBehaviour
                             foreach (PersonajeBase person in selectedUnits)
                             {
                                 person.setAction(new AgentActionMove(new Vector2(hit.point.x, hit.point.z), person.innerDetector, person.outterDetector));
-                                AntiAlignSteering pursueSD = new AntiAlignSteering();
+                                PursueSD pursueSD = new PursueSD();
                                 pursueSD.target = personajeObjetivo;
-                                person.fake.posicion = hit.point;
+                                /*person.fake.posicion = hit.point;
                                 person.fake.moveTo(hit.point);
-                                person.fake.innerDetector = person.innerDetector;
+                                person.fake.innerDetector = person.innerDetector;*/
                                 person.newTask(pursueSD);
                             }
                         }
@@ -126,7 +126,8 @@ public class SimulationManager : MonoBehaviour
                             foreach (PersonajeBase person in selectedUnits)
                             {
                                 person.setAction(new AgentActionMove(new Vector2(hit.point.x,hit.point.z),person.innerDetector,person.outterDetector));
-                                PursueSD pursueSD = new PursueSD(person.fake);
+                                PursueSD pursueSD = new PursueSD();
+                                pursueSD.target = person.fake;
                                 person.fake.posicion = hit.point;
                                 person.fake.moveTo(hit.point);
                                 person.fake.innerDetector = person.innerDetector;
@@ -138,95 +139,10 @@ public class SimulationManager : MonoBehaviour
             }
         }
     }
+    
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-            //OLD INPUT
-            //CONTROLLER INPUT
-            /*
-            if (Input.GetMouseButtonDown(0))
-            {
-                //FOR INFO FOCUS ON 1 CHAR
-                RaycastHit hit;
-                if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit, 10000f, 1 << 8))
-                {
-                    if (!selectedUnits.Contains(hit.collider.gameObject.GetComponent<PersonajeBase>()))
-                    {
-                        PersonajeBase character = hit.collider.gameObject.GetComponent<PersonajeBase>();
-                        character.selected = true;
-                        characterWithFocus = character;
-                        selectedUnits.Add(character);
-                        ui.showDebugInfo(true);
-                        ui.actualizeAgentDebugInfo(new AgentDebugInfo(character));
-                    }
-                }
-                //FOR SELECTING MULTIPLE CHARS
-                else if (!selectingMultipleUnits)
-                {
-                    if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit, 10000f, 1 << 9 ^ 1 << 10))
-                    {
-                        selectingMultipleUnits = true;
-                        Vector2 centeredPosition = new Vector2(Input.mousePosition.x - Screen.width / 2, Input.mousePosition.y - Screen.height / 2);
-                        ui.startUnitSelection(centeredPosition);
-
-                        agentSelector.gameObject.SetActive(true);
-                        selectionOrigin = Camera.main.transform.InverseTransformVector(hit.point);
-                    }
-                    else
-                    {
-                        foreach (PersonajeBase person in selectedUnits)
-                        {
-                            person.selected = false;
-                        }
-                        selectedUnits.Clear();
-                    }
-                }
-            }
-            else if (Input.GetMouseButton(0))
-            {
-                if (selectingMultipleUnits)
-                {
-                    RaycastHit hit;
-                    if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit, 10000f, 1 << 9 ^ 1 << 10))
-                    {
-                        if (selectingMultipleUnits)
-                        {
-                            Vector2 centeredPosition = new Vector2(Input.mousePosition.x - Screen.width / 2, Input.mousePosition.y - Screen.height / 2);
-                            ui.trackUnitSelection(centeredPosition);
-                            Vector3 currentSelectionEnd = Camera.main.transform.InverseTransformVector(hit.point);
-                            Vector3 selectionVector = (currentSelectionEnd - selectionOrigin);
-                            agentSelector.localPosition = new Vector3(selectionOrigin.x,selectionOrigin.y, agentSelector.localPosition.z) + new Vector3((selectionVector / 2).x,(selectionVector / 2).y, 0);
-                            agentSelector.localScale = new Vector3(System.Math.Abs(selectionVector.x), System.Math.Abs(selectionVector.y), agentSelector.localScale.z);
-                        }
-                    }
-                    else
-                    {
-                        ui.releaseUnitSelection();
-                        selectingMultipleUnits = false;
-                        agentSelector.gameObject.SetActive(false);
-                    }
-                }
-            }else if (Input.GetMouseButtonUp(0))
-            {
-                if (selectingMultipleUnits)
-                {
-                    ui.releaseUnitSelection();
-                    selectingMultipleUnits = false;
-                    agentSelector.gameObject.SetActive(false);
-                }
-            }*/
 
     private void FixedUpdate()
     {

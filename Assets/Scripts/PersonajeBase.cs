@@ -40,7 +40,7 @@ public abstract class PersonajeBase : Bodi
     {
         orientacion = transform.eulerAngles.y * GradosARadianes;
         actionList.AddFirst(new AgentActionStay(orientacion));
-        kinetic.Add(new WanderSteering(2*(float)System.Math.PI,20));
+        kinetic.Add(new WanderSD(2*(float)System.Math.PI,20));
     }
 
 
