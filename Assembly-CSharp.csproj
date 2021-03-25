@@ -82,6 +82,7 @@
     <Compile Include="Assets\Scripts\SimulationManager.cs" />
     <Compile Include="Assets\Scripts\Steering.cs" />
     <Compile Include="Assets\Scripts\SteeringBehaviour.cs" />
+    <Compile Include="Assets\Scripts\SteeringDelegates\EvadeSD.cs" />
     <Compile Include="Assets\Scripts\SteeringDelegates\FaceSD.cs" />
     <Compile Include="Assets\Scripts\SteeringDelegates\LookWhereYouGoingSD.cs" />
     <Compile Include="Assets\Scripts\SteeringDelegates\PursueSD.cs" />

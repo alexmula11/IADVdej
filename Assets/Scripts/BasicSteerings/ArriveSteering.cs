@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class ArriveSteering : SteeringBehaviour
 {
-    internal override Steering getSteering(PersonajeBase personaje)
+    protected internal override Steering getSteering(PersonajeBase personaje)
     {
         Steering st = new Steering();
         Vector3 distance = _target.posicion - personaje.posicion;
@@ -16,6 +16,10 @@ public class ArriveSteering : SteeringBehaviour
         else if (distance.magnitude > _target.innerDetector)
         {
             st.linear = (distance + _target.velocidad * Time.fixedDeltaTime).normalized * personaje.movAcc * distance.magnitude / _target.outterDetector;
+        }
+        else
+        {
+            _finished = true;
         }
         return st;
     }

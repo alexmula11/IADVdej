@@ -7,7 +7,7 @@ public class WanderSteeringRO : WanderSteering
     {
     }
 
-    internal override Steering getSteering(PersonajeBase personaje)
+    protected internal override Steering getSteering(PersonajeBase personaje)
     {
         Steering st = base.getSteering(personaje);
         st.linear = st.linear * (float)offsetRandomizer.NextDouble(); //random offset

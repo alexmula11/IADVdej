@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class LeaveSteering : SteeringBehaviour
 {
-    internal override Steering getSteering(PersonajeBase personaje)
+    protected internal override Steering getSteering(PersonajeBase personaje)
     {
         Steering st = new Steering();
         Vector3 distance = personaje.posicion - _target.posicion;
@@ -16,6 +16,10 @@ public class LeaveSteering : SteeringBehaviour
         {
             st.linear = (distance + _target.velocidad * Time.fixedDeltaTime).normalized * personaje.movAcc *(1- distance.magnitude / _target.outterDetector);
             //                        AAA     Un poco de predicsion   AAA                                       AAA Mas rápido cuanto más cerca AAA
+        }
+        else
+        {
+            _finished = true;
         }
         return st;
     }

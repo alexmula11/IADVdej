@@ -6,7 +6,7 @@ public class AlignSteering : SteeringBehaviour
 {
     
 
-    internal override Steering getSteering(PersonajeBase personaje)
+    protected internal override Steering getSteering(PersonajeBase personaje)
     {
         //float timeToTarget = 0.1f;
         float rotation = 0;
@@ -22,6 +22,7 @@ public class AlignSteering : SteeringBehaviour
         if(rotationSize < target.innerAngleVision)
         {
             st.angular = 0;
+            _finished = true;
             return st;
         }
 

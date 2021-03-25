@@ -5,7 +5,7 @@ using UnityEngine;
 public class AntiAlignSteering : SteeringBehaviour
 {
 
-    internal override Steering getSteering(PersonajeBase personaje)
+    protected internal override Steering getSteering(PersonajeBase personaje)
     {
         float rotation = 0;
         float rotationSize = 0;
@@ -20,6 +20,7 @@ public class AntiAlignSteering : SteeringBehaviour
         if (rotationSize < target.innerAngleVision)
         {
             st.angular = 0;
+            _finished = true;
             return st;
         }
 

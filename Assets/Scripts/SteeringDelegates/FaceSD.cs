@@ -5,7 +5,7 @@ using UnityEngine;
 public class FaceSD : SteeringBehaviour
 {
     private AlignSteering alsteer = new AlignSteering();
-    internal override Steering getSteering(PersonajeBase personaje)
+    protected internal override Steering getSteering(PersonajeBase personaje)
     {
         Steering st = new Steering();
         Vector3 direction = _target.posicion - personaje.posicion;
@@ -15,6 +15,7 @@ public class FaceSD : SteeringBehaviour
         {
             st.linear =  Vector3.zero;
             st.angular = 0;
+            _finished = true;
             return st;
         }
         personaje.fake.posicion = _target.posicion;

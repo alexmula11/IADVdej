@@ -5,7 +5,7 @@ using UnityEngine;
 public class VelocityMatchingSteering : SteeringBehaviour
 {
 
-    internal override Steering getSteering(PersonajeBase personaje)
+    protected internal override Steering getSteering(PersonajeBase personaje)
     {
         Steering st = new Steering();
 
@@ -16,7 +16,10 @@ public class VelocityMatchingSteering : SteeringBehaviour
         {
             st.linear = st.linear.normalized * personaje.movAcc;
         }
-        st.angular = 0;
+        if (_target.velocidad == personaje.velocidad)
+        {
+            _finished = true;
+        }
         return st;
     }
 

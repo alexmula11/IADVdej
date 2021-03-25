@@ -6,10 +6,10 @@ public abstract class SteeringBehaviour
 {
     [SerializeField]
     protected PersonajeBase _target;
-    internal PersonajeBase target { get { return _target; } set { _target = value; } }
+    internal protected PersonajeBase target { get { return _target; } set { _target = value; } }
 
-    internal enum MOV_TYPE { UNIFORM, ACCELERATED}
-    internal MOV_TYPE steeringType = MOV_TYPE.UNIFORM;
+    protected bool _finished=false;
+    internal bool finished { get { return _finished; } }
 
-    internal abstract Steering getSteering(PersonajeBase personaje);
+    internal protected abstract Steering getSteering(PersonajeBase personaje);
 }
