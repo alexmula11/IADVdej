@@ -14,7 +14,7 @@ public abstract class PersonajeBase : Bodi
 
     //SENSORS
     internal float innerDetector=2f, outterDetector=10f;
-    internal float innerAngleVision=15*GradosARadianes, outterAngleVision=30*GradosARadianes; //30grad -- 60grad
+    internal float innerAngleVision=5*GradosARadianes, outterAngleVision=30*GradosARadianes; //30grad -- 60grad
 
     
     
@@ -40,6 +40,7 @@ public abstract class PersonajeBase : Bodi
     {
         orientacion = transform.eulerAngles.y * GradosARadianes;
         actionList.AddFirst(new AgentActionStay(orientacion));
+        kinetic.Add(new WallAvoidance3WhiswersSD(innerAngleVision,maxMovementSpeed/2,maxMovementSpeed,innerDetector));
         kinetic.Add(new WanderSD(2*(float)System.Math.PI,20));
     }
 
@@ -47,6 +48,7 @@ public abstract class PersonajeBase : Bodi
 
     private void FixedUpdate()
     {
+        arbitro();
         applySteering();
 
     }
@@ -60,35 +62,43 @@ public abstract class PersonajeBase : Bodi
             aceleracion = steeringActual.linear;
             rotacion = steeringActual.angular;
 
-            //si no hay aceleracion paramos
-            if (aceleracion == Vector3.zero)
-            {
-                //velocidad = velocidad.normalized*(velocidad.magnitude-movementAccel); --> Parada decelerada NO
-                velocidad = Vector3.zero; //Parada en seco
-            }
             //capamiento aceleracion
             checkMaxAcelerationReached();
-  
-            velocidad = velocidad + aceleracion * Time.fixedDeltaTime;          //vf = v0 + a*t
+            //si no hay aceleracion paramos -- ya no
+            /*if (aceleracion == Vector3.zero)
+            {
+                velocidad = velocidad.normalized*(System.Math.Max(velocidad.magnitude-movementDeccel*Time.fixedDeltaTime,0)); //--> Parada decelerada, todo por fizik
+                //velocidad = Vector3.zero; //Parada en seco
+            }
+            else
+            {
+                velocidad += aceleracion*Time.fixedDeltaTime;          //vf = v0 + a*t
+            }*/
 
+
+            velocidad += aceleracion * Time.fixedDeltaTime;          //vf = v0 + a*t
             //capamos velocidad
             checkMaxVelocityReached();
  
             //capamos velocidad angular
             checkMaxRotationReached();
- 
 
 
-            //ACTUALIZAMOS
-            posicion += velocidad * Time.fixedDeltaTime;                        // Fórmulas de Newton 
-            transform.position = posicion;
+
+            posicion += velocidad * Time.fixedDeltaTime;   // Fórmulas de Newton 
             orientacion += rotacion * Time.fixedDeltaTime;
-            
             orientacionTo360();
-
+            //ACTUALIZAMOS (SI ACABA REINICIAMOS VARIABLES)              
+            transform.position = posicion;
             //transform.rotation = new Quaternion(); //Quaternion.identity;
             //transform.Rotate(Vector3.up, orientacion);
             transform.eulerAngles = new Vector3(0, orientacion * RadianesAGrados, 0);
+            if (selectedBehaviour.finished)
+            {
+                velocidad = Vector3.zero;
+                rotacion = 0;
+            }
+
             /*if (selectedBehaviour.steeringType == SteeringBehaviour.MOV_TYPE.ACCELERATED)
             {
                 
@@ -109,10 +119,10 @@ public abstract class PersonajeBase : Bodi
 
     //Calculamos para cada SteeringBehavior su Steering y lo añadimos a una lista
     //para despues seleccionar cual se va a aplicar
-    void LateUpdate()
+    /*void LateUpdate()
     {
         arbitro();
-    }
+    }*/
     
 
     //Seleccionamos que Steering se va a aplicar recorriendo la lista kinetic
@@ -123,7 +133,15 @@ public abstract class PersonajeBase : Bodi
         //auxiliarmente elegimos el primero de la lista
         if (kinetic.Count > 0)
         {
-            selectedBehaviour = kinetic[0];
+            //CHECK IF WALLAVOIDANCE
+            if (kinetic[0].getSteering(this).linear != Vector3.zero)
+            {
+                selectedBehaviour = kinetic[0];
+            }
+            else
+            {
+                selectedBehaviour = kinetic[1];
+            }
             steeringActual = selectedBehaviour.getSteering(this);
 
             //steering finish

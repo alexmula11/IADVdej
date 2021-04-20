@@ -12,8 +12,8 @@ public class PersonajePlayer : PersonajeBase
 
     internal override void newTask(SteeringBehaviour st)
     {
-        velocidad = Vector3.zero; //informar a la peña, SINO --> Se mantiene el vector de velocidad de la task anterior
         kinetic.Clear();
+        kinetic.Add(new WallAvoidance3WhiswersSD(innerAngleVision, maxMovementSpeed / 2, maxMovementSpeed, innerDetector));
         kinetic.Add(st);
     }
 }

@@ -5,7 +5,7 @@ using UnityEngine;
 public class Bodi : MonoBehaviour
 {
     [SerializeField]
-    protected float rotationSpeed = (float)System.Math.PI, maxMovementSpeed = 3f, movementAccel = 0.5f, mass = 1f;    //HOW MANY DEGREES IN A SECOND
+    protected float rotationSpeed = (float)System.Math.PI, maxMovementSpeed = 3f, movementAccel = 0.5f, mass = 1f,movementDeccel=50f;    //HOW MANY DEGREES IN A SECOND
     internal float rotSpeed { get { return rotationSpeed; } }
     internal float maxMovSpeed { get { return maxMovementSpeed; } }
     internal float movAcc { get { return movementAccel; } }

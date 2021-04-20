@@ -10,12 +10,13 @@ public class ArriveSteering : SteeringBehaviour
         Vector3 distance = _target.posicion - personaje.posicion;
         if (distance.magnitude > _target.outterDetector)
         {
-            st.linear = (distance + _target.velocidad * Time.fixedDeltaTime).normalized * personaje.movAcc;
+            //st.linear = (distance + _target.velocidad * Time.fixedDeltaTime).normalized * personaje.movAcc;
             //                        AAA     Un poco de predicsion   AAA
+            st.linear = (distance.normalized - personaje.velocidad.normalized + _target.velocidad.normalized * Time.fixedDeltaTime).normalized * personaje.movAcc;
         }
         else if (distance.magnitude > _target.innerDetector)
         {
-            st.linear = (distance + _target.velocidad * Time.fixedDeltaTime).normalized * personaje.movAcc * distance.magnitude / _target.outterDetector;
+            st.linear = (distance.normalized - personaje.velocidad.normalized + _target.velocidad.normalized * Time.fixedDeltaTime).normalized * personaje.movAcc * distance.magnitude / _target.outterDetector;
         }
         else
         {

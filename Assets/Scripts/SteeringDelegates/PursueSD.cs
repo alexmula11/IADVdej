@@ -19,6 +19,14 @@ public class PursueSD : SteeringBehaviour
         {
             _finished = true;
         }
+        else if (skAccSt.finished)
+        {
+            _finished = true;
+        }
+        else
+        {
+            _finished = false;
+        }
         return st;
     }
 }

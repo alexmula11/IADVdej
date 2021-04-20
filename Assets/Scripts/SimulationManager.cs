@@ -129,7 +129,7 @@ public class SimulationManager : MonoBehaviour
                                 PursueSD pursueSD = new PursueSD();
                                 pursueSD.target = person.fake;
                                 person.fake.posicion = hit.point;
-                                person.fake.moveTo(hit.point);
+                                //person.fake.moveTo(hit.point);
                                 person.fake.innerDetector = person.innerDetector;
                                 person.newTask(pursueSD);
                             }

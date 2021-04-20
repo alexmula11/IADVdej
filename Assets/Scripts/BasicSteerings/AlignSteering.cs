@@ -25,6 +25,7 @@ public class AlignSteering : SteeringBehaviour
             _finished = true;
             return st;
         }
+        _finished = false;
 
         if(rotationSize > personaje.outterAngleVision)
         {

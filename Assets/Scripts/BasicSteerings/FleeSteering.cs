@@ -12,7 +12,7 @@ public class FleeSteering : SteeringBehaviour
             st.linear = (personaje.posicion - _target.posicion).normalized * personaje.movAcc;
         }*/
         //NECESITAMOS UNA CONDICION DE CIERRE AQUI TAMBIEN
-        st.linear = (personaje.posicion - _target.posicion).normalized * personaje.movAcc;
+        st.linear = ((personaje.posicion - _target.posicion).normalized - personaje.velocidad.normalized).normalized * personaje.movAcc;
         return st;
     }
 }
