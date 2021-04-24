@@ -75,6 +75,7 @@
     <Compile Include="Assets\Scripts\BasicSteerings\WanderSteering.cs" />
     <Compile Include="Assets\Scripts\BasicSteerings\WanderSteeringRO.cs" />
     <Compile Include="Assets\Scripts\Bodi.cs" />
+    <Compile Include="Assets\Scripts\FlechaDeRutaDelegate.cs" />
     <Compile Include="Assets\Scripts\MouseOptionDelegate.cs" />
     <Compile Include="Assets\Scripts\PersonajeBase.cs" />
     <Compile Include="Assets\Scripts\PersonajeNPC.cs" />
@@ -85,6 +86,7 @@
     <Compile Include="Assets\Scripts\SteeringDelegates\EvadeSD.cs" />
     <Compile Include="Assets\Scripts\SteeringDelegates\FaceSD.cs" />
     <Compile Include="Assets\Scripts\SteeringDelegates\LookWhereYouGoingSD.cs" />
+    <Compile Include="Assets\Scripts\SteeringDelegates\PathFollowingNOPathOffsetSD.cs" />
     <Compile Include="Assets\Scripts\SteeringDelegates\PursueSD.cs" />
     <Compile Include="Assets\Scripts\SteeringDelegates\WallAvoidance3WhiswersSD.cs" />
     <Compile Include="Assets\Scripts\SteeringDelegates\WanderSD.cs" />

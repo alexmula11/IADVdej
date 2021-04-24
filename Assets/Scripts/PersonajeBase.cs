@@ -8,9 +8,15 @@ public abstract class PersonajeBase : Bodi
     protected string nombre = "Base Character";
     [SerializeField]
     protected PersonajeNPC fakeMovementObjetive, fakeAvoidObjetive, fakeAlignObjetive;
+    [SerializeField]
+    protected GameObject[] gizmosGOs;
+    [SerializeField]
+    protected Transform routeMarkers;
+
     internal PersonajeNPC fakeMovement { get { return fakeMovementObjetive; } }
     internal PersonajeNPC fakeAvoid { get { return fakeAvoidObjetive; } }
     internal PersonajeNPC fakeAlign { get { return fakeAlignObjetive; } }
+    internal Transform routeMarks { get { return routeMarkers; } }
 
 
 
@@ -42,8 +48,7 @@ public abstract class PersonajeBase : Bodi
     {
         orientacion = transform.eulerAngles.y * GradosARadianes;
         actionList.AddFirst(new AgentActionStay(orientacion));
-        kinetic.Add(new WallAvoidance3WhiswersSD());
-        kinetic.Add(new WanderSD(2*(float)System.Math.PI,20));
+        newTask(new WanderSD(2 * (float)System.Math.PI, 5, 30 * GradosARadianes, 2));
     }
 
 
@@ -126,6 +131,23 @@ public abstract class PersonajeBase : Bodi
             if ((kinetic[0] as WallAvoidance3WhiswersSD).finished)
             {
                 // lo que no es evadir parede
+                int i = 1; //not finished
+                bool allFinished = true;
+
+                for (i=1; i<kinetic.Count; i++)
+                {
+                    if (!kinetic[i].finished)
+                    {
+                        selectedBehaviour = kinetic[i];
+                        allFinished=false;
+                        break;
+                    }
+                }
+                if (allFinished)
+                {
+                    newTask(new WanderSD(2 * (float)System.Math.PI, 5, 30 * GradosARadianes, 2));
+                }
+
                 selectedBehaviour = kinetic[1];
                 steeringActual = selectedBehaviour.getSteering(this);
             }
@@ -219,6 +241,7 @@ public abstract class PersonajeBase : Bodi
             if (rightOri > System.Math.PI) rightOri -= 2 * (float)System.Math.PI;
             else if (rightOri < -System.Math.PI) rightOri += 2 * (float)System.Math.PI;
             Gizmos.DrawLine(origin, origin + SimulationManager.DirectionToVector(rightOri) * velocidad.magnitude);
+        
         //}
         //Area detectors
         Gizmos.color = Color.grey;

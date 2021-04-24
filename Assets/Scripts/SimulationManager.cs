@@ -11,10 +11,16 @@ public class SimulationManager : MonoBehaviour
     private HashSet<PersonajeBase> selectedUnits = new HashSet<PersonajeBase>();
     private PersonajeBase characterWithFocus;
 
+
+    [SerializeField]
+    private GameObject routeMarkPrefab, routeLinePrefab;
+    private List<Vector3> pathToSet = new List<Vector3>();
+
     private enum MOUSE_ACTION
     {
         SELECT = 0,
-        MOVE = 1
+        MOVE = 1,
+        ROUTE_SET = 2
     }
     private MOUSE_ACTION mouseBehav = 0;
     private bool mouseOverUI=false;
@@ -121,7 +127,7 @@ public class SimulationManager : MonoBehaviour
                                 person.newTask(pursueSD);
                             }
                         }
-                        else if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit, 10000f, 1 << 9))
+                        else if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit, 10000f, 1 << 10))
                         {
                             foreach (PersonajeBase person in selectedUnits)
                             {
@@ -132,6 +138,45 @@ public class SimulationManager : MonoBehaviour
                                 person.fakeMovement.moveTo(hit.point); // mover los fakes para debuggeo
                                 person.fakeMovement.innerDetector = person.innerDetector;
                                 person.newTask(pursueSD);
+                            }
+                        }
+                    }
+                }
+            }
+            else if (mouseBehav == MOUSE_ACTION.ROUTE_SET)
+            {
+                if (selectedUnits.Count > 0)
+                {
+                    if (Input.GetMouseButtonDown(0))
+                    {
+                        RaycastHit hit;
+                        if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit, 10000f, 1 << 11))
+                        {
+                            setRouteOnUnits();
+                            pathToSet.Clear();
+                        }
+                        else if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit, 10000f, 1 << 10))
+                        {
+                            if (pathToSet.Count == 0)
+                            {
+                                foreach (PersonajeBase unit in selectedUnits)
+                                {
+                                    foreach (Transform routeElem in unit.routeMarks)
+                                    {
+                                        Destroy(routeElem);
+                                    }
+                                }
+                            }
+                            pathToSet.Add(hit.point);
+                            foreach (PersonajeBase unit in selectedUnits)
+                            {
+                                GameObject routeMark = Instantiate(routeMarkPrefab, unit.routeMarks);
+                                routeMark.transform.position = new Vector3(hit.point.x, 0.05f, hit.point.z);
+                                if (pathToSet.Count > 1)
+                                {
+                                    GameObject routeLine = Instantiate(routeLinePrefab, unit.routeMarks);
+                                    routeLine.GetComponent<FlechaDeRutaDelegate>().setRouteDirection(pathToSet[pathToSet.Count - 2], pathToSet[pathToSet.Count - 1]);
+                                }
                             }
                         }
                     }
@@ -161,7 +206,41 @@ public class SimulationManager : MonoBehaviour
     internal void setMouseBehaviour(int behaviour)
     {
         mouseBehav = (MOUSE_ACTION)behaviour;
+        if (mouseBehav != MOUSE_ACTION.ROUTE_SET && pathToSet.Count>0)
+        {
+            setRouteOnUnits();
+            pathToSet.Clear();
+        }
+
     }
+
+
+    private void setRouteOnUnits()
+    {
+        if (pathToSet.Count == 1)
+        {
+            foreach (PersonajeBase unit in selectedUnits)
+            {
+                List<Vector3> puntosDeRuta = new List<Vector3>(pathToSet);
+                GameObject mark = Instantiate(routeMarkPrefab, unit.routeMarks);
+                mark.transform.position = unit.posicion;
+                puntosDeRuta.Add(unit.posicion);
+                unit.newTask(new PathFollowingNOPathOffsetSD(puntosDeRuta));
+            }
+        }
+        else
+        {
+            foreach (PersonajeBase unit in selectedUnits)
+            {
+                List<Vector3> puntosDeRuta = new List<Vector3>(pathToSet);
+                unit.newTask(new PathFollowingNOPathOffsetSD(puntosDeRuta));
+            }
+        }
+    }
+
+
+
+
 
 
     internal static float VectorToDirection(Vector3 direction)

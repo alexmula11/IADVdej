@@ -1,5 +1,5 @@
 sceneSetups:
-- path: Assets/Scenes/Seek-Wander-And-WallAvoidance.unity
+- path: Assets/Scenes/PathFollowing.unity
   isLoaded: 1
   isActive: 1
   isSubScene: 0
