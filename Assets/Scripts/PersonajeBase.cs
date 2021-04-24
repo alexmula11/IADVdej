@@ -7,8 +7,10 @@ public abstract class PersonajeBase : Bodi
     [SerializeField]
     protected string nombre = "Base Character";
     [SerializeField]
-    protected PersonajeNPC fakeObjetive;
-    internal PersonajeNPC fake { get { return fakeObjetive; } }
+    protected PersonajeNPC fakeMovementObjetive, fakeAvoidObjetive, fakeAlignObjetive;
+    internal PersonajeNPC fakeMovement { get { return fakeMovementObjetive; } }
+    internal PersonajeNPC fakeAvoid { get { return fakeAvoidObjetive; } }
+    internal PersonajeNPC fakeAlign { get { return fakeAlignObjetive; } }
 
 
 
@@ -40,7 +42,7 @@ public abstract class PersonajeBase : Bodi
     {
         orientacion = transform.eulerAngles.y * GradosARadianes;
         actionList.AddFirst(new AgentActionStay(orientacion));
-        kinetic.Add(new WallAvoidance3WhiswersSD(innerAngleVision,maxMovementSpeed/2,maxMovementSpeed,innerDetector));
+        kinetic.Add(new WallAvoidance3WhiswersSD());
         kinetic.Add(new WanderSD(2*(float)System.Math.PI,20));
     }
 
@@ -88,31 +90,17 @@ public abstract class PersonajeBase : Bodi
             posicion += velocidad * Time.fixedDeltaTime;   // Fórmulas de Newton 
             orientacion += rotacion * Time.fixedDeltaTime;
             orientacionTo360();
-            //ACTUALIZAMOS (SI ACABA REINICIAMOS VARIABLES)              
+            //ACTUALIZAMOS
             transform.position = posicion;
             //transform.rotation = new Quaternion(); //Quaternion.identity;
             //transform.Rotate(Vector3.up, orientacion);
             transform.eulerAngles = new Vector3(0, orientacion * RadianesAGrados, 0);
+            //SI ACABA REINICIAMOS VARIABLES?
             if (selectedBehaviour.finished)
             {
                 velocidad = Vector3.zero;
                 rotacion = 0;
             }
-
-            /*if (selectedBehaviour.steeringType == SteeringBehaviour.MOV_TYPE.ACCELERATED)
-            {
-                
-            }
-            else
-            {
-                velocidad = steeringActual.linear;
-                if (velocidad.magnitude > maxMovementSpeed)
-                {
-                    velocidad = velocidad.normalized * maxMovementSpeed;
-                }
-                transform.position = posicion;
-                transform.eulerAngles = new Vector3(0, orientacion, 0);
-            }*/
         }
     }
 
@@ -133,16 +121,18 @@ public abstract class PersonajeBase : Bodi
         //auxiliarmente elegimos el primero de la lista
         if (kinetic.Count > 0)
         {
+            steeringActual = kinetic[0].getSteering(this); //se hace antes para hacer el raycast y no hacerlo dos veces
             //CHECK IF WALLAVOIDANCE
-            if (kinetic[0].getSteering(this).linear != Vector3.zero)
+            if ((kinetic[0] as WallAvoidance3WhiswersSD).finished)
             {
-                selectedBehaviour = kinetic[0];
+                // lo que no es evadir parede
+                selectedBehaviour = kinetic[1];
+                steeringActual = selectedBehaviour.getSteering(this);
             }
             else
             {
-                selectedBehaviour = kinetic[1];
+                selectedBehaviour = kinetic[0];
             }
-            steeringActual = selectedBehaviour.getSteering(this);
 
             //steering finish
             /*if (steeringActual.angular == 0 && steeringActual.linear == Vector3.zero)
@@ -180,13 +170,13 @@ public abstract class PersonajeBase : Bodi
 
     internal void orientacionTo360()
     {
-        if (orientacion < -180)
+        if (orientacion < -System.Math.PI)
          {
-            orientacion += 360;
+            orientacion += 2* (float)System.Math.PI;
          }
-        else if (orientacion>180)
+        else if (orientacion> System.Math.PI)
          {
-            orientacion -= 360;
+            orientacion -= 2 * (float)System.Math.PI;
         }
     }
 
@@ -204,6 +194,42 @@ public abstract class PersonajeBase : Bodi
 
     internal abstract void newTask(SteeringBehaviour st);
 
-    
+
+
+    internal void OnDrawGizmos()
+    {
+        Vector3 origin = posicion + Vector3.up;
+        //Drawing gizmos
+        //Whiskers
+        Gizmos.color = Color.green;
+        /*if (velocidad != Vector3.zero)
+        {
+            Gizmos.DrawLine(origin, origin + velocidad.normalized * maxMovementSpeed);
+            Gizmos.DrawLine(origin, origin + SimulationManager.DirectionToVector(SimulationManager.VectorToDirection(velocidad) + outterAngleVision).normalized * maxMovementSpeed / 2);
+            Gizmos.DrawLine(origin, origin + SimulationManager.DirectionToVector(SimulationManager.VectorToDirection(velocidad) - outterAngleVision).normalized * maxMovementSpeed / 2);
+        }
+        else
+        {*/
+            Gizmos.DrawLine(origin, origin + SimulationManager.DirectionToVector(orientacion) * velocidad.magnitude*2);
+            float leftOri = orientacion - outterAngleVision;
+            if (leftOri > System.Math.PI) leftOri -= 2* (float)System.Math.PI;
+            else if (leftOri < -System.Math.PI) leftOri += 2*(float)System.Math.PI;
+            Gizmos.DrawLine(origin, origin + SimulationManager.DirectionToVector(leftOri) * velocidad.magnitude);
+            float rightOri = orientacion + outterAngleVision;
+            if (rightOri > System.Math.PI) rightOri -= 2 * (float)System.Math.PI;
+            else if (rightOri < -System.Math.PI) rightOri += 2 * (float)System.Math.PI;
+            Gizmos.DrawLine(origin, origin + SimulationManager.DirectionToVector(rightOri) * velocidad.magnitude);
+        //}
+        //Area detectors
+        Gizmos.color = Color.grey;
+        //Gizmos.DrawSphere(posicion, innerDetector);
+        Gizmos.color = Color.black;
+        //Gizmos.DrawSphere(posicion, outterDetector);
+        //Bodi vars
+        Gizmos.color = Color.blue;
+        Gizmos.DrawLine(origin+Vector3.up/2, origin + Vector3.up / 2 + velocidad);
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawLine(origin + Vector3.up / 2, origin + Vector3.up / 2 + aceleracion);
+    }
 
 }

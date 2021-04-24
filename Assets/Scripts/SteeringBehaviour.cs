@@ -9,7 +9,7 @@ public abstract class SteeringBehaviour
     internal protected PersonajeBase target { get { return _target; } set { _target = value; } }
 
     protected bool _finished=false;
-    internal bool finished { get { return _finished; } }
+    protected internal bool finished { get { return _finished; } }
 
     internal protected abstract Steering getSteering(PersonajeBase personaje);
 }

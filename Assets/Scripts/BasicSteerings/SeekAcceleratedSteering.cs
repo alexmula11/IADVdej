@@ -17,7 +17,7 @@ public class SeekAcceleratedSteering : SteeringBehaviour
             //1ra manera, superposición de velocidad (velocidad deseada en el primer frame) velocidad desada = velocidad que tienes + velocidad que pasa el steering 
             // --> velocidad que pasa el steering = velocidad deseada - velocidad que tienes
             Vector3 desiredSpeed = (_target.posicion - personaje.posicion).normalized * System.Math.Min(personaje.maxMovSpeed, distance);
-            st.linear = (desiredSpeed - personaje.velocidad + _target.velocidad * Time.fixedDeltaTime).normalized * System.Math.Min(personaje.movAcc, distance);
+            st.linear = (desiredSpeed - personaje.velocidad + _target.velocidad * Time.fixedDeltaTime).normalized * personaje.movAcc;
             //                                                      AAA     Un poco de predicsion   AAA
             _finished = false;
         }

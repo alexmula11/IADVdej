@@ -19,8 +19,8 @@ public class WanderSD : SteeringBehaviour
     {
         float angularVariation = (float)randomizer.NextDouble() * rotationLimit - rotationLimit / 2; //rotacion random entre orientacion - limite/2 y orientacion+limite/2
         float nuevoAngulo = personaje.orientacion + angularVariation;
-        personaje.fake.posicion = personaje.posicion + SimulationManager.DirectionToVector(nuevoAngulo) * offset;
-        pursueSD.target = personaje.fake;
+        personaje.fakeMovement.posicion = personaje.posicion + SimulationManager.DirectionToVector(nuevoAngulo) * offset;
+        pursueSD.target = personaje.fakeMovement;
         Steering st = pursueSD.getSteering(personaje);
 
         return st;

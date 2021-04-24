@@ -13,7 +13,7 @@ public class PersonajePlayer : PersonajeBase
     internal override void newTask(SteeringBehaviour st)
     {
         kinetic.Clear();
-        kinetic.Add(new WallAvoidance3WhiswersSD(innerAngleVision, maxMovementSpeed / 2, maxMovementSpeed, innerDetector));
+        kinetic.Add(new WallAvoidance3WhiswersSD());
         kinetic.Add(st);
     }
 }

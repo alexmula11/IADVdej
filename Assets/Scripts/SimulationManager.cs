@@ -127,10 +127,10 @@ public class SimulationManager : MonoBehaviour
                             {
                                 person.setAction(new AgentActionMove(new Vector2(hit.point.x,hit.point.z),person.innerDetector,person.outterDetector));
                                 PursueSD pursueSD = new PursueSD();
-                                pursueSD.target = person.fake;
-                                person.fake.posicion = hit.point;
-                                //person.fake.moveTo(hit.point);
-                                person.fake.innerDetector = person.innerDetector;
+                                pursueSD.target = person.fakeMovement;
+                                person.fakeMovement.posicion = hit.point;
+                                person.fakeMovement.moveTo(hit.point); // mover los fakes para debuggeo
+                                person.fakeMovement.innerDetector = person.innerDetector;
                                 person.newTask(pursueSD);
                             }
                         }
@@ -170,7 +170,8 @@ public class SimulationManager : MonoBehaviour
     }
     internal static Vector3 DirectionToVector(float direction)
     {
-        return new Vector3((float)System.Math.Cos(direction), 0,(float)System.Math.Sin(direction));
+        //return new Vector3((float)System.Math.Cos(direction), 0,(float)System.Math.Sin(direction));
+        return new Vector3((float)System.Math.Sin(direction), 0, (float)System.Math.Cos(direction));
     }
 
     internal static float TurnAmountInDirection(float originAngle, float destAngle)
