@@ -44,6 +44,7 @@ public abstract class PersonajeBase : Bodi
 
 
 
+
     private void Start()
     {
         orientacion = transform.eulerAngles.y * GradosARadianes;
