@@ -115,7 +115,7 @@ MonoBehaviour:
   m_MinSize: {x: 679, y: 492}
   m_MaxSize: {x: 18004, y: 14042}
   vertical: 0
-  controlID: 180
+  controlID: 171
 --- !u!114 &6
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -140,7 +140,7 @@ MonoBehaviour:
   m_MinSize: {x: 403, y: 492}
   m_MaxSize: {x: 14003, y: 14042}
   vertical: 1
-  controlID: 142
+  controlID: 65
 --- !u!114 &7
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -165,7 +165,7 @@ MonoBehaviour:
   m_MinSize: {x: 403, y: 221}
   m_MaxSize: {x: 8003, y: 4021}
   vertical: 0
-  controlID: 73
+  controlID: 66
 --- !u!114 &8
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -244,7 +244,7 @@ MonoBehaviour:
   m_MinSize: {x: 333, y: 271}
   m_MaxSize: {x: 14003, y: 10021}
   vertical: 0
-  controlID: 143
+  controlID: 134
 --- !u!114 &11
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -359,9 +359,9 @@ MonoBehaviour:
   m_PlayAudio: 0
   m_AudioPlay: 0
   m_Position:
-    m_Target: {x: 154.78696, y: -755.24066, z: 381.24252}
+    m_Target: {x: 1032.2565, y: -1284.7128, z: 395.34207}
     speed: 2
-    m_Value: {x: 154.78696, y: -755.24066, z: 381.24252}
+    m_Value: {x: 1032.2565, y: -1284.7128, z: 395.34207}
   m_RenderMode: 0
   m_CameraMode:
     drawMode: 0
@@ -407,13 +407,13 @@ MonoBehaviour:
     m_GridAxis: 1
     m_gridOpacity: 0.5
   m_Rotation:
-    m_Target: {x: -0.49875194, y: -0.1253372, z: 0.07328933, w: -0.8545807}
+    m_Target: {x: 0.3269038, y: 0.53410095, z: -0.234973, w: 0.74352604}
     speed: 2
-    m_Value: {x: -0.49860597, y: -0.1266099, z: 0.074032106, w: -0.85433096}
+    m_Value: {x: 0.3268755, y: 0.53405476, z: -0.23495266, w: 0.74346167}
   m_Size:
-    m_Target: 458.62375
+    m_Target: 1001.3682
     speed: 2
-    m_Value: 458.62375
+    m_Value: 1001.3682
   m_Ortho:
     m_Target: 0
     speed: 2
@@ -467,23 +467,23 @@ MonoBehaviour:
   m_SceneHierarchy:
     m_TreeViewState:
       scrollPos: {x: 0, y: 0}
-      m_SelectedIDs: 769effff
-      m_LastClickedID: -24970
-      m_ExpandedIDs: 269dffff829dffff1a9effff769effffbaabffff1aacffffb6acffff16adffffe0f9ffff40faffffa0faffff00fbffff60fbffff68fbffff
+      m_SelectedIDs: d479ffff
+      m_LastClickedID: -34348
+      m_ExpandedIDs: f8afffff0ccdffff52f6ffff68fbffff303400006c3400008a340000
       m_RenameOverlay:
         m_UserAcceptedRename: 0
-        m_Name: FakeMarker
-        m_OriginalName: FakeMarker
+        m_Name: 
+        m_OriginalName: 
         m_EditFieldRect:
           serializedVersion: 2
           x: 0
           y: 0
           width: 0
           height: 0
-        m_UserData: 30890
+        m_UserData: 0
         m_IsWaitingForDelay: 0
         m_IsRenaming: 0
-        m_OriginalEventType: 0
+        m_OriginalEventType: 11
         m_IsRenamingFilename: 0
         m_ClientGUIView: {fileID: 8}
       m_SearchString: 
@@ -650,20 +650,20 @@ MonoBehaviour:
     m_SkipHidden: 0
     m_SearchArea: 1
     m_Folders:
-    - Assets/Scripts
+    - Assets/Scripts/SceneScripts
   m_ViewMode: 1
   m_StartGridSize: 16
   m_LastFolders:
-  - Assets/Scripts
+  - Assets/Scripts/SceneScripts
   m_LastFoldersGridSize: 16
   m_LastProjectPath: P:\Documentos\UnityProjects\TacticsLegends\WarIARep\IADVdej
   m_LockTracker:
     m_IsLocked: 0
   m_FolderTreeState:
     scrollPos: {x: 0, y: 10}
-    m_SelectedIDs: ce350000
-    m_LastClickedID: 13774
-    m_ExpandedIDs: 00000000cc350000ce35000000ca9a3b
+    m_SelectedIDs: d8760000
+    m_LastClickedID: 30424
+    m_ExpandedIDs: 00000000d8350000da35000000ca9a3b
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -691,7 +691,7 @@ MonoBehaviour:
     scrollPos: {x: 0, y: 0}
     m_SelectedIDs: 
     m_LastClickedID: 0
-    m_ExpandedIDs: 00000000cc350000ce350000
+    m_ExpandedIDs: 00000000d8350000da350000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -722,18 +722,18 @@ MonoBehaviour:
     m_ExpandedInstanceIDs: c623000000000000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
-      m_Name: PathFollowingNOPathOffsetSD
-      m_OriginalName: PathFollowingNOPathOffsetSD
+      m_Name: 
+      m_OriginalName: 
       m_EditFieldRect:
         serializedVersion: 2
         x: 0
         y: 0
         width: 0
         height: 0
-      m_UserData: 12668
+      m_UserData: 0
       m_IsWaitingForDelay: 0
       m_IsRenaming: 0
-      m_OriginalEventType: 0
+      m_OriginalEventType: 11
       m_IsRenamingFilename: 1
       m_ClientGUIView: {fileID: 11}
     m_CreateAssetUtility:
@@ -743,7 +743,7 @@ MonoBehaviour:
       m_Icon: {fileID: 0}
       m_ResourceFile: 
     m_NewAssetIndexInList: -1
-    m_ScrollPosition: {x: 0, y: 97}
+    m_ScrollPosition: {x: 0, y: 0}
     m_GridSize: 16
   m_SkipHiddenPackages: 0
   m_DirectoriesAreaWidth: 144

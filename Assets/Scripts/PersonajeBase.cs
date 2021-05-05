@@ -53,9 +53,9 @@ public abstract class PersonajeBase : Bodi
     private void Start()
     {
         orientacion = transform.eulerAngles.y * GradosARadianes;
-        actionList.AddFirst(new AgentActionStay(orientacion));
-        newTask(new WanderSD(2 * (float)System.Math.PI, 5, 30 * GradosARadianes, 2));
-        //newTask(new SeparationSD());
+        //actionList.AddFirst(new AgentActionStay(orientacion));
+        //newTask(new WanderSD(2 * (float)System.Math.PI, 5, 30 * GradosARadianes, 2));
+        //newTask(new CohesionSD());
     }
 
 
@@ -77,7 +77,7 @@ public abstract class PersonajeBase : Bodi
 
             //capamiento aceleracion
             checkMaxAcelerationReached();
-            Debug.Log(aceleracion);
+
             //si no hay aceleracion paramos -- ya no
             /*if (aceleracion == Vector3.zero)
             {
@@ -103,7 +103,7 @@ public abstract class PersonajeBase : Bodi
             orientacion += rotacion * Time.fixedDeltaTime;
             orientacionTo360();
             //ACTUALIZAMOS
-            transform.position = posicion;
+            moveTo(posicion);
             //transform.rotation = new Quaternion(); //Quaternion.identity;
             //transform.Rotate(Vector3.up, orientacion);
             transform.eulerAngles = new Vector3(0, orientacion * RadianesAGrados, 0);

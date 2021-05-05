@@ -4,17 +4,17 @@ using UnityEngine;
 
 public class SimulationManager : MonoBehaviour
 {
-    private static List<PersonajeBase> charactersInTeam;
+    protected static List<PersonajeBase> charactersInTeam;
     [SerializeField]
-    private UIManager ui;
+    protected UIManager ui;
     [SerializeField]
     private FormationManager formationManager;
 
 
-    private const float GROUP_STEERING_RADIUS = 50;
+    internal static readonly float GROUP_STEERING_RADIUS = 200;
 
     private HashSet<PersonajeBase> selectedUnits = new HashSet<PersonajeBase>();
-    private PersonajeBase characterWithFocus;
+    protected PersonajeBase characterWithFocus;
 
 
     [SerializeField]
@@ -32,14 +32,14 @@ public class SimulationManager : MonoBehaviour
     private MOUSE_ACTION mouseBehav = 0;
     private bool mouseOverUI=false;
 
-    private void Start()
+    protected void Start()
     {
         PersonajePlayer[] equipillo = GameObject.FindObjectsOfType<PersonajePlayer>();
         charactersInTeam = new List<PersonajeBase>(equipillo);
     }
 
 
-    private void Update()
+    protected void Update()
     {
         //INPUT MANAGEMENT
         //CAMERA INPUT HERE (AROUND THE MAP)
@@ -212,6 +212,7 @@ public class SimulationManager : MonoBehaviour
                         RaycastHit hit;
                         if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit, 10000f, 1 << 8))
                         {
+                            /* PARA FORMACIONES
                             foreach (PersonajeBase person in selectedUnits)
                             {
                                 if (person.currentFormacion != null)
@@ -233,6 +234,19 @@ public class SimulationManager : MonoBehaviour
                             }
                             formacion.formacionASusPuestos();
                             formationManager.addFormation(formacion);
+                            */
+
+                            //PARA FLOCKING
+                            PersonajeBase lider = hit.collider.gameObject.GetComponent<PersonajeBase>();
+                            foreach (PersonajeBase person in selectedUnits)
+                            {
+                                if (person!= lider)
+                                {
+                                    FlockingSD flocking = new FlockingSD();
+                                    flocking.target = lider;
+                                    person.newTask(flocking);
+                                }
+                            }
                         }
                     }
                 }
@@ -244,7 +258,7 @@ public class SimulationManager : MonoBehaviour
 
 
 
-    private void FixedUpdate()
+    protected void FixedUpdate()
     {
         if (characterWithFocus != null)
         {

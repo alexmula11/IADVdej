@@ -86,12 +86,16 @@
     <Compile Include="Assets\Scripts\PersonajeBase.cs" />
     <Compile Include="Assets\Scripts\PersonajeNPC.cs" />
     <Compile Include="Assets\Scripts\PersonajePlayer.cs" />
+    <Compile Include="Assets\Scripts\SceneScripts\SimManagerFlocking.cs" />
     <Compile Include="Assets\Scripts\SimulationManager.cs" />
     <Compile Include="Assets\Scripts\Steering.cs" />
     <Compile Include="Assets\Scripts\SteeringBehaviour.cs" />
+    <Compile Include="Assets\Scripts\SteeringDelegates\CohesionSD.cs" />
     <Compile Include="Assets\Scripts\SteeringDelegates\EvadeSD.cs" />
     <Compile Include="Assets\Scripts\SteeringDelegates\FaceSD.cs" />
+    <Compile Include="Assets\Scripts\SteeringDelegates\FlockingSD.cs" />
     <Compile Include="Assets\Scripts\SteeringDelegates\FormacionSD.cs" />
+    <Compile Include="Assets\Scripts\SteeringDelegates\GroupAlignSD.cs" />
     <Compile Include="Assets\Scripts\SteeringDelegates\LookWhereYouGoingSD.cs" />
     <Compile Include="Assets\Scripts\SteeringDelegates\OffsetPursuitSD.cs" />
     <Compile Include="Assets\Scripts\SteeringDelegates\PathFollowingNOPathOffsetSD.cs" />
