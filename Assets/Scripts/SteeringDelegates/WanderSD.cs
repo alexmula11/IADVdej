@@ -12,6 +12,8 @@ public class WanderSD : SteeringBehaviour
     protected float wanderLimit;
     protected float wanderRadius;
 
+    protected bool setup = true;
+
     public WanderSD(float rotationLimit, float offset, float wanderLimit, float wanderRadius)
     {
         this.rotationLimit = rotationLimit;
@@ -22,10 +24,9 @@ public class WanderSD : SteeringBehaviour
 
     protected internal override Steering getSteering(PersonajeBase personaje)
     {
-        pursueSD.target = personaje.fakeMovement; //teniendo en cuenta que empieza en el mismo sitio
-
-        if (pursueSD.finished || pursueSD.getSteering(personaje).linear == Vector3.zero)
+        if (pursueSD.finishedLinear || setup)
         {
+            setup = false;
             float angularVariation = (float)randomizer.NextDouble() * rotationLimit * 2 - rotationLimit; //rotacion random entre orientacion - limite/2 y orientacion+limite/2
             float nuevoAngulo = personaje.orientacion + angularVariation;
 
@@ -37,6 +38,7 @@ public class WanderSD : SteeringBehaviour
             personaje.fakeMovement.posicion = wanderTarget;
             personaje.fakeMovement.moveTo(wanderTarget);
         }
+        pursueSD.target = personaje.fakeMovement;
         return pursueSD.getSteering(personaje);
     }
 }

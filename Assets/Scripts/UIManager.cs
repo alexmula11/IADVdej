@@ -14,7 +14,7 @@ public class UIManager : MonoBehaviour
     [SerializeField]
     private GameObject debugInfo;
     [SerializeField]
-    private Text debugAgentName, debugAgentAction, debugAgentLookingDirectionAngle, debugAgentTargetLookingDirectionAngle;
+    private Text debugAgentName, debugAgentAction, debugAgentLookingDirectionAngle, debugAgentTargetLookingDirectionAngle, debugAgentSteeringLinear, debugAgentSteeringAngular;
 
     [SerializeField]
     private MouseOptionDelegate[] mouseButtons;
@@ -30,8 +30,10 @@ public class UIManager : MonoBehaviour
     internal void actualizeAgentDebugInfo(PersonajeBase character)
     {
         debugAgentName.text = "Agent Name: " + character.nick;
-        debugAgentAction.text = "Current Action: " + character.currentAction.action.ToString();
+        debugAgentAction.text = "Selected Behaviour: " + character.selectedBehaviour.GetType().Name;
         debugAgentLookingDirectionAngle.text = "Looking Direction Angle: " + character.orientacion;
+        debugAgentSteeringLinear.text = "Linear Steering: " + character.steeringActual.linear;
+        debugAgentSteeringAngular.text = "Angular Steering: " + character.steeringActual.angular;
     }
 
 

@@ -18,6 +18,11 @@ public abstract class PersonajeBase : Bodi
     internal PersonajeNPC fakeAlign { get { return fakeAlignObjetive; } }
     internal Transform routeMarks { get { return routeMarkers; } }
 
+    protected Formacion formacion = null;
+    internal Formacion currentFormacion { get{ return formacion; } set { formacion = value; } }
+
+    internal List<PersonajeBase> group = new List<PersonajeBase>();
+
 
 
     //SENSORS
@@ -39,8 +44,8 @@ public abstract class PersonajeBase : Bodi
 
 
     protected List<SteeringBehaviour> kinetic = new List<SteeringBehaviour>();
-    protected SteeringBehaviour selectedBehaviour = null;
-    protected Steering steeringActual = null;
+    protected internal SteeringBehaviour selectedBehaviour = null;
+    protected internal Steering steeringActual = null;
 
 
 
@@ -50,6 +55,7 @@ public abstract class PersonajeBase : Bodi
         orientacion = transform.eulerAngles.y * GradosARadianes;
         actionList.AddFirst(new AgentActionStay(orientacion));
         newTask(new WanderSD(2 * (float)System.Math.PI, 5, 30 * GradosARadianes, 2));
+        //newTask(new SeparationSD());
     }
 
 
@@ -58,7 +64,6 @@ public abstract class PersonajeBase : Bodi
     {
         arbitro();
         applySteering();
-
     }
 
     //Realizamos la accion del steeringActual
@@ -72,6 +77,7 @@ public abstract class PersonajeBase : Bodi
 
             //capamiento aceleracion
             checkMaxAcelerationReached();
+            Debug.Log(aceleracion);
             //si no hay aceleracion paramos -- ya no
             /*if (aceleracion == Vector3.zero)
             {
@@ -102,9 +108,12 @@ public abstract class PersonajeBase : Bodi
             //transform.Rotate(Vector3.up, orientacion);
             transform.eulerAngles = new Vector3(0, orientacion * RadianesAGrados, 0);
             //SI ACABA REINICIAMOS VARIABLES?
-            if (selectedBehaviour.finished)
+            if (selectedBehaviour.finishedLinear)
             {
                 velocidad = Vector3.zero;
+            }
+            if (selectedBehaviour.finishedAngular)
+            {
                 rotacion = 0;
             }
         }
@@ -129,7 +138,7 @@ public abstract class PersonajeBase : Bodi
         {
             steeringActual = kinetic[0].getSteering(this); //se hace antes para hacer el raycast y no hacerlo dos veces
             //CHECK IF WALLAVOIDANCE
-            if ((kinetic[0] as WallAvoidance3WhiswersSD).finished)
+            if ((kinetic[0] as WallAvoidance3WhiswersSD).finishedLinear)
             {
                 // lo que no es evadir parede
                 int i = 1; //not finished
@@ -137,7 +146,7 @@ public abstract class PersonajeBase : Bodi
 
                 for (i=1; i<kinetic.Count; i++)
                 {
-                    if (!kinetic[i].finished)
+                    if (!(kinetic[i].finishedLinear&&kinetic[i].finishedAngular))
                     {
                         selectedBehaviour = kinetic[i];
                         allFinished=false;
@@ -147,9 +156,12 @@ public abstract class PersonajeBase : Bodi
                 if (allFinished)
                 {
                     newTask(new WanderSD(2 * (float)System.Math.PI, 5, 30 * GradosARadianes, 2));
+                    selectedBehaviour = kinetic[1];
                 }
-
-                selectedBehaviour = kinetic[1];
+                else
+                {
+                    selectedBehaviour = kinetic[i];
+                }
                 steeringActual = selectedBehaviour.getSteering(this);
             }
             else
@@ -216,7 +228,10 @@ public abstract class PersonajeBase : Bodi
     }
 
     internal abstract void newTask(SteeringBehaviour st);
+    internal abstract void addTask(SteeringBehaviour st);
 
+
+    internal abstract void disband();
 
 
     internal void OnDrawGizmos()

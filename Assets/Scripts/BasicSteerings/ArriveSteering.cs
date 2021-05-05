@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class ArriveSteering : SteeringBehaviour
 {
+    protected new bool finishedAngular { get { return true; } }
     protected internal override Steering getSteering(PersonajeBase personaje)
     {
         Steering st = new Steering();
@@ -20,7 +21,8 @@ public class ArriveSteering : SteeringBehaviour
         }
         else
         {
-            _finished = true;
+            st.linear = -personaje.velocidad.normalized * System.Math.Min(personaje.velocidad.magnitude, personaje.movAcc);
+            _finishedLinear = true;
         }
         return st;
     }

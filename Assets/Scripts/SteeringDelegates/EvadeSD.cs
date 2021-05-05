@@ -12,13 +12,13 @@ public class EvadeSD : SteeringBehaviour
 
     internal protected override Steering getSteering(PersonajeBase personaje)
     {
+        _finishedAngular = _finishedLinear = false;
         Steering st = new Steering();
         st.linear = skAccSt.getSteering(personaje).linear;
         st.angular = face.getSteering(personaje).angular;
-        if (skAccSt.finished && face.finished)
-        {
-            _finished = true;
-        }
+
+        _finishedLinear = skAccSt.finishedLinear;
+        _finishedAngular = face.finishedAngular;
         return st;
     }
 }

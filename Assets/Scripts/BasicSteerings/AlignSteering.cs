@@ -4,28 +4,29 @@ using UnityEngine;
 
 public class AlignSteering : SteeringBehaviour
 {
-    
+    protected new bool finishedLinear { get { return true; } }
 
     protected internal override Steering getSteering(PersonajeBase personaje)
     {
+        _finishedAngular = false;
         //float timeToTarget = 0.1f;
         float rotation = 0;
         float rotationSize = 0;
         float targetRotation = 0;
         Steering st = new Steering();
         st.linear = Vector3.zero;
-        
 
-        rotation = SimulationManager.TurnAmountInDirection(personaje.orientacion,SimulationManager.VectorToDirection(_target.posicion-personaje.posicion));
+        //rotation = SimulationManager.TurnAmountInDirection(personaje.orientacion,SimulationManager.VectorToDirection(_target.posicion-personaje.posicion));
+        rotation = SimulationManager.TurnAmountInDirection(personaje.orientacion,_target.orientacion);
         rotationSize = Mathf.Abs(rotation);
 
         if(rotationSize < target.innerAngleVision)
         {
             st.angular = 0;
-            _finished = true;
+            _finishedAngular = true;
             return st;
         }
-        _finished = false;
+        _finishedAngular = false;
 
         if(rotationSize > personaje.outterAngleVision)
         {

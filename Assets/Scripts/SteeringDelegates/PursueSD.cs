@@ -12,21 +12,13 @@ public class PursueSD : SteeringBehaviour
 
     protected internal override Steering getSteering(PersonajeBase personaje)
     {
+
         Steering st = new Steering();
         st.linear = skAccSt.getSteering(personaje).linear;
         st.angular = face.getSteering(personaje).angular;
-        if (skAccSt.finished && face.finished)
-        {
-            _finished = true;
-        }
-        else if (skAccSt.finished)
-        {
-            _finished = true;
-        }
-        else
-        {
-            _finished = false;
-        }
+
+        _finishedLinear = skAccSt.finishedLinear;
+        _finishedAngular = face.finishedAngular;
         return st;
     }
 }

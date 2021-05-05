@@ -12,27 +12,13 @@ public class FormacionTriangulo : Formacion
     public FormacionTriangulo(PersonajeBase lider) :base(lider,4){
         for (int i = 1; i < maximoMiembros; i++)
         {
-            offsetPositions.Add(new Vector3(5, 0, (-5 + ((i - 1) * 5))));//Valores de z para el segundo vector -> -5 0 5
+            offsetPositions.Add(new Vector3((-7.5f + ((i - 1) * 7.5f)), 0, -7.5f));//Valores de z para el segundo vector -> -5 0 5
         }
-    }
-
-    internal override void formacionASusPuestos(Vector3 posicionLider)
-    {   
-        PersonajeNPC fake = new PersonajeNPC();
-        fake.posicion = posicionLider;
-        PursueSD p = new PursueSD();
-        p.target = fake;
-
-        lider.newTask(p);
-
-        for(int i = 1; i<maximoMiembros;i++)
+        for (int i = 1; i < maximoMiembros; i++)
         {
-            OffsetPursuitSD opSD = new OffsetPursuitSD(offsetPositions[i - 1]);
-            opSD.target = lider;
-            miembros[i].newTask(p);
+            offsetRotations.Add(0);
         }
     }
-
     /*
      * Cosas que cambio:
      * 1.- Las posiciones no se calculan, están ya predefinidas en una lista
@@ -42,41 +28,4 @@ public class FormacionTriangulo : Formacion
      * 4.- Inicializador de lista de los miembros
      * 5.- También puse lider como accesor al primer elemento de la lista de miembros, ya que el código es dependiente de esto, por lo que siempre mantendremos al líder al principio de esta lista
      */
-
-    internal override void formacionEnAccion(Vector3 posicionLider)
-    {   
-        PersonajeNPC fake = new PersonajeNPC();
-        fake.posicion = posicionLider;
-        PursueSD p = new PursueSD();
-        p.target = fake;
-
-        lider.newTask(p);
-
-
-        //Para detener al lider cada 5 segundos
-        Stopwatch stopwatch = new Stopwatch();
-        if (stopwatch.ElapsedMilliseconds%5000 == 0)
-        {
-            //lider.stop();
-            stopwatch.Restart();
-        }
-
-        //Igualamos la velocidad y aceleracion de los secuaces al lider
-        for(int i = 1; i<maximoMiembros;i++)
-        {
-            //miembros[i].maxMovSpeed = lider.maxMovSpeed;
-            //miembros[i].movementAccel = lider.movementAccel;
-        }
-
-        for(int i = 1; i<maximoMiembros;i++)
-        {
-            PersonajeNPC fake2 = new PersonajeNPC();
-            fake2.posicion = posicionLider-new Vector3(5,0,(-5+((i-1)*5)));//Valores de z para el segundo vector -> -5 0 5
-            p = new PursueSD();
-            p.target = fake2;
-            miembros[i].newTask(p);
-        }
-    }
-
-
 }

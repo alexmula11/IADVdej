@@ -4,9 +4,11 @@ using UnityEngine;
 
 public class AntiAlignSteering : SteeringBehaviour
 {
+    protected new bool finishedLinear { get { return true; } }
 
     protected internal override Steering getSteering(PersonajeBase personaje)
     {
+        _finishedAngular = false;
         float rotation = 0;
         float rotationSize = 0;
         float targetRotation = 0;
@@ -20,7 +22,7 @@ public class AntiAlignSteering : SteeringBehaviour
         if (rotationSize < target.innerAngleVision)
         {
             st.angular = 0;
-            _finished = true;
+            _finishedAngular = true;
             return st;
         }
 

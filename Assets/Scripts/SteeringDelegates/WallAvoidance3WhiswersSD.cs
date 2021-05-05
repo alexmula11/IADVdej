@@ -6,8 +6,9 @@ public class WallAvoidance3WhiswersSD : SteeringBehaviour
 {
     private PursueSD pursueSD = new PursueSD();
     private float secondaryWhiskersAngle, secondaryWhiskersLength, primaryWhiskerLenght, wallOffset;
-    protected new bool _finished = true;
-    protected internal new bool finished { get { return _finished; } }
+    protected new bool _finishedLinear=true, _finishedAngular = true;
+    protected internal new bool finishedLinear { get { return _finishedLinear; } }
+    protected internal new bool finishedAngular { get { return _finishedAngular; } }
 
     protected internal override Steering getSteering(PersonajeBase personaje)
     {
@@ -29,14 +30,14 @@ public class WallAvoidance3WhiswersSD : SteeringBehaviour
             rightOri -= 2 * (float)System.Math.PI;
         else if (rightOri < -System.Math.PI)
             rightOri += 2 * (float)System.Math.PI;
-        bool midWhisker = Physics.Raycast(personaje.posicion, SimulationManager.DirectionToVector(personaje.orientacion), out midWHit, primaryWhiskerLenght, 1 << 9);
-        bool leftWhisker = Physics.Raycast(personaje.posicion, SimulationManager.DirectionToVector(leftOri), out leftWHit, secondaryWhiskersLength, 1 << 9);
-        bool rightWhisker = Physics.Raycast(personaje.posicion, SimulationManager.DirectionToVector(rightOri), out rightWHit, secondaryWhiskersLength, 1 << 9);
+        bool midWhisker = Physics.Raycast(personaje.posicion, SimulationManager.DirectionToVector(personaje.orientacion), out midWHit, primaryWhiskerLenght, 1 << 9 | 1 << 8);
+        bool leftWhisker = Physics.Raycast(personaje.posicion, SimulationManager.DirectionToVector(leftOri), out leftWHit, secondaryWhiskersLength, 1 << 9 | 1 << 8);
+        bool rightWhisker = Physics.Raycast(personaje.posicion, SimulationManager.DirectionToVector(rightOri), out rightWHit, secondaryWhiskersLength, 1 << 9 | 1 << 8);
         
 
         if (midWhisker)
         {
-            _finished = false;
+            _finishedLinear = _finishedAngular = false;
 
             Vector3 newPos = midWHit.point + midWHit.normal.normalized * wallOffset;
 
@@ -47,7 +48,7 @@ public class WallAvoidance3WhiswersSD : SteeringBehaviour
 
         }else if (leftWhisker && !rightWhisker)
         {
-            _finished = false;
+            _finishedLinear = _finishedAngular = false;
 
             float hipotenusa = leftWHit.distance;
             float transversalDistance = hipotenusa * (float)System.Math.Sin(secondaryWhiskersAngle);
@@ -73,7 +74,7 @@ public class WallAvoidance3WhiswersSD : SteeringBehaviour
         }
         else if (rightWhisker && !leftWhisker)
         {
-            _finished = false;
+            _finishedLinear = _finishedAngular = false;
 
             float hipotenusa = rightWHit.distance;
             float transversalDistance = hipotenusa * (float)System.Math.Sin(secondaryWhiskersAngle);
@@ -100,9 +101,9 @@ public class WallAvoidance3WhiswersSD : SteeringBehaviour
             personaje.fakeAvoid.moveTo(newPos);
             
         }
-        else if (_finished || (!_finished && pursueSD.finished))
+        else if (_finishedLinear || (!_finishedLinear && pursueSD.finishedLinear))
         {
-            _finished = true;
+            _finishedLinear = _finishedAngular = true;
             return new Steering();
         }
         pursueSD.target = personaje.fakeAvoid;

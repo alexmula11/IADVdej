@@ -4,9 +4,10 @@ using UnityEngine;
 
 public class VelocityMatchingSteering : SteeringBehaviour
 {
-
+    protected new bool finishedAngular { get { return true; } }
     protected internal override Steering getSteering(PersonajeBase personaje)
     {
+        _finishedLinear = false;
         Steering st = new Steering();
 
         //st.linear = _target.velocidad - personaje.velocidad; <-- ESTO ES HACERLO POR SUMA DE COMPONENTES
@@ -18,7 +19,7 @@ public class VelocityMatchingSteering : SteeringBehaviour
         }
         if (_target.velocidad == personaje.velocidad)
         {
-            _finished = true;
+            _finishedLinear = true;
         }
         return st;
     }

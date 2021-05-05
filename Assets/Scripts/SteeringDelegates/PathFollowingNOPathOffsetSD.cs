@@ -31,7 +31,7 @@ public class PathFollowingNOPathOffsetSD : SteeringBehaviour
             setup = true;
             currentPoint = nearestPoint;
         }
-        if (pursueSD.finished)
+        if (pursueSD.finishedLinear)
         {
             currentPoint = (currentPoint + 1) % path.Count;
         }

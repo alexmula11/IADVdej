@@ -4,11 +4,12 @@ using UnityEngine;
 
 public class LookWhereYouGoingSD : SteeringBehaviour
 {
+    protected new bool finishedLinear { get { return true; } }
     protected internal override Steering getSteering(PersonajeBase personaje)
     {
         Steering st = new Steering();
         st.angular = SimulationManager.TurnAmountInDirection(personaje.orientacion,SimulationManager.VectorToDirection(personaje.velocidad));
-        if (st.angular == 0) _finished = true;
+        _finishedAngular = st.angular == 0;
         return st;
     }
 }

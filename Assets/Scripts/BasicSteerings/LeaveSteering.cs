@@ -4,8 +4,11 @@ using UnityEngine;
 
 public class LeaveSteering : SteeringBehaviour
 {
+    protected new bool finishedAngular { get { return true; } }
+
     protected internal override Steering getSteering(PersonajeBase personaje)
     {
+        _finishedLinear = false;
         Steering st = new Steering();
         Vector3 distance = personaje.posicion - _target.posicion;
         if (distance.magnitude < _target.innerDetector)
@@ -19,7 +22,8 @@ public class LeaveSteering : SteeringBehaviour
         }
         else
         {
-            _finished = true;
+            st.linear = -personaje.velocidad.normalized * System.Math.Min(personaje.velocidad.magnitude, personaje.movAcc);
+            _finishedLinear = true;
         }
         return st;
     }
