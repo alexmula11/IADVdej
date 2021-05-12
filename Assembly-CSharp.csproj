@@ -87,6 +87,7 @@
     <Compile Include="Assets\Scripts\PersonajeNPC.cs" />
     <Compile Include="Assets\Scripts\PersonajePlayer.cs" />
     <Compile Include="Assets\Scripts\SceneScripts\SimManagerFlocking.cs" />
+    <Compile Include="Assets\Scripts\SceneScripts\SimManagerLRTA.cs" />
     <Compile Include="Assets\Scripts\SimulationManager.cs" />
     <Compile Include="Assets\Scripts\Steering.cs" />
     <Compile Include="Assets\Scripts\SteeringBehaviour.cs" />

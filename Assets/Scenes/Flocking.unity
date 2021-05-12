@@ -463,8 +463,6 @@ MonoBehaviour:
   debugAgentSteeringAngular: {fileID: 394786535}
   mouseButtons:
   - {fileID: 403845424}
-  - {fileID: 0}
-  - {fileID: 0}
 --- !u!114 &211301749
 MonoBehaviour:
   m_ObjectHideFlags: 0
