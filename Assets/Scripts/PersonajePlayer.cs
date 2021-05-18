@@ -34,6 +34,10 @@ public class PersonajePlayer : PersonajeBase
         kinetic.Add(new WallAvoidance3WhiswersSD());
         kinetic.Add(st);
     }
-
+    internal override void newTaskWOWA(SteeringBehaviour st)
+    {
+        kinetic.Clear();
+        kinetic.Add(st);
+    }
 
 }

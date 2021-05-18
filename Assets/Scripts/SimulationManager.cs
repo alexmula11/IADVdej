@@ -30,7 +30,7 @@ public class SimulationManager : MonoBehaviour
         FORM_SET = 3
     }
     private MOUSE_ACTION mouseBehav = 0;
-    private bool mouseOverUI=false;
+    protected bool mouseOverUI=false;
 
     protected void Start()
     {

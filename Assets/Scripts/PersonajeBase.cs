@@ -53,6 +53,10 @@ public abstract class PersonajeBase : Bodi
     private void Start()
     {
         orientacion = transform.eulerAngles.y * GradosARadianes;
+
+
+        //VARIAR COMO EMPIEZA EL PERSONAJE EN FUNCIÓN DE LA ESCENA
+
         //actionList.AddFirst(new AgentActionStay(orientacion));
         //newTask(new WanderSD(2 * (float)System.Math.PI, 5, 30 * GradosARadianes, 2));
         //newTask(new CohesionSD());
@@ -229,6 +233,7 @@ public abstract class PersonajeBase : Bodi
 
     internal abstract void newTask(SteeringBehaviour st);
     internal abstract void addTask(SteeringBehaviour st);
+    internal abstract void newTaskWOWA(SteeringBehaviour st);
 
 
     internal abstract void disband();

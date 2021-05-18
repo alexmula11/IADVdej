@@ -97,6 +97,7 @@
     <Compile Include="Assets\Scripts\SteeringDelegates\FlockingSD.cs" />
     <Compile Include="Assets\Scripts\SteeringDelegates\FormacionSD.cs" />
     <Compile Include="Assets\Scripts\SteeringDelegates\GroupAlignSD.cs" />
+    <Compile Include="Assets\Scripts\SteeringDelegates\LRTASD.cs" />
     <Compile Include="Assets\Scripts\SteeringDelegates\LookWhereYouGoingSD.cs" />
     <Compile Include="Assets\Scripts\SteeringDelegates\OffsetPursuitSD.cs" />
     <Compile Include="Assets\Scripts\SteeringDelegates\PathFollowingNOPathOffsetSD.cs" />
