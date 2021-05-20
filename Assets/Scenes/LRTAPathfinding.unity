@@ -8611,7 +8611,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 43ba6aa133aa40045a6c3e072895063d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  simManager: {fileID: 0}
+  simManager: {fileID: 1319100184}
   unitSelectionMark: {fileID: 0}
   debugInfo: {fileID: 1441478661}
   debugAgentName: {fileID: 521483531}
@@ -66424,25 +66424,40 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 60052387961555795, guid: d79bcac0ed792794883aa6019f8ce5e3,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 7278142580203036144, guid: d79bcac0ed792794883aa6019f8ce5e3,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7278142580627032917, guid: d79bcac0ed792794883aa6019f8ce5e3,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7278142581091291857, guid: d79bcac0ed792794883aa6019f8ce5e3,
         type: 3}
       propertyPath: nombre
       value: Pepito
       objectReference: {fileID: 0}
+    - target: {fileID: 7278142581091291857, guid: d79bcac0ed792794883aa6019f8ce5e3,
+        type: 3}
+      propertyPath: innerDetector
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 7278142581091291858, guid: d79bcac0ed792794883aa6019f8ce5e3,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -94.3
+      value: -96
       objectReference: {fileID: 0}
     - target: {fileID: 7278142581091291858, guid: d79bcac0ed792794883aa6019f8ce5e3,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 1.2
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 7278142581091291858, guid: d79bcac0ed792794883aa6019f8ce5e3,
         type: 3}

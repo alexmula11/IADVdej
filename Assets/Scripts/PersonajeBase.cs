@@ -4,6 +4,7 @@ using UnityEngine;
 
 public abstract class PersonajeBase : Bodi
 {
+
     [SerializeField]
     protected string nombre = "Base Character";
     [SerializeField]
@@ -23,9 +24,11 @@ public abstract class PersonajeBase : Bodi
 
     internal List<PersonajeBase> group = new List<PersonajeBase>();
 
-
+    [SerializeField]
+    protected UnitsInfo.TIPO_PERSONAJE tipo = UnitsInfo.TIPO_PERSONAJE.INFANTERIA;
 
     //SENSORS
+    [SerializeField]
     internal float innerDetector=2f, outterDetector=10f;
     internal float innerAngleVision=5*GradosARadianes, outterAngleVision=30*GradosARadianes; //30grad -- 60grad
 
@@ -53,6 +56,8 @@ public abstract class PersonajeBase : Bodi
     private void Start()
     {
         orientacion = transform.eulerAngles.y * GradosARadianes;
+
+
 
 
         //VARIAR COMO EMPIEZA EL PERSONAJE EN FUNCIÓN DE LA ESCENA
@@ -142,7 +147,7 @@ public abstract class PersonajeBase : Bodi
         {
             steeringActual = kinetic[0].getSteering(this); //se hace antes para hacer el raycast y no hacerlo dos veces
             //CHECK IF WALLAVOIDANCE
-            if ((kinetic[0] as WallAvoidance3WhiswersSD).finishedLinear)
+            /*if ((kinetic[0] as WallAvoidance3WhiswersSD).finishedLinear)
             {
                 // lo que no es evadir parede
                 int i = 1; //not finished
@@ -171,7 +176,9 @@ public abstract class PersonajeBase : Bodi
             else
             {
                 selectedBehaviour = kinetic[0];
-            }
+            }*/
+            //CUANDO NO HAY WALL AVOIDANCE
+            selectedBehaviour = kinetic[0];
 
             //steering finish
             /*if (steeringActual.angular == 0 && steeringActual.linear == Vector3.zero)

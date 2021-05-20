@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using UnityEngine;
 
 public class SimManagerLRTA : SimulationManager
@@ -10,7 +11,7 @@ public class SimManagerLRTA : SimulationManager
     [SerializeField]
     private GameObject[] wallFathers;
 
-    private bool[][] muros = new bool[50][];
+    private static bool[][] muros = new bool[51][];
 
     internal const int BLOCKSIZE = 4;
     
@@ -18,13 +19,17 @@ public class SimManagerLRTA : SimulationManager
     {
         for (int i=0; i<muros.Length;i++)
         {
-            muros[i] = new bool[25];
+            muros[i] = new bool[26];
         }
-
         foreach (GameObject wall in wallFathers)
         {
-            muros[(int)wall.transform.position.x / BLOCKSIZE + muros.Length/2][(int)wall.transform.position.z / BLOCKSIZE + muros[0].Length / 2] = true;
+            foreach (Transform singleWall in wall.transform)
+            {
+                Vector2 coord = positionToGrid(singleWall.position);
+                muros[(int)coord.x][(int)coord.y] = true;
+            }
         }
+        Time.timeScale = 10;
     }
 
     protected new void Update()
@@ -39,11 +44,26 @@ public class SimManagerLRTA : SimulationManager
             else if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit, 10000f, 1 << 10))
             {
                 LRTASD lrtaSteering = new LRTASD(muros,
-                    new Vector2((int)personajeBase.posicion.x / SimManagerLRTA.BLOCKSIZE, (int)personajeBase.posicion.z / SimManagerLRTA.BLOCKSIZE),
-                    new Vector2((int)hit.point.x / SimManagerLRTA.BLOCKSIZE, (int)hit.point.z / SimManagerLRTA.BLOCKSIZE));
+                    positionToGrid(personajeBase.posicion),
+                    positionToGrid(hit.point));
                 personajeBase.newTaskWOWA(lrtaSteering);
             }
         }
     }
 
+
+    internal static Vector2 positionToGrid(Vector3 position)
+    {
+        int coordX = (int)System.Math.Round(position.x) / BLOCKSIZE + muros.Length / 2;
+        int coordY = (int)System.Math.Round(position.z) / BLOCKSIZE + muros[0].Length / 2;
+        if (position.z < 0) coordY--;
+        return new Vector2(coordX, coordY);
+    }
+
+    internal static Vector3 gridToPosition(Vector2 gridPos)
+    {
+        int coordX = ((int)gridPos.x - muros.Length / 2)*BLOCKSIZE;
+        int coordY = ((int)gridPos.y - muros[0].Length / 2)*BLOCKSIZE + BLOCKSIZE/2;
+        return new Vector3(coordX, 0, coordY);
+    }
 }

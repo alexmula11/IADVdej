@@ -106,6 +106,7 @@
     <Compile Include="Assets\Scripts\SteeringDelegates\WallAvoidance3WhiswersSD.cs" />
     <Compile Include="Assets\Scripts\SteeringDelegates\WanderSD.cs" />
     <Compile Include="Assets\Scripts\UIManager.cs" />
+    <Compile Include="Assets\Scripts\UnitsInfo.cs" />
     <Reference Include="UnityEngine">
       <HintPath>P:/Programas/UnityEditors/2019.4.21f1/Editor/Data/Managed/UnityEngine/UnityEngine.dll</HintPath>
     </Reference>
