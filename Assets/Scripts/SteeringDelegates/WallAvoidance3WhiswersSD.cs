@@ -13,11 +13,11 @@ public class WallAvoidance3WhiswersSD : SteeringBehaviour
     protected internal override Steering getSteering(PersonajeBase personaje)
     {
         secondaryWhiskersAngle = personaje.outterAngleVision;
-        secondaryWhiskersLength = personaje.velocidad.magnitude;
-        primaryWhiskerLenght = personaje.velocidad.magnitude*2.5f;
-        //secondaryWhiskersLength = personaje.maxMovSpeed / 2;
-        //primaryWhiskerLenght = personaje.maxMovSpeed;
-        wallOffset = personaje.innerDetector*1.5f;
+        //secondaryWhiskersLength = personaje.velocidad.magnitude*1.5f;
+        //primaryWhiskerLenght = personaje.velocidad.magnitude*2.5f;
+        secondaryWhiskersLength = personaje.maxMovSpeed*1.5f;
+        primaryWhiskerLenght = personaje.maxMovSpeed*2f;
+        wallOffset = personaje.innerDetector*1.1f;
 
         RaycastHit leftWHit, rightWHit, midWHit;
         float leftOri = personaje.orientacion - secondaryWhiskersAngle;

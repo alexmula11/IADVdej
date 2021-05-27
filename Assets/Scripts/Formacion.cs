@@ -7,9 +7,9 @@ public abstract class Formacion
 {
 
     protected Stopwatch stopwatch = new Stopwatch();
-    protected List<PersonajeBase> miembros = new List<PersonajeBase>();
-    protected List<Vector3> offsetPositions = new List<Vector3>();
-    protected List<float> offsetRotations = new List<float>();
+    protected PersonajeBase[] miembros;
+    protected Vector3[] offsetPositions;
+    protected float[] offsetRotations;
 
 
     protected internal PersonajeBase lider { get { return miembros[0]; } }
@@ -20,16 +20,19 @@ public abstract class Formacion
 
     public Formacion(PersonajeBase lider, int maximoMiembros)
     {
-        miembros.Add(lider);
         n_miembros = 1;
         this.maximoMiembros = maximoMiembros;
+        miembros = new PersonajeBase[maximoMiembros];
+        miembros[0] = lider;
+        offsetPositions = new Vector3[maximoMiembros - 1];
+        offsetRotations = new float[maximoMiembros - 1];
         stopwatch.Start();
     }
 
-    internal bool addMiembro(PersonajeBase nuevo){
+    internal virtual bool addMiembro(PersonajeBase nuevo){
          if (n_miembros < maximoMiembros)
          {
-            miembros.Add(nuevo);
+            miembros[n_miembros] = nuevo;
             n_miembros ++;
             return true;
          }
@@ -47,20 +50,25 @@ public abstract class Formacion
 
     internal void formacionASusPuestos()
     {
-        for (int i = 1; i < n_miembros; i++)
+        for (int i = 1; i < maximoMiembros; i++)
         {
-
-            FormacionSD opSD = new FormacionSD(offsetPositions[i - 1],offsetRotations[i-1]);
-            opSD.target = lider;
-            miembros[i].newTask(opSD);
+            if (miembros[i] != null)
+            {
+                FormacionSD opSD = new FormacionSD(offsetPositions[i - 1], offsetRotations[i - 1]);
+                opSD.target = lider;
+                miembros[i].newTask(opSD);
+            }
         }
     }
 
     internal void disband()
     {
-        for (int i=0; i<miembros.Count; i++)
+        for (int i=0; i<miembros.Length; i++)
         {
-            miembros[i].disband();
+            if (miembros[i] != null)
+            {
+                miembros[i].disband();
+            }
         }
     }
 
@@ -69,7 +77,7 @@ public abstract class Formacion
         //Para detener al lider cada 5 segundos
         if (stopwatch.ElapsedMilliseconds > 10000)
         {
-            lider.addTask(new WaitSteering(6000));
+            lider.addTask(new WaitSteering(3000));
             stopwatch.Restart();
         }
     }

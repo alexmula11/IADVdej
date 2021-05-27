@@ -62,9 +62,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\Scripts\AgenActions\AgentActionMove.cs" />
-    <Compile Include="Assets\Scripts\AgenActions\AgentActionStay.cs" />
-    <Compile Include="Assets\Scripts\AgentAction.cs" />
     <Compile Include="Assets\Scripts\BasicSteerings\AlignSteering.cs" />
     <Compile Include="Assets\Scripts\BasicSteerings\AntiAlignSteering.cs" />
     <Compile Include="Assets\Scripts\BasicSteerings\ArriveSteering.cs" />
@@ -76,19 +73,23 @@
     <Compile Include="Assets\Scripts\BasicSteerings\WanderSteering.cs" />
     <Compile Include="Assets\Scripts\BasicSteerings\WanderSteeringRO.cs" />
     <Compile Include="Assets\Scripts\Bodi.cs" />
+    <Compile Include="Assets\Scripts\CameraScripts\TopDownCamera.cs" />
     <Compile Include="Assets\Scripts\FlechaDeRutaDelegate.cs" />
     <Compile Include="Assets\Scripts\Formacion.cs" />
-    <Compile Include="Assets\Scripts\FormacionCuadrado.cs" />
-    <Compile Include="Assets\Scripts\FormacionTriangulo.cs" />
-    <Compile Include="Assets\Scripts\FormationManager.cs" />
+    <Compile Include="Assets\Scripts\Formaciones\FormacionCuadrado.cs" />
+    <Compile Include="Assets\Scripts\Formaciones\FormacionPorRoles.cs" />
+    <Compile Include="Assets\Scripts\Formaciones\FormacionTriangulo.cs" />
     <Compile Include="Assets\Scripts\GroupDelegate.cs" />
     <Compile Include="Assets\Scripts\MouseOptionDelegate.cs" />
     <Compile Include="Assets\Scripts\PersonajeBase.cs" />
     <Compile Include="Assets\Scripts\PersonajeNPC.cs" />
     <Compile Include="Assets\Scripts\PersonajePlayer.cs" />
+    <Compile Include="Assets\Scripts\SceneScripts\GroundTypeDelegate.cs" />
     <Compile Include="Assets\Scripts\SceneScripts\SimManagerFlocking.cs" />
+    <Compile Include="Assets\Scripts\SceneScripts\SimManagerFormation.cs" />
     <Compile Include="Assets\Scripts\SceneScripts\SimManagerLRTA.cs" />
     <Compile Include="Assets\Scripts\SimulationManager.cs" />
+    <Compile Include="Assets\Scripts\StatsInfo.cs" />
     <Compile Include="Assets\Scripts\Steering.cs" />
     <Compile Include="Assets\Scripts\SteeringBehaviour.cs" />
     <Compile Include="Assets\Scripts\SteeringDelegates\CohesionSD.cs" />
@@ -97,6 +98,9 @@
     <Compile Include="Assets\Scripts\SteeringDelegates\FlockingSD.cs" />
     <Compile Include="Assets\Scripts\SteeringDelegates\FormacionSD.cs" />
     <Compile Include="Assets\Scripts\SteeringDelegates\GroupAlignSD.cs" />
+    <Compile Include="Assets\Scripts\SteeringDelegates\LRTAChevychevSD.cs" />
+    <Compile Include="Assets\Scripts\SteeringDelegates\LRTAEuclideSD.cs" />
+    <Compile Include="Assets\Scripts\SteeringDelegates\LRTAManhattanSD.cs" />
     <Compile Include="Assets\Scripts\SteeringDelegates\LRTASD.cs" />
     <Compile Include="Assets\Scripts\SteeringDelegates\LookWhereYouGoingSD.cs" />
     <Compile Include="Assets\Scripts\SteeringDelegates\OffsetPursuitSD.cs" />
@@ -106,7 +110,6 @@
     <Compile Include="Assets\Scripts\SteeringDelegates\WallAvoidance3WhiswersSD.cs" />
     <Compile Include="Assets\Scripts\SteeringDelegates\WanderSD.cs" />
     <Compile Include="Assets\Scripts\UIManager.cs" />
-    <Compile Include="Assets\Scripts\UnitsInfo.cs" />
     <Reference Include="UnityEngine">
       <HintPath>P:/Programas/UnityEditors/2019.4.21f1/Editor/Data/Managed/UnityEngine/UnityEngine.dll</HintPath>
     </Reference>

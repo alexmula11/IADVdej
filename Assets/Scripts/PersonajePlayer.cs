@@ -8,6 +8,7 @@ public class PersonajePlayer : PersonajeBase
     private Behaviour halo;
 
 
+
     internal bool selected { get { return halo.enabled; } set { halo.enabled = value; foreach (GameObject gizmo in gizmosGOs) gizmo.SetActive(value); } }
 
     internal override void addTask(SteeringBehaviour st)

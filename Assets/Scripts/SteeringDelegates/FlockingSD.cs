@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class FlockingSD : SteeringBehaviour
 {
-    private const float PURSUE_LEADER_PERCENT = 1f;
 
     private GroupAlignSD grAlSD = new GroupAlignSD();
     private CohesionSD chSD = new CohesionSD();
@@ -13,6 +12,16 @@ public class FlockingSD : SteeringBehaviour
     private LookWhereYouGoingSD lookSD = new LookWhereYouGoingSD();
 
     private const float distanceDivision = 20f;
+
+    internal float chPercentDyn=0, sepPercentDyn =0, followLeaderPercentDyn = 0;
+    private float chPercent=1, sepPercent=1, pLeaderPercent = 1;
+
+    public FlockingSD(float chPercent, float sepPercent, float pLeaderPercent)
+    {
+        this.chPercent = chPercent;
+        this.sepPercent = sepPercent;
+        this.pLeaderPercent = pLeaderPercent;
+    }
 
     protected internal override Steering getSteering(PersonajeBase personaje)
     {
@@ -31,9 +40,13 @@ public class FlockingSD : SteeringBehaviour
         }
         Steering st = new Steering();
         pursueSD.target = _target;
-        st.linear = chSD.getSteering(personaje).linear * (lejanos / personaje.group.Count)
-            + sepSD.getSteering(personaje).linear * cercanos / personaje.group.Count
-            + pursueSD.getSteering(personaje).linear * PURSUE_LEADER_PERCENT;
+        chPercentDyn = ((float)lejanos / personaje.group.Count) * chPercent;
+        sepPercentDyn = ((float)cercanos / personaje.group.Count) * sepPercent;
+        followLeaderPercentDyn = pLeaderPercent * System.Math.Min(2,(_target.posicion - personaje.posicion).magnitude/10);
+
+        st.linear = chSD.getSteering(personaje).linear * chPercentDyn
+            + sepSD.getSteering(personaje).linear * sepPercentDyn
+            + pursueSD.getSteering(personaje).linear * followLeaderPercentDyn;
         personaje.fakeMovement.posicion = personaje.posicion + st.linear;
         personaje.fakeMovement.moveTo(personaje.posicion + st.linear);
         if (st.linear == Vector3.zero)

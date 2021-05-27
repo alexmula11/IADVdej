@@ -4,16 +4,16 @@ using UnityEngine;
 
 public class SimulationManager : MonoBehaviour
 {
-    protected static List<PersonajeBase> charactersInTeam;
+
+    private List<Formacion> formaciones = new List<Formacion>();
+    protected static List<PersonajeBase> charactersInScene;
     [SerializeField]
     protected UIManager ui;
-    [SerializeField]
-    private FormationManager formationManager;
 
 
     internal static readonly float GROUP_STEERING_RADIUS = 200;
 
-    private HashSet<PersonajeBase> selectedUnits = new HashSet<PersonajeBase>();
+    protected HashSet<PersonajeBase> selectedUnits = new HashSet<PersonajeBase>();
     protected PersonajeBase characterWithFocus;
 
 
@@ -22,20 +22,26 @@ public class SimulationManager : MonoBehaviour
     private List<Vector3> pathToSet = new List<Vector3>();
 
 
-    private enum MOUSE_ACTION
+    protected enum MOUSE_ACTION
     {
         SELECT = 0,
         MOVE = 1,
-        ROUTE_SET = 2,
-        FORM_SET = 3
+        FORM_T = 2,
+        FORM_S = 3,
+        FORM_R = 4,
+        ROUTE_SET = 5
     }
-    private MOUSE_ACTION mouseBehav = 0;
+    protected MOUSE_ACTION mouseBehav = 0;
     protected bool mouseOverUI=false;
 
     protected void Start()
     {
-        PersonajePlayer[] equipillo = GameObject.FindObjectsOfType<PersonajePlayer>();
-        charactersInTeam = new List<PersonajeBase>(equipillo);
+        PersonajeBase[] personajes = FindObjectsOfType<PersonajeBase>();
+        charactersInScene = new List<PersonajeBase>(personajes);
+        foreach(PersonajeBase person in charactersInScene)
+        {
+            person.newTask(person.defaultSteering);
+        }
     }
 
 
@@ -103,7 +109,8 @@ public class SimulationManager : MonoBehaviour
                             }
                         }
                     }
-                    
+                    ui.actualizeUserButtons(allPossibleActions());
+
                 }
             }
             else if (mouseBehav == MOUSE_ACTION.MOVE)
@@ -118,12 +125,11 @@ public class SimulationManager : MonoBehaviour
                             PersonajeBase personajeObjetivo = hit.collider.gameObject.GetComponent<PersonajeBase>();
                             foreach (PersonajeBase person in selectedUnits)
                             {
-                                if (person.currentFormacion != null)
+                                if (person.currentFormacion != null && person.currentFormacion.lider != person)
                                 {
-                                    formationManager.removeFormacion(person.currentFormacion);
+                                    formaciones.Remove(person.currentFormacion);
                                     person.currentFormacion.disband();
                                 }
-                                person.setAction(new AgentActionMove(new Vector2(hit.point.x, hit.point.z), person.innerDetector, person.outterDetector));
                                 PursueSD pursueSD = new PursueSD();
                                 pursueSD.target = personajeObjetivo;
                                 /*person.fake.posicion = hit.point;
@@ -137,12 +143,11 @@ public class SimulationManager : MonoBehaviour
                         {
                             foreach (PersonajeBase person in selectedUnits)
                             {
-                                if (person.currentFormacion != null && person.currentFormacion.lider!=person)
+                                if (person.currentFormacion != null && person.currentFormacion.lider != person)
                                 {
-                                    formationManager.removeFormacion(person.currentFormacion);
+                                    formaciones.Remove(person.currentFormacion);
                                     person.currentFormacion.disband();
                                 }
-                                person.setAction(new AgentActionMove(new Vector2(hit.point.x,hit.point.z),person.innerDetector,person.outterDetector));
                                 PursueSD pursueSD = new PursueSD();
                                 pursueSD.target = person.fakeMovement;
                                 person.fakeMovement.posicion = hit.point;
@@ -150,6 +155,69 @@ public class SimulationManager : MonoBehaviour
                                 person.fakeMovement.innerDetector = person.innerDetector;
                                 person.newTask(pursueSD);
                             }
+                        }
+                    }
+                }
+            }
+            else if (mouseBehav == MOUSE_ACTION.FORM_T || mouseBehav == MOUSE_ACTION.FORM_S || mouseBehav == MOUSE_ACTION.FORM_R)
+            {
+                if (selectedUnits.Count > 0)
+                {
+                    if (Input.GetMouseButtonDown(0))
+                    {
+                        RaycastHit hit;
+                        if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit, 10000f, 1 << 8))
+                        {
+
+                            // PARA FORMACIONES
+                            foreach (PersonajeBase person in selectedUnits)
+                            {
+                                if (person.currentFormacion != null)
+                                {
+                                    formaciones.Add(person.currentFormacion);
+                                    person.currentFormacion.disband();
+                                }
+                            }
+                            //Asignamos el lider que clicamos
+                            PersonajeBase lider = hit.collider.gameObject.GetComponent<PersonajeBase>();
+
+                            Formacion formacion = null;
+
+                            switch (mouseBehav)
+                            {
+                                case MOUSE_ACTION.FORM_T:
+                                    formacion = new FormacionTriangulo(lider);
+                                    break;
+                                case MOUSE_ACTION.FORM_S:
+                                    formacion = new FormacionCuadrado(lider);
+                                    break;
+                                case MOUSE_ACTION.FORM_R:
+                                    formacion = new FormacionPorRoles(lider);
+                                    break;
+                            }
+                            foreach (PersonajeBase person in selectedUnits)
+                            {
+                                person.currentFormacion = formacion;
+                                if (person != lider)
+                                {
+                                    formacion.addMiembro(person);
+                                }
+                            }
+                            formacion.formacionASusPuestos();
+                            formaciones.Add(formacion);
+                            
+
+                            //PARA FLOCKING
+                            /*PersonajeBase lider = hit.collider.gameObject.GetComponent<PersonajeBase>();
+                            foreach (PersonajeBase person in selectedUnits)
+                            {
+                                if (person!= lider)
+                                {
+                                    FlockingSD flocking = new FlockingSD(1,1,1);
+                                    flocking.target = lider;
+                                    person.newTask(flocking);
+                                }
+                            }*/
                         }
                     }
                 }
@@ -167,14 +235,14 @@ public class SimulationManager : MonoBehaviour
                             pathToSet.Clear();
                             setMouseBehaviour(0);
                             ui.selectMouseOption(0);
-                            foreach (PersonajeBase person in selectedUnits)
+                            /*foreach (PersonajeBase person in selectedUnits)
                             {
                                 if (person.currentFormacion != null)
                                 {
                                     formationManager.removeFormacion(person.currentFormacion);
                                     person.currentFormacion.disband();
                                 }
-                            }
+                            }*/
                         }
                         else if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit, 10000f, 1 << 10))
                         {
@@ -184,7 +252,7 @@ public class SimulationManager : MonoBehaviour
                                 {
                                     foreach (Transform routeElem in unit.routeMarks)
                                     {
-                                        Destroy(routeElem);
+                                        Destroy(routeElem.gameObject);
                                     }
                                 }
                             }
@@ -197,54 +265,6 @@ public class SimulationManager : MonoBehaviour
                                 {
                                     GameObject routeLine = Instantiate(routeLinePrefab, unit.routeMarks);
                                     routeLine.GetComponent<FlechaDeRutaDelegate>().setRouteDirection(pathToSet[pathToSet.Count - 2], pathToSet[pathToSet.Count - 1]);
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-            else if (mouseBehav == MOUSE_ACTION.FORM_SET)
-            {
-                if (selectedUnits.Count > 0)
-                {
-                    if (Input.GetMouseButtonDown(0))
-                    {
-                        RaycastHit hit;
-                        if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit, 10000f, 1 << 8))
-                        {
-                            /* PARA FORMACIONES
-                            foreach (PersonajeBase person in selectedUnits)
-                            {
-                                if (person.currentFormacion != null)
-                                {
-                                    formationManager.removeFormacion(person.currentFormacion);
-                                    person.currentFormacion.disband();
-                                }
-                            }
-                            //Asignamos el lider que clicamos
-                            PersonajeBase lider = hit.collider.gameObject.GetComponent<PersonajeBase>();
-                            Formacion formacion = new FormacionCuadrado(lider);
-                            foreach (PersonajeBase person in selectedUnits)
-                            {
-                                person.currentFormacion = formacion;
-                                if (person != lider)
-                                {
-                                    formacion.addMiembro(person);
-                                }
-                            }
-                            formacion.formacionASusPuestos();
-                            formationManager.addFormation(formacion);
-                            */
-
-                            //PARA FLOCKING
-                            PersonajeBase lider = hit.collider.gameObject.GetComponent<PersonajeBase>();
-                            foreach (PersonajeBase person in selectedUnits)
-                            {
-                                if (person!= lider)
-                                {
-                                    FlockingSD flocking = new FlockingSD();
-                                    flocking.target = lider;
-                                    person.newTask(flocking);
                                 }
                             }
                         }
@@ -272,7 +292,7 @@ public class SimulationManager : MonoBehaviour
     }
 
 
-    internal void setMouseBehaviour(int behaviour)
+    internal virtual void setMouseBehaviour(int behaviour)
     {
         mouseBehav = (MOUSE_ACTION)behaviour;
         if (mouseBehav != MOUSE_ACTION.ROUTE_SET && pathToSet.Count>0)
@@ -285,7 +305,7 @@ public class SimulationManager : MonoBehaviour
     internal static List<PersonajeBase> PersonajesCerca(PersonajeBase person)
     {
         List<PersonajeBase> personsCerca = new List<PersonajeBase>();
-        foreach (PersonajeBase personCerca in charactersInTeam)
+        foreach (PersonajeBase personCerca in charactersInScene)
         {
             if (personCerca != person)
             {
@@ -324,7 +344,18 @@ public class SimulationManager : MonoBehaviour
         }
     }
 
-
+    private HashSet<StatsInfo.ACCION> allPossibleActions()
+    {
+        HashSet<StatsInfo.ACCION> lista = new HashSet<StatsInfo.ACCION>();
+        foreach (PersonajeBase person in selectedUnits)
+        {
+            foreach(StatsInfo.ACCION action in person.posiblesAcciones)
+            {
+                lista.Add(action);
+            }
+        }
+        return lista;
+    }
 
 
 

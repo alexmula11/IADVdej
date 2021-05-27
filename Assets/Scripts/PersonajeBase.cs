@@ -13,6 +13,8 @@ public abstract class PersonajeBase : Bodi
     protected GameObject[] gizmosGOs;
     [SerializeField]
     protected Transform routeMarkers;
+    [SerializeField]
+    protected MeshRenderer bodyMesh, headMesh;
 
     internal PersonajeNPC fakeMovement { get { return fakeMovementObjetive; } }
     internal PersonajeNPC fakeAvoid { get { return fakeAvoidObjetive; } }
@@ -25,12 +27,12 @@ public abstract class PersonajeBase : Bodi
     internal List<PersonajeBase> group = new List<PersonajeBase>();
 
     [SerializeField]
-    protected UnitsInfo.TIPO_PERSONAJE tipo = UnitsInfo.TIPO_PERSONAJE.INFANTERIA;
+    protected internal StatsInfo.TIPO_PERSONAJE tipo = StatsInfo.TIPO_PERSONAJE.INFANTERIA;
 
     //SENSORS
     [SerializeField]
     internal float innerDetector=2f, outterDetector=10f;
-    internal float innerAngleVision=5*GradosARadianes, outterAngleVision=30*GradosARadianes; //30grad -- 60grad
+    internal float innerAngleVision=5*GradosARadianes, outterAngleVision=30*GradosARadianes; 
 
     
     
@@ -40,26 +42,26 @@ public abstract class PersonajeBase : Bodi
     internal float currentMovementSpeed { get { return velocidad.magnitude; } }
 
 
-
-    //ACTIONS MANAGEMENT
-    private LinkedList<AgentAction> actionList = new LinkedList<AgentAction>();
-    internal AgentAction currentAction { get { return actionList.First.Value; } }
+    
 
 
     protected List<SteeringBehaviour> kinetic = new List<SteeringBehaviour>();
     protected internal SteeringBehaviour selectedBehaviour = null;
     protected internal Steering steeringActual = null;
 
+    protected internal SteeringBehaviour defaultSteering = new WanderSD(2 * (float)System.Math.PI, 5, 30 * GradosARadianes, 2);
+    protected internal StatsInfo.ACCION[] posiblesAcciones;
+    //TERRAIN BELOW
+    protected StatsInfo.TIPO_TERRENO terrenoQuePiso = 0;
 
 
 
     private void Start()
     {
         orientacion = transform.eulerAngles.y * GradosARadianes;
-
-
-
-
+        applyTipo(tipo);
+        
+        
         //VARIAR COMO EMPIEZA EL PERSONAJE EN FUNCIÓN DE LA ESCENA
 
         //actionList.AddFirst(new AgentActionStay(orientacion));
@@ -67,10 +69,41 @@ public abstract class PersonajeBase : Bodi
         //newTask(new CohesionSD());
     }
 
+    protected internal void applyTipo(StatsInfo.TIPO_PERSONAJE tipo)
+    {
+        this.tipo = tipo;
+        /*switch (tipo)
+        {
+            case UnitsInfo.TIPO_PERSONAJE.INFANTERIA:
+                bodyMesh.material.color = UnitsInfo.colorInfanteria;
+                maxMovementSpeed = UnitsInfo.velocidadUnidadPorTerreno[0][(int)tipo];
+                break;
+            case UnitsInfo.TIPO_PERSONAJE.ARQUERO:
+                bodyMesh.material.color = UnitsInfo.colorArquero;
+                maxMovementSpeed = UnitsInfo.velocidadArquero;
+                break;
+            case UnitsInfo.TIPO_PERSONAJE.PESADA:
+                bodyMesh.material.color = UnitsInfo.colorPesada;
+                maxMovementSpeed = UnitsInfo.velocidadPesada;
+                break;
+        }*/
+        bodyMesh.material.color = StatsInfo.coloresUnidades[(int) tipo];
+        maxMovementSpeed = StatsInfo.velocidadUnidades[(int)tipo];
+        posiblesAcciones = StatsInfo.accionesDeUnidades[(int)tipo];
+        if (this is PersonajePlayer)
+        {
+            headMesh.material.color = Color.white;
+        }
+        else
+        {
+            headMesh.material.color = Color.gray;
+        }
+    }
 
 
     private void FixedUpdate()
     {
+        checkTerrainBelow();
         arbitro();
         applySteering();
     }
@@ -145,49 +178,102 @@ public abstract class PersonajeBase : Bodi
         //auxiliarmente elegimos el primero de la lista
         if (kinetic.Count > 0)
         {
-            steeringActual = kinetic[0].getSteering(this); //se hace antes para hacer el raycast y no hacerlo dos veces
-            //CHECK IF WALLAVOIDANCE
-            /*if ((kinetic[0] as WallAvoidance3WhiswersSD).finishedLinear)
-            {
-                // lo que no es evadir parede
-                int i = 1; //not finished
-                bool allFinished = true;
 
-                for (i=1; i<kinetic.Count; i++)
+            //steeringActual = kinetic[0].getSteering(this); //se hace antes para hacer el raycast y no hacerlo dos veces
+            //CHECK IF WALLAVOIDANCE
+            int i=0;
+            if ((kinetic[0] as WallAvoidance3WhiswersSD) != null)
+            {
+                steeringActual = kinetic[0].getSteering(this);
+                if ((kinetic[0] as WallAvoidance3WhiswersSD).finishedLinear)
                 {
-                    if (!(kinetic[i].finishedLinear&&kinetic[i].finishedAngular))
+                    i = 1;
+                    // lo que no es evadir parede
+                    bool allFinished = true;
+
+                    for (i = 1; i < kinetic.Count; i++)
+                    {
+                        if (!(kinetic[i].finishedLinear && kinetic[i].finishedAngular))
+                        {
+                            selectedBehaviour = kinetic[i];
+                            allFinished = false;
+                            break;
+                        }
+                    }
+                    if (allFinished)
+                    {
+                        newTask(defaultSteering);
+                        selectedBehaviour = kinetic[1];
+                    }
+                    else
                     {
                         selectedBehaviour = kinetic[i];
-                        allFinished=false;
+                    }
+                    if (allFinished)
+                    {
+                        i--;
+                    }
+                    selectedBehaviour = kinetic[i];
+                    steeringActual = selectedBehaviour.getSteering(this);
+                }
+                else
+                {
+                    selectedBehaviour = kinetic[0];
+                }
+            }
+            else
+            {
+                bool allFinished = true;
+                for (i = i; i < kinetic.Count; i++)
+                {
+                    if (!(kinetic[i].finishedLinear && kinetic[i].finishedAngular))
+                    {
+                        selectedBehaviour = kinetic[i];
+                        allFinished = false;
                         break;
                     }
                 }
                 if (allFinished)
                 {
-                    newTask(new WanderSD(2 * (float)System.Math.PI, 5, 30 * GradosARadianes, 2));
+                    newTask(defaultSteering);
                     selectedBehaviour = kinetic[1];
                 }
                 else
                 {
                     selectedBehaviour = kinetic[i];
                 }
+                selectedBehaviour = kinetic[i];
                 steeringActual = selectedBehaviour.getSteering(this);
             }
-            else
-            {
-                selectedBehaviour = kinetic[0];
-            }*/
-            //CUANDO NO HAY WALL AVOIDANCE
-            selectedBehaviour = kinetic[0];
+                //CUANDO NO HAY WALL AVOIDANCE
+                //selectedBehaviour = kinetic[0];
 
-            //steering finish
-            /*if (steeringActual.angular == 0 && steeringActual.linear == Vector3.zero)
-            {
-                kinetic.RemoveAt(0);
-                steeringActual = null;
-            }*/
+                //steering finish
+                /*if (steeringActual.angular == 0 && steeringActual.linear == Vector3.zero)
+                {
+                    kinetic.RemoveAt(0);
+                    steeringActual = null;
+                }*/
         }
     }
+
+    private void checkTerrainBelow()
+    {
+        RaycastHit hit;
+        if (Physics.Raycast(transform.position+Vector3.up,Vector3.down, out hit, 2, 1 << 10))
+        {
+            
+            terrenoQuePiso = hit.collider.GetComponent<GroundTypeDelegate>().tipoTerreno;
+            maxMovementSpeed = StatsInfo.velocidadUnidades[(int)tipo] * StatsInfo.velocidadUnidadPorTerreno[(int)terrenoQuePiso][(int)tipo];
+        }
+    }
+
+
+
+
+
+
+
 
 
     internal void checkMaxAcelerationReached()
@@ -232,11 +318,6 @@ public abstract class PersonajeBase : Bodi
         get { return nombre; }
     }
     
-    internal void setAction(AgentAction action)
-    {
-        actionList.Clear();
-        actionList.AddFirst(action);
-    }
 
     internal abstract void newTask(SteeringBehaviour st);
     internal abstract void addTask(SteeringBehaviour st);
@@ -260,15 +341,18 @@ public abstract class PersonajeBase : Bodi
         }
         else
         {*/
-            Gizmos.DrawLine(origin, origin + SimulationManager.DirectionToVector(orientacion) * velocidad.magnitude*2);
+            //Gizmos.DrawLine(origin, origin + SimulationManager.DirectionToVector(orientacion) * velocidad.magnitude*2.5f);
+            Gizmos.DrawLine(origin, origin + SimulationManager.DirectionToVector(orientacion) * maxMovementSpeed*2f);
             float leftOri = orientacion - outterAngleVision;
             if (leftOri > System.Math.PI) leftOri -= 2* (float)System.Math.PI;
             else if (leftOri < -System.Math.PI) leftOri += 2*(float)System.Math.PI;
-            Gizmos.DrawLine(origin, origin + SimulationManager.DirectionToVector(leftOri) * velocidad.magnitude);
+            //Gizmos.DrawLine(origin, origin + SimulationManager.DirectionToVector(leftOri) * velocidad.magnitude * 1.5f);
+            Gizmos.DrawLine(origin, origin + SimulationManager.DirectionToVector(leftOri) * maxMovementSpeed*1.5f);
             float rightOri = orientacion + outterAngleVision;
             if (rightOri > System.Math.PI) rightOri -= 2 * (float)System.Math.PI;
             else if (rightOri < -System.Math.PI) rightOri += 2 * (float)System.Math.PI;
-            Gizmos.DrawLine(origin, origin + SimulationManager.DirectionToVector(rightOri) * velocidad.magnitude);
+            //Gizmos.DrawLine(origin, origin + SimulationManager.DirectionToVector(rightOri) * velocidad.magnitude * 1.5f);
+            Gizmos.DrawLine(origin, origin + SimulationManager.DirectionToVector(rightOri) * maxMovementSpeed * 1.5f);
         
         //}
         //Area detectors

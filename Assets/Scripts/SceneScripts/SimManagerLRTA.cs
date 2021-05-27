@@ -34,19 +34,103 @@ public class SimManagerLRTA : SimulationManager
 
     protected new void Update()
     {
-        if (Input.GetMouseButton(0))
+        if (!mouseOverUI)
         {
-            RaycastHit hit;
-            if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit, 10000f, 1 << 9))
+            if (mouseBehav == MOUSE_ACTION.SELECT)
             {
-                return;
+                if (Input.GetMouseButton(0))
+                {
+                    if (Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift))
+                    {
+                        RaycastHit hit;
+                        if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit, 10000f, 1 << 8))
+                        {
+                            PersonajePlayer character = hit.collider.gameObject.GetComponent<PersonajePlayer>();
+                            if (!selectedUnits.Contains(character))
+                            {
+                                character.selected = true;
+                                characterWithFocus = character;
+                                selectedUnits.Add(character);
+                                ui.showDebugInfo(true);
+                                ui.actualizeAgentDebugInfo(character);
+                            }
+                            else
+                            {
+                                character.selected = false;
+                                if (character == characterWithFocus)
+                                {
+                                    characterWithFocus = null;
+                                    ui.showDebugInfo(false);
+                                }
+                                selectedUnits.Remove(character);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        foreach (PersonajePlayer person in selectedUnits)
+                        {
+                            person.selected = false;
+                        }
+                        selectedUnits.Clear();
+                        RaycastHit hit;
+                        if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit, 10000f, 1 << 8))
+                        {
+                            PersonajePlayer character = hit.collider.gameObject.GetComponent<PersonajePlayer>();
+                            character.selected = true;
+                            characterWithFocus = character;
+                            selectedUnits.Add(character);
+                            ui.showDebugInfo(true);
+                            ui.actualizeAgentDebugInfo(character);
+                        }
+                        else
+                        {
+                            if (characterWithFocus != null)
+                            {
+                                characterWithFocus = null;
+                                ui.showDebugInfo(false);
+                            }
+                        }
+                    }
+
+                }
             }
-            else if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit, 10000f, 1 << 10))
+            else if (mouseBehav == MOUSE_ACTION.MOVE)
             {
-                LRTASD lrtaSteering = new LRTASD(muros,
-                    positionToGrid(personajeBase.posicion),
-                    positionToGrid(hit.point));
-                personajeBase.newTaskWOWA(lrtaSteering);
+                if (selectedUnits.Count > 0)
+                {
+                    if (Input.GetMouseButton(0))
+                    {
+                        RaycastHit hit;
+                        if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit, 10000f, 1 << 9))
+                        {
+                            return;
+                        }
+                        else if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit, 10000f, 1 << 10))
+                        {
+                            foreach (PersonajeBase person in selectedUnits)
+                            {
+                                Vector2 posicionDestino = positionToGrid(hit.point);
+                                LRTASD lrtaSteering = null;
+                                switch (person.tipo)
+                                {
+                                    case StatsInfo.TIPO_PERSONAJE.INFANTERIA:
+                                        lrtaSteering = new LRTAManhattanSD(muros, positionToGrid(personajeBase.posicion), posicionDestino);
+                                        break;
+                                    case StatsInfo.TIPO_PERSONAJE.ARQUERO:
+                                        lrtaSteering = new LRTAEuclideSD(muros, positionToGrid(personajeBase.posicion), posicionDestino);
+                                        break;
+                                    case StatsInfo.TIPO_PERSONAJE.PESADA:
+                                        lrtaSteering = new LRTAChevychevSD(muros, positionToGrid(personajeBase.posicion), posicionDestino);
+                                        break;
+                                }
+                                person.fakeAvoid.transform.position = gridToPosition(posicionDestino);
+                                person.newTaskWOWA(lrtaSteering);
+
+                            }
+                        }
+                    }
+                }
             }
         }
     }

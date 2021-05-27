@@ -4,43 +4,23 @@ using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 
-public class LRTASD : SteeringBehaviour
+public abstract class LRTASD : SteeringBehaviour
 {
-    private int[][] pesos;
+    protected int[][] pesos;
 
-    private PursueSD pursueSD = new PursueSD();
+    protected PursueSD pursueSD = new PursueSD();
 
-    private bool setup = true;
+    protected bool setup = true;
 
-    private Vector2 destiny;
+    protected Vector2 destiny;
 
     public LRTASD(bool[][] walls, Vector2 origin, Vector2 destiny)
     {
         this.destiny = destiny;
-        pesos = new int[walls.Length][];
-        for (int i=0; i < pesos.Length; i++)
-        {
-            string linea = "";
-            string linea2 = "";
-            pesos[i] = new int[walls[i].Length];
-            for (int j=0; j < pesos[i].Length; j++)
-            {
-
-                if (walls[i][j])
-                {
-                    pesos[i][j] = int.MaxValue;
-                    linea += " -1";
-                    linea2 += " 1";
-                }
-                else
-                {
-                    pesos[i][j] = (int)((System.Math.Abs(destiny.x - i)) + (System.Math.Abs(destiny.y - j)));
-                    linea += " "+pesos[i][j];
-                    linea2 += " 0";
-                }
-            }
-        }
+        populateWeights(walls,origin, destiny);
     }
+
+    protected abstract void populateWeights(bool[][] walls, Vector2 origin, Vector2 destiny);
 
     private int[] minimalSpace(Vector2 pos)
     {
@@ -52,6 +32,7 @@ public class LRTASD : SteeringBehaviour
         return costs;
     }
 
+    /*
     private Vector2 nextMove(int[] minimalSpace, Vector2 position)
     {
 
@@ -101,7 +82,28 @@ public class LRTASD : SteeringBehaviour
             default: return new Vector2(0, 0);
         }
     }
+    */
+    private Vector2 nextMove(int[] minimalSpace, Vector2 position)
+    {
 
+        int minorCostIndex = -1, minorCost = int.MaxValue;
+        for (int i = 0; i < minimalSpace.Length; i++)
+        {
+            if (minimalSpace[i] < minorCost)
+            {
+                minorCost = minimalSpace[i];
+                minorCostIndex = i;
+            }
+        }
+        switch (minorCostIndex)
+        {
+            case 0: return new Vector2(0, 1);
+            case 1: return new Vector2(1, 0);
+            case 2: return new Vector2(0, -1);
+            case 3: return new Vector2(-1, 0);
+            default: return new Vector2(0, 0);
+        }
+    }
 
     protected internal override Steering getSteering(PersonajeBase personaje)
     {

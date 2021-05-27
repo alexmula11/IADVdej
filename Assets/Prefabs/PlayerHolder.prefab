@@ -356,6 +356,11 @@ MonoBehaviour:
   fakeAlignObjetive: {fileID: 0}
   gizmosGOs: []
   routeMarkers: {fileID: 0}
+  bodyMesh: {fileID: 0}
+  headMesh: {fileID: 0}
+  tipo: 0
+  innerDetector: 2
+  outterDetector: 10
 --- !u!1 &7278142580627032917
 GameObject:
   m_ObjectHideFlags: 0
@@ -620,6 +625,11 @@ MonoBehaviour:
   - {fileID: 7278142581038659061}
   - {fileID: 60052387961555795}
   routeMarkers: {fileID: 7278142581038659060}
+  bodyMesh: {fileID: 7278142580919666079}
+  headMesh: {fileID: 7278142581568626052}
+  tipo: 0
+  innerDetector: 2
+  outterDetector: 10
   halo: {fileID: 7278142581568626050}
 --- !u!1 &7278142581145093286
 GameObject:
@@ -677,6 +687,11 @@ MonoBehaviour:
   fakeAlignObjetive: {fileID: 0}
   gizmosGOs: []
   routeMarkers: {fileID: 0}
+  bodyMesh: {fileID: 0}
+  headMesh: {fileID: 0}
+  tipo: 0
+  innerDetector: 2
+  outterDetector: 10
 --- !u!1 &7278142581147376520
 GameObject:
   m_ObjectHideFlags: 0
@@ -732,6 +747,11 @@ MonoBehaviour:
   fakeAlignObjetive: {fileID: 0}
   gizmosGOs: []
   routeMarkers: {fileID: 0}
+  bodyMesh: {fileID: 0}
+  headMesh: {fileID: 0}
+  tipo: 0
+  innerDetector: 2
+  outterDetector: 10
 --- !u!1 &7278142581188969392
 GameObject:
   m_ObjectHideFlags: 0
