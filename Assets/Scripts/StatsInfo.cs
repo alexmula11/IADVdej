@@ -14,12 +14,12 @@ public class StatsInfo
 
     public enum TIPO_TERRENO
     {
-        DEFAULT,
+        INFRANQUEABLE,
         CEMENTO,
         LLANURA,
         BOSQUE,
         ARENA,
-        MADERA
+        MADERA,
     }
 
     public enum ACCION

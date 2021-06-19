@@ -115,13 +115,13 @@ public class SimManagerLRTA : SimulationManager
                                 switch (person.tipo)
                                 {
                                     case StatsInfo.TIPO_PERSONAJE.INFANTERIA:
-                                        lrtaSteering = new LRTAManhattanSD(muros, positionToGrid(personajeBase.posicion), posicionDestino);
+                                        lrtaSteering = new LRTAManhattanSD(muros, positionToGrid(person.posicion), posicionDestino);
                                         break;
                                     case StatsInfo.TIPO_PERSONAJE.ARQUERO:
-                                        lrtaSteering = new LRTAEuclideSD(muros, positionToGrid(personajeBase.posicion), posicionDestino);
+                                        lrtaSteering = new LRTAEuclideSD(muros, positionToGrid(person.posicion), posicionDestino);
                                         break;
                                     case StatsInfo.TIPO_PERSONAJE.PESADA:
-                                        lrtaSteering = new LRTAChevychevSD(muros, positionToGrid(personajeBase.posicion), posicionDestino);
+                                        lrtaSteering = new LRTAChevychevSD(muros, positionToGrid(person.posicion), posicionDestino);
                                         break;
                                 }
                                 person.fakeAvoid.transform.position = gridToPosition(posicionDestino);

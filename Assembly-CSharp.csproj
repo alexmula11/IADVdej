@@ -11,7 +11,7 @@
     <ProductVersion>10.0.20506</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <RootNamespace></RootNamespace>
-    <ProjectGuid>{048344AF-81E8-77D8-60D9-4AB7EDED155E}</ProjectGuid>
+    <ProjectGuid>{3C2C45CF-C1F8-6F5E-0126-225A4C7F6DE2}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <AssemblyName>Assembly-CSharp</AssemblyName>
@@ -79,11 +79,14 @@
     <Compile Include="Assets\Scripts\Formaciones\FormacionCuadrado.cs" />
     <Compile Include="Assets\Scripts\Formaciones\FormacionPorRoles.cs" />
     <Compile Include="Assets\Scripts\Formaciones\FormacionTriangulo.cs" />
+    <Compile Include="Assets\Scripts\GrafoBusqueda.cs" />
     <Compile Include="Assets\Scripts\GroupDelegate.cs" />
     <Compile Include="Assets\Scripts\MouseOptionDelegate.cs" />
+    <Compile Include="Assets\Scripts\NodoGrafo.cs" />
     <Compile Include="Assets\Scripts\PersonajeBase.cs" />
     <Compile Include="Assets\Scripts\PersonajeNPC.cs" />
     <Compile Include="Assets\Scripts\PersonajePlayer.cs" />
+    <Compile Include="Assets\Scripts\SceneScripts\Final\SimManagerFinal.cs" />
     <Compile Include="Assets\Scripts\SceneScripts\GroundTypeDelegate.cs" />
     <Compile Include="Assets\Scripts\SceneScripts\SimManagerFlocking.cs" />
     <Compile Include="Assets\Scripts\SceneScripts\SimManagerFormation.cs" />
@@ -92,6 +95,7 @@
     <Compile Include="Assets\Scripts\StatsInfo.cs" />
     <Compile Include="Assets\Scripts\Steering.cs" />
     <Compile Include="Assets\Scripts\SteeringBehaviour.cs" />
+    <Compile Include="Assets\Scripts\SteeringDelegates\AStarSD.cs" />
     <Compile Include="Assets\Scripts\SteeringDelegates\CohesionSD.cs" />
     <Compile Include="Assets\Scripts\SteeringDelegates\EvadeSD.cs" />
     <Compile Include="Assets\Scripts\SteeringDelegates\FaceSD.cs" />
@@ -648,31 +652,31 @@
       <HintPath>P:/Programas/UnityEditors/2019.4.21f1/Editor/Data/NetStandard/compat/2.0.0/shims/netfx/System.Xml.Serialization.dll</HintPath>
     </Reference>
     <Reference Include="Unity.Timeline.Editor">
-      <HintPath>P:/Documentos/UnityProjects/TacticsLegends/WarIARep/IADVdej/Library/ScriptAssemblies/Unity.Timeline.Editor.dll</HintPath>
+      <HintPath>P:/Documentos/UnityProjects/TacticsLegends/WarIARep/WarIA/Library/ScriptAssemblies/Unity.Timeline.Editor.dll</HintPath>
     </Reference>
     <Reference Include="Unity.VSCode.Editor">
-      <HintPath>P:/Documentos/UnityProjects/TacticsLegends/WarIARep/IADVdej/Library/ScriptAssemblies/Unity.VSCode.Editor.dll</HintPath>
+      <HintPath>P:/Documentos/UnityProjects/TacticsLegends/WarIARep/WarIA/Library/ScriptAssemblies/Unity.VSCode.Editor.dll</HintPath>
     </Reference>
     <Reference Include="Unity.TextMeshPro.Editor">
-      <HintPath>P:/Documentos/UnityProjects/TacticsLegends/WarIARep/IADVdej/Library/ScriptAssemblies/Unity.TextMeshPro.Editor.dll</HintPath>
+      <HintPath>P:/Documentos/UnityProjects/TacticsLegends/WarIARep/WarIA/Library/ScriptAssemblies/Unity.TextMeshPro.Editor.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.UI">
-      <HintPath>P:/Documentos/UnityProjects/TacticsLegends/WarIARep/IADVdej/Library/ScriptAssemblies/UnityEngine.UI.dll</HintPath>
+      <HintPath>P:/Documentos/UnityProjects/TacticsLegends/WarIARep/WarIA/Library/ScriptAssemblies/UnityEngine.UI.dll</HintPath>
     </Reference>
     <Reference Include="Unity.Timeline">
-      <HintPath>P:/Documentos/UnityProjects/TacticsLegends/WarIARep/IADVdej/Library/ScriptAssemblies/Unity.Timeline.dll</HintPath>
+      <HintPath>P:/Documentos/UnityProjects/TacticsLegends/WarIARep/WarIA/Library/ScriptAssemblies/Unity.Timeline.dll</HintPath>
     </Reference>
     <Reference Include="Unity.CollabProxy.Editor">
-      <HintPath>P:/Documentos/UnityProjects/TacticsLegends/WarIARep/IADVdej/Library/ScriptAssemblies/Unity.CollabProxy.Editor.dll</HintPath>
+      <HintPath>P:/Documentos/UnityProjects/TacticsLegends/WarIARep/WarIA/Library/ScriptAssemblies/Unity.CollabProxy.Editor.dll</HintPath>
     </Reference>
     <Reference Include="Unity.Rider.Editor">
-      <HintPath>P:/Documentos/UnityProjects/TacticsLegends/WarIARep/IADVdej/Library/ScriptAssemblies/Unity.Rider.Editor.dll</HintPath>
+      <HintPath>P:/Documentos/UnityProjects/TacticsLegends/WarIARep/WarIA/Library/ScriptAssemblies/Unity.Rider.Editor.dll</HintPath>
     </Reference>
     <Reference Include="Unity.TextMeshPro">
-      <HintPath>P:/Documentos/UnityProjects/TacticsLegends/WarIARep/IADVdej/Library/ScriptAssemblies/Unity.TextMeshPro.dll</HintPath>
+      <HintPath>P:/Documentos/UnityProjects/TacticsLegends/WarIARep/WarIA/Library/ScriptAssemblies/Unity.TextMeshPro.dll</HintPath>
     </Reference>
     <Reference Include="UnityEditor.UI">
-      <HintPath>P:/Documentos/UnityProjects/TacticsLegends/WarIARep/IADVdej/Library/ScriptAssemblies/UnityEditor.UI.dll</HintPath>
+      <HintPath>P:/Documentos/UnityProjects/TacticsLegends/WarIARep/WarIA/Library/ScriptAssemblies/UnityEditor.UI.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup></ItemGroup>

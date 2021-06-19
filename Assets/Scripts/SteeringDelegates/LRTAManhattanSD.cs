@@ -28,4 +28,19 @@ public class LRTAManhattanSD : LRTASD
             }
         }
     }
+
+    protected override List<NodoGrafo> generateMinimalSpace(NodoGrafo ng)
+    {
+        List<NodoGrafo> listanodos = new List<NodoGrafo>();
+
+        //cruz
+        listanodos.Add(new NodoGrafo(new Vector2(ng.posicionGrid.x, ng.posicionGrid.y+1), pesos[(int)ng.posicionGrid.x][(int)ng.posicionGrid.y + 1]));
+        listanodos.Add(new NodoGrafo(new Vector2(ng.posicionGrid.x+1, ng.posicionGrid.y), pesos[(int)ng.posicionGrid.x+1][(int)ng.posicionGrid.y]));
+        listanodos.Add(new NodoGrafo(new Vector2(ng.posicionGrid.x, ng.posicionGrid.y-1), pesos[(int)ng.posicionGrid.x][(int)ng.posicionGrid.y - 1]));
+        listanodos.Add(new NodoGrafo(new Vector2(ng.posicionGrid.x-1, ng.posicionGrid.y), pesos[(int)ng.posicionGrid.x-1][(int)ng.posicionGrid.y]));
+ 
+        return listanodos;
+    }
+
+
 }
