@@ -36,7 +36,7 @@ public class StatsInfo
     };
     /*
      * primer acceso tipo de terreno, segundo acceso tipo de unidad
-     * 0 defualt (escenas específicas)
+     * 0 infranqueable (escenas específicas)
      * 1 cemento
      * 2 llanura
      * 3 bosque
