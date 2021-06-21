@@ -53,6 +53,12 @@ public class StatsInfo
         new float[4] { 1.5f, 1.5f, 1.5f, 1.5f},
     };
     public static Color[] coloresUnidades = { Color.red, Color.blue, Color.black, Color.cyan };
+    public static float[] potenciaInfluenciaUnidades = { 10f, 20f, 30f, 40f };
+    public static float[] distanciaInfluenciaUnidades = { 5f, 10f, 5f, 5f };
+    public static float basePotenciaInfluencia = 100f;
+    public static float baseDistanciaInfluencia = 25f;
+
+    public static float[] distanciaVisionUnidades = { 2f, 3f, 1f, 2f };
 
     public static ACCION[][] accionesDeUnidades =
     {

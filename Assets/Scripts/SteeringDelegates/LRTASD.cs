@@ -143,7 +143,7 @@ public abstract class LRTASD : SteeringBehaviour
 
                 personaje.fakeMovement.posicion = SimManagerLRTA.gridToPosition(nextNode.posicionGrid);
                 personaje.fakeMovement.transform.position = SimManagerLRTA.gridToPosition(nextNode.posicionGrid);
-                personaje.innerDetector = 0.5f;
+                //personaje.innerDetector = 0.5f;
                 personaje.fakeMovement.innerDetector = personaje.innerDetector;
 
                 pursueSD.target = personaje.fakeMovement;

@@ -11,7 +11,7 @@ public class AStarSD : SteeringBehaviour
     protected int pasoActual=0;
     protected Vector2 origen, destino;
     protected NodoGrafoAStar nodoOrigen, nodoDestino;
-    protected bool setup=false;
+    protected bool setupAEstrella=false, setupRecorrido = false;
     protected LinkedList<Vector2> recorrido = new LinkedList<Vector2>();
     protected PursueSD pursue = new PursueSD();
 
@@ -62,7 +62,7 @@ public class AStarSD : SteeringBehaviour
 
     protected internal override Steering getSteering(PersonajeBase personaje)
     {
-        if (!setup)
+        if (!setupAEstrella)
         {
             LinkedList<NodoGrafoAStar> closedPositions = new LinkedList<NodoGrafoAStar>();
             closedPositions.AddLast(nodoOrigen);
@@ -70,7 +70,7 @@ public class AStarSD : SteeringBehaviour
             
 
             NodoGrafoAStar nodoActual = nodoOrigen;
-            while (!setup)
+            while (!setupAEstrella)
             {
                 LinkedList<NodoGrafoAStar> adyacentes = calcularAdyacentes(nodoActual,personaje.tipo);
                 //LinkedList<NodoGrafoAStar> adyacentesFiltrados 
@@ -129,13 +129,14 @@ public class AStarSD : SteeringBehaviour
                     }
                 }
                 nodoActual = next;
+                openPositions.Remove(nodoActual);
                 closedPositions.AddLast(nodoActual);
                 //Comprobacion de parada(llegamos al destina)
                 foreach (NodoGrafoAStar noditoClosed in closedPositions)
                 {
                     if (noditoClosed.posicionGrid == destino)
                     {
-                        setup=true;
+                        setupAEstrella=true;
                     }
                 }
 
@@ -145,10 +146,11 @@ public class AStarSD : SteeringBehaviour
             while(aux.padre!=null)
             {
                 recorrido.AddFirst(aux.posicionGrid);
+                aux = aux.padre;
             }
         }
         
-        if (pursue.finishedLinear)
+        if (pursue.finishedLinear || !setupRecorrido)
         {
             if (pasoActual >= recorrido.Count-1)
             {
@@ -161,7 +163,8 @@ public class AStarSD : SteeringBehaviour
                 pasoActual++;
                 personaje.fakeMovement.posicion = SimManagerFinal.gridToPosition(recorrido.ElementAt(pasoActual));
                 personaje.fakeMovement.moveTo(SimManagerFinal.gridToPosition(recorrido.ElementAt(pasoActual)));
-                pursue.target=personaje.fakeMovement;
+                pursue.target = personaje.fakeMovement;
+                setupRecorrido = true;
                 return pursue.getSteering(personaje);
             }
         }

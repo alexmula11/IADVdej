@@ -11,29 +11,35 @@ public class SimManagerFinal : SimulationManager
     [SerializeField]
     protected Vector2 gridDimensions;
 
+    [SerializeField]
+    protected Transform baseAliada, baseEnemiga;
+
     static protected Vector2 blocksize;
     static float minX, minY;
-    
 
-    static StatsInfo.TIPO_TERRENO[][] terrenos; 
+    protected float influenceMapTimer = 5f;
+    protected float[][] influences;
+
+    static StatsInfo.TIPO_TERRENO[][] terrenos;
 
     protected new void Start()
     {
+        base.Start();
         terrenos = new StatsInfo.TIPO_TERRENO[(int)gridDimensions.x][];
+        influences = new float[(int)gridDimensions.x][];
         float widthStep = (mapMaxLimits.x - mapMinLimits.x) / gridDimensions.x;
         float heightStep = (mapMaxLimits.y - mapMinLimits.y) / gridDimensions.y;
         for (int i = 0; i<gridDimensions.x; i++)
         {
             terrenos[i] = new StatsInfo.TIPO_TERRENO[(int)gridDimensions.y];
+            influences[i] = new float[(int)gridDimensions.y];
             for (int j = 0; j < gridDimensions.y; j++)
             {
-                Debug.Log("Cogiendo coordenada de grid: "+i+"x"+j);
                 Vector3 originPoint = new Vector3(-(mapMinLimits.y + j * heightStep),0.5f,mapMinLimits.x+i*widthStep);
                 RaycastHit hit;
                 if (Physics.Raycast(originPoint, Vector3.down, out hit, 1f, 1 << 10))
                 {
                     terrenos[i][j] = hit.collider.GetComponent<GroundTypeDelegate>().tipoTerreno;
-                    Debug.Log("Asignando terreno: " + terrenos[i][j]);
                 }
 
             }
@@ -137,8 +143,62 @@ public class SimManagerFinal : SimulationManager
     }
 
 
+    private new void FixedUpdate()
+    {
+        if (influenceMapTimer > 3)
+        {
+            calculateInfluenceMap();
+            ui.actualizeInfluenceMinimap(influences);
+            influenceMapTimer = 0;
+        }
+        else
+        {
+            influenceMapTimer += Time.fixedDeltaTime;
+        }
+    }
+
+    private void calculateInfluenceMap()
+    {
+        for (int i = 0; i < gridDimensions.x; i++)
+        {
+            for (int j = 0; j < gridDimensions.y; j++)
+            {
+                influences[i][j] = 0f;
+            }
+        }
 
 
+        foreach (PersonajeBase person in charactersInScene)
+        {
+            if (!(person is PersonajeFake))
+            {
+                Vector2 origenInfluencia = positionToGrid(person.posicion);
+                float distanciaInfluencia = StatsInfo.distanciaInfluenciaUnidades[(int)person.tipo];
+                float potenciaInfluencia = StatsInfo.potenciaInfluenciaUnidades[(int)person.tipo];
+                for (int i = (int)System.Math.Max((origenInfluencia.x - distanciaInfluencia), 0); i < (int)System.Math.Min((origenInfluencia.x + distanciaInfluencia), gridDimensions.x - 1); i++)
+                {
+                    for (int j = (int)System.Math.Max((origenInfluencia.y - distanciaInfluencia), 0); j < (int)System.Math.Min((origenInfluencia.y + distanciaInfluencia), gridDimensions.y - 1); j++)
+                    {
+                        float distanciaActual = (new Vector2(i, j) - origenInfluencia).magnitude;
+                        float distanciaRelativa = System.Math.Min(1, distanciaActual / distanciaInfluencia);
+                        float influenciaActual = potenciaInfluencia - potenciaInfluencia * distanciaRelativa;
+                        if (terrenos[i][j] != StatsInfo.TIPO_TERRENO.INFRANQUEABLE)
+                        {
+                            if (person is PersonajePlayer)
+                            {
+                                influences[i][j] = influences[i][j] + influenciaActual;
+                            }
+                            else if (person)
+                            {
+                                influences[i][j] = influences[i][j] - influenciaActual;
+                            }
+                        }
+                    }
+                }
+            }
+            
+        }
+    }
 
 
 

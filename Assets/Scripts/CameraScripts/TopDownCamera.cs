@@ -16,12 +16,12 @@ public class TopDownCamera : MonoBehaviour
 
     void Start()
     {
-
         transform.position = center;
     }
 
+    //FOR BLOKE 1
     // Update is called once per frame
-    void Update()
+    /*void Update()
     {
         hInput = 0;
         vInput = 0;
@@ -35,6 +35,27 @@ public class TopDownCamera : MonoBehaviour
             vInput = 1;
         else if(Input.GetKey(KeyCode.S))
             vInput = -1;
+
+        if (Input.GetKey(KeyCode.Q))
+            xInput = 1;
+        else if (Input.GetKey(KeyCode.E))
+            xInput = -1;
+    }*/
+
+    void Update()
+    {
+        hInput = 0;
+        vInput = 0;
+        xInput = 0;
+        if (Input.GetKey(KeyCode.A))
+            vInput = -1;
+        else if (Input.GetKey(KeyCode.D))
+            vInput = 1;
+
+        if (Input.GetKey(KeyCode.W))
+            hInput = -1;
+        else if (Input.GetKey(KeyCode.S))
+            hInput = 1;
 
         if (Input.GetKey(KeyCode.Q))
             xInput = 1;

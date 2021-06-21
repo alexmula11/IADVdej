@@ -85,6 +85,7 @@
     <Compile Include="Assets\Scripts\NodoGrafo.cs" />
     <Compile Include="Assets\Scripts\NodoGrafoAStar.cs" />
     <Compile Include="Assets\Scripts\PersonajeBase.cs" />
+    <Compile Include="Assets\Scripts\PersonajeFake.cs" />
     <Compile Include="Assets\Scripts\PersonajeNPC.cs" />
     <Compile Include="Assets\Scripts\PersonajePlayer.cs" />
     <Compile Include="Assets\Scripts\SceneScripts\Final\SimManagerFinal.cs" />

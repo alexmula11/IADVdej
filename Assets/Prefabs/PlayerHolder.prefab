@@ -310,7 +310,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7278142580328622301}
-  - component: {fileID: 7278142580328622300}
+  - component: {fileID: 3190925707189746513}
   m_Layer: 8
   m_Name: FakeTargetWallAvoidance
   m_TagString: Untagged
@@ -333,24 +333,24 @@ Transform:
   m_Father: {fileID: 7278142581749419836}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &7278142580328622300
+--- !u!114 &3190925707189746513
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7278142580328622302}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fefd3ce6c9ea2ed41bd311defbd5a7e4, type: 3}
+  m_Script: {fileID: 11500000, guid: 3a7605b0f74690141a2aff5db0611629, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   rotationSpeed: 0
   maxMovementSpeed: 0
   movementAccel: 0
   mass: 0
-  movementDeccel: 5
-  nombre: Fake Target
+  movementDeccel: 0
+  nombre: Fake Wall
   fakeMovementObjetive: {fileID: 0}
   fakeAvoidObjetive: {fileID: 0}
   fakeAlignObjetive: {fileID: 0}
@@ -615,9 +615,9 @@ MonoBehaviour:
   mass: 1
   movementDeccel: 5
   nombre: Base Character
-  fakeMovementObjetive: {fileID: 7278142581145093284}
-  fakeAvoidObjetive: {fileID: 7278142580328622300}
-  fakeAlignObjetive: {fileID: 7278142581147376518}
+  fakeMovementObjetive: {fileID: 0}
+  fakeAvoidObjetive: {fileID: 0}
+  fakeAlignObjetive: {fileID: 0}
   gizmosGOs:
   - {fileID: 7278142580627032917}
   - {fileID: 7278142580169147707}
@@ -640,7 +640,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7278142581145093285}
-  - component: {fileID: 7278142581145093284}
+  - component: {fileID: 2033585640056316565}
   m_Layer: 8
   m_Name: FakeTargetMovement
   m_TagString: Untagged
@@ -664,24 +664,24 @@ Transform:
   m_Father: {fileID: 7278142581749419836}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &7278142581145093284
+--- !u!114 &2033585640056316565
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7278142581145093286}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fefd3ce6c9ea2ed41bd311defbd5a7e4, type: 3}
+  m_Script: {fileID: 11500000, guid: 3a7605b0f74690141a2aff5db0611629, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   rotationSpeed: 0
   maxMovementSpeed: 0
   movementAccel: 0
   mass: 0
-  movementDeccel: 5
-  nombre: Fake Target
+  movementDeccel: 0
+  nombre: Fake Movement
   fakeMovementObjetive: {fileID: 0}
   fakeAvoidObjetive: {fileID: 0}
   fakeAlignObjetive: {fileID: 0}
@@ -701,7 +701,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7278142581147376519}
-  - component: {fileID: 7278142581147376518}
+  - component: {fileID: 1574997570327172755}
   m_Layer: 8
   m_Name: FakeTargetAlign
   m_TagString: Untagged
@@ -724,24 +724,24 @@ Transform:
   m_Father: {fileID: 7278142581145093285}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &7278142581147376518
+--- !u!114 &1574997570327172755
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7278142581147376520}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fefd3ce6c9ea2ed41bd311defbd5a7e4, type: 3}
+  m_Script: {fileID: 11500000, guid: 3a7605b0f74690141a2aff5db0611629, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   rotationSpeed: 0
   maxMovementSpeed: 0
   movementAccel: 0
-  mass: 0
-  movementDeccel: 5
-  nombre: Fake Target
+  mass: 1
+  movementDeccel: 0
+  nombre: Fake Align
   fakeMovementObjetive: {fileID: 0}
   fakeAvoidObjetive: {fileID: 0}
   fakeAlignObjetive: {fileID: 0}

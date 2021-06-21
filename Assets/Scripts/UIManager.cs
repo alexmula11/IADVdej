@@ -19,6 +19,9 @@ public class UIManager : MonoBehaviour
     [SerializeField]
     private MouseOptionDelegate[] mouseButtons;
 
+    [SerializeField]
+    private RectTransform minimamp;
+
 
     private Vector2 selectionOrigin;
 
@@ -122,5 +125,38 @@ public class UIManager : MonoBehaviour
                     break;
             }
         }
+    }
+
+
+    internal void actualizeInfluenceMinimap(float[][] influences)
+    {
+
+        Texture2D texture = new Texture2D(influences.Length,influences[0].Length);
+        minimamp.sizeDelta = new Vector2(influences.Length, influences[0].Length);
+        Material matirial = new Material(Shader.Find("Standard"));
+        for (int i=0; i<influences.Length; i++)
+        {
+            for (int j=0; j < influences[i].Length; j++)
+            {
+                if (influences[i][j] > 0)
+                {
+                    int intensity = (int)System.Math.Min(255,influences[i][j]*255/StatsInfo.basePotenciaInfluencia);
+                    texture.SetPixel(i, j, new Color(0,0,intensity));
+                }
+                else if(influences[i][j] < 0)
+                {
+                    int intensity = (int)System.Math.Max(-255, influences[i][j] * 255 / StatsInfo.basePotenciaInfluencia);
+                    texture.SetPixel(i, j, new Color(-intensity, 0, 0));
+                }
+                else
+                {
+                    texture.SetPixel(i, j, Color.black);
+                }
+                
+            }
+        }
+        texture.Apply();
+        //matirial.SetTexture("Mapilla",texture);
+        minimamp.GetComponent<CanvasRenderer>().SetMaterial(matirial,texture);
     }
 }
