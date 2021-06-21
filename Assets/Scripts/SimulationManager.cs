@@ -109,7 +109,6 @@ public class SimulationManager : MonoBehaviour
                             }
                         }
                     }
-                    ui.actualizeUserButtons(allPossibleActions());
 
                 }
             }

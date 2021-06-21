@@ -46,15 +46,94 @@ public class SimManagerFinal : SimulationManager
 
     protected new void Update()
     {
-        Vector2 final = new Vector2(gridDimensions.x-1, gridDimensions.y-1);
-        Vector3 centroFinal = gridToPosition(final);
-        Vector3 aunFinal = centroFinal - Vector3.forward * 2;
-        Vector3 yaNoFinal = centroFinal - Vector3.forward * 3;
-        final = new Vector2(0, 0);
-        Vector3 otroFinal = gridToPosition(final);
-        Vector3 aunOtroFinal = otroFinal - Vector3.back * 2;
-        Vector3 yaNoOtroFinal = otroFinal - Vector3.back * 3;
-        bool hola = true;
+        if (!mouseOverUI)
+        {
+            if (mouseBehav == MOUSE_ACTION.SELECT)
+            {
+                if (Input.GetMouseButton(0))
+                {
+                    if (Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift))
+                    {
+                        RaycastHit hit;
+                        if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit, 10000f, 1 << 8))
+                        {
+                            PersonajePlayer character = hit.collider.gameObject.GetComponent<PersonajePlayer>();
+                            if (!selectedUnits.Contains(character))
+                            {
+                                character.selected = true;
+                                characterWithFocus = character;
+                                selectedUnits.Add(character);
+                                ui.showDebugInfo(true);
+                                ui.actualizeAgentDebugInfo(character);
+                            }
+                            else
+                            {
+                                character.selected = false;
+                                if (character == characterWithFocus)
+                                {
+                                    characterWithFocus = null;
+                                    ui.showDebugInfo(false);
+                                }
+                                selectedUnits.Remove(character);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        foreach (PersonajePlayer person in selectedUnits)
+                        {
+                            person.selected = false;
+                        }
+                        selectedUnits.Clear();
+                        RaycastHit hit;
+                        if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit, 10000f, 1 << 8))
+                        {
+                            PersonajePlayer character = hit.collider.gameObject.GetComponent<PersonajePlayer>();
+                            character.selected = true;
+                            characterWithFocus = character;
+                            selectedUnits.Add(character);
+                            ui.showDebugInfo(true);
+                            ui.actualizeAgentDebugInfo(character);
+                        }
+                        else
+                        {
+                            if (characterWithFocus != null)
+                            {
+                                characterWithFocus = null;
+                                ui.showDebugInfo(false);
+                            }
+                        }
+                    }
+                    ui.actualizeUserButtons(allPossibleActions());
+
+                }
+            }
+            else if (mouseBehav == MOUSE_ACTION.MOVE)
+            {
+                if (selectedUnits.Count > 0)
+                {
+                    if (Input.GetMouseButton(0))
+                    {
+                        RaycastHit hit;
+                        if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit, 10000f, 1 << 9))
+                        {
+                            return;
+                        }
+                        else if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit, 10000f, 1 << 10))
+                        {
+                            foreach (PersonajeBase person in selectedUnits)
+                            {
+                                Vector2 posicionDestino = positionToGrid(hit.point);
+                                Vector2 posicionOrigen = positionToGrid(person.posicion);
+                                AStarSD aEstrella = new AStarSD(terrenos, posicionOrigen, posicionDestino);
+                                person.newTaskWOWA(aEstrella);
+
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 
 
@@ -78,5 +157,18 @@ public class SimManagerFinal : SimulationManager
         float coordX = (gridPos.y - terrenos[0].Length / 2f) * blocksize.y + (float)System.Math.Ceiling(blocksize.y/2);
         float coordY = (gridPos.x - terrenos.Length / 2f) * blocksize.x + (float)System.Math.Ceiling(blocksize.x / 2);
         return new Vector3(coordX, 0, coordY);
+    }
+
+    private HashSet<StatsInfo.ACCION> allPossibleActions()
+    {
+        HashSet<StatsInfo.ACCION> lista = new HashSet<StatsInfo.ACCION>();
+        foreach (PersonajeBase person in selectedUnits)
+        {
+            foreach (StatsInfo.ACCION action in person.posiblesAcciones)
+            {
+                lista.Add(action);
+            }
+        }
+        return lista;
     }
 }

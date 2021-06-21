@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+using System.Linq;
 
 public class AStarSD : SteeringBehaviour
 {
@@ -27,25 +28,25 @@ public class AStarSD : SteeringBehaviour
             distancias[i] = new float[terrenos[i].Length];
         }*/
         float estimatedCost = (destino - origen).magnitude;
-        nodoOrigen = new NodoGrafoAStar(origen,0f,null);
+        nodoOrigen = new NodoGrafoAStar(origen, (destino - origen).magnitude, 0f,null);
     }
 
     public LinkedList<NodoGrafoAStar> calcularAdyacentes(NodoGrafoAStar actual, StatsInfo.TIPO_PERSONAJE type)
     {
-        LinkedList<NodoGrafoAStar> listanodos = new LinkedList();
+        LinkedList<NodoGrafoAStar> listanodos = new LinkedList<NodoGrafoAStar>();
 
         for(int i=-1;i<2;i++)
         {
-            for (int j=-1,j<2;j++)
+            for (int j=-1; j<2;j++)
             {
                 if (i!=0 || j!=0)
                 {
                     Vector2 newPosi = new Vector2(actual.posicionGrid.x+i, actual.posicionGrid.y+j);
-                    if(terrenos[newPosi.x][newPosi.y]!=StatsInfo.TIPO_TERRENO.INFRANQUEABLE)
+                    if(terrenos[(int)newPosi.x][(int)newPosi.y]!=StatsInfo.TIPO_TERRENO.INFRANQUEABLE)
                     {
-                        float inversaVelocidad = 1/StatsInfo.velocidadUnidadPorTerreno[terrenos[newPosi.x][newPosi.y]][type];
+                        float inversaVelocidad = 1/StatsInfo.velocidadUnidadPorTerreno[(int)terrenos[(int)newPosi.x][(int)newPosi.y]][(int)type];
                         float newG=actual.costFromOrigin + (destino - newPosi).magnitude*inversaVelocidad;
-                        listanodos.Add(new NodoGrafoAStar(newPosi, (destino - newPosi).magnitude,newG,actual);
+                        listanodos.AddLast(new NodoGrafoAStar(newPosi, (destino - newPosi).magnitude,newG,actual));
                     }
 
                 }
@@ -64,7 +65,7 @@ public class AStarSD : SteeringBehaviour
         if (!setup)
         {
             LinkedList<NodoGrafoAStar> closedPositions = new LinkedList<NodoGrafoAStar>();
-            closedPositions.Add(nodoOrigen);
+            closedPositions.AddLast(nodoOrigen);
             LinkedList<NodoGrafoAStar> openPositions = new LinkedList<NodoGrafoAStar>();
             
 
@@ -83,12 +84,12 @@ public class AStarSD : SteeringBehaviour
                         if (noditoClosed.posicionGrid==nodito.posicionGrid)
                         {
                             estaEnListaClosed = true;
-                            continue;
+                            break;
                         }
                     }
                     if (estaEnListaClosed)
                     {
-                        break;
+                        continue;
                     }
 
                     //Observamos lista open
@@ -96,7 +97,7 @@ public class AStarSD : SteeringBehaviour
                     bool estaEnListaOpen = false;
                     foreach(NodoGrafoAStar noditoOpen in openPositions)
                     {
-                        if (noditoOpen.posicionGrid==noditoOpen.posicionGrid) 
+                        if (nodito.posicionGrid == noditoOpen.posicionGrid) 
                         {
                             estaEnListaOpen = true;
                             if (noditoOpen.totalCost>nodito.totalCost)
@@ -109,11 +110,11 @@ public class AStarSD : SteeringBehaviour
                     if (posibleaASustituir!=null)
                     {
                         openPositions.Remove(posibleaASustituir);
-                        openPositions.Add(nodito);
+                        openPositions.AddLast(nodito);
                     }
-                    elseif (!estaEnListaOpen)
+                    else if (!estaEnListaOpen)
                     {
-                        openPositions.Add(nodito);
+                        openPositions.AddLast(nodito);
                     }
                 }
                 //Calculamos siguiente nodo
@@ -128,7 +129,7 @@ public class AStarSD : SteeringBehaviour
                     }
                 }
                 nodoActual = next;
-                closedPositions.Add(nodoActual);
+                closedPositions.AddLast(nodoActual);
                 //Comprobacion de parada(llegamos al destina)
                 foreach (NodoGrafoAStar noditoClosed in closedPositions)
                 {
@@ -158,8 +159,8 @@ public class AStarSD : SteeringBehaviour
             else
             {
                 pasoActual++;
-                personaje.fakeMovement.posicion = SimManagerFinal.gridToPosition(recorrido.get(pasoActual));
-                personaje.fakeMovement.moveTo(SimManagerFinal.gridToPosition(recorrido.get(pasoActual)));
+                personaje.fakeMovement.posicion = SimManagerFinal.gridToPosition(recorrido.ElementAt(pasoActual));
+                personaje.fakeMovement.moveTo(SimManagerFinal.gridToPosition(recorrido.ElementAt(pasoActual)));
                 pursue.target=personaje.fakeMovement;
                 return pursue.getSteering(personaje);
             }

@@ -21,9 +21,4 @@ public class NodoGrafoAStar
         padre = _padre;
     }
 
-    public void addAdyacentes(List<NodoGrafo> noditos){
-        foreach(NodoGrafo nd in noditos)
-            adyacentes.Add(nd);
-    }
-
 }
