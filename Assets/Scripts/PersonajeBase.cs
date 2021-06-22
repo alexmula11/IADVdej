@@ -59,7 +59,7 @@ public abstract class PersonajeBase : Bodi
     private void Start()
     {
         orientacion = transform.eulerAngles.y * GradosARadianes;
-        applyTipo(tipo);
+        if(!(this is PersonajeFake))applyTipo(tipo);
         
         
         //VARIAR COMO EMPIEZA EL PERSONAJE EN FUNCIÓN DE LA ESCENA

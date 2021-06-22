@@ -20,19 +20,26 @@ public class SimManagerFinal : SimulationManager
     protected float influenceMapTimer = 5f;
     protected float[][] influences;
 
+    protected bool [][] visibleTerrain;
+
     static StatsInfo.TIPO_TERRENO[][] terrenos;
 
     protected new void Start()
     {
         base.Start();
+
         terrenos = new StatsInfo.TIPO_TERRENO[(int)gridDimensions.x][];
         influences = new float[(int)gridDimensions.x][];
+        visibleTerrain = new bool[(int)gridDimensions.x][];
+
         float widthStep = (mapMaxLimits.x - mapMinLimits.x) / gridDimensions.x;
         float heightStep = (mapMaxLimits.y - mapMinLimits.y) / gridDimensions.y;
         for (int i = 0; i<gridDimensions.x; i++)
         {
-            terrenos[i] = new StatsInfo.TIPO_TERRENO[(int)gridDimensions.y];
+            terrenos[i] = new StatsInfo.TIPO_TERRENO[(int)gridDimensions.y];            //Inic terrenos, influences y terrenos visibles
             influences[i] = new float[(int)gridDimensions.y];
+            visibleTerrain[i] = new bool[(int)gridDimensions.y];
+
             for (int j = 0; j < gridDimensions.y; j++)
             {
                 Vector3 originPoint = new Vector3(-(mapMinLimits.y + j * heightStep),0.5f,mapMinLimits.x+i*widthStep);
@@ -196,11 +203,43 @@ public class SimManagerFinal : SimulationManager
                     }
                 }
             }
-            
+            //TODO LAS BASES
         }
     }
+        
+    //TODO hacer mapa de vision
+    private void calculateVisionMap()
+    {
+        //mirar con distancia de vision de unidades   
+        //colorear con el color del terreno la porcion visible
+        //TODO poner punto de color en el pesonaje que aporta vision
+        for (int i = 0; i < gridDimensions.x; i++)                  //Reinic la matriz
+        {
+            for (int j = 0; j < gridDimensions.y; j++)
+            {
+                visibleTerrain[i][j] = false;
+            }
+        }
 
 
+        foreach (PersonajeBase person in charactersInScene)
+        {
+            if (!(person is PersonajeFake))
+            {
+                Vector2 origenVision = positionToGrid(person.posicion);
+                float distanciaVision = StatsInfo.distanciaVisionUnidades[(int)person.tipo];
+
+                for (int i = (int)System.Math.Max((origenVision.x - distanciaVision), 0); i < (int)System.Math.Min((origenVision.x + distanciaVision), gridDimensions.x - 1); i++)
+                {
+                    for (int j = (int)System.Math.Max((origenVision.y - distanciaVision), 0); j < (int)System.Math.Min((origenVision.y + distanciaVision), gridDimensions.y - 1); j++)
+                    {
+                        visibleTerrain[i][j] = true;                    
+                    }
+                }
+            }
+            //TODO LAS BASES
+        }
+    }
 
     internal static Vector2 positionToGrid(Vector3 position)
     {
