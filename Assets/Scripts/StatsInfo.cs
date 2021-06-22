@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class StatsInfo
 {
+
+    private const int MAX_UNIT_TYPE = 4;
+
     public enum TIPO_PERSONAJE
     {
         INFANTERIA,
@@ -45,18 +48,30 @@ public class StatsInfo
      */
     public static float[][] velocidadUnidadPorTerreno =
     {
-        new float[4] { 1, 1, 1, 1},
-        new float[4] { 1.5f, 1.5f, 2, 2},
-        new float[4] { 1, 1, 1, 1},
-        new float[4] { 0.66f, 0.75f, 0.5f, 0.5f},
-        new float[4] { 0.66f, 0.66f, 0.5f, 0.5f},
-        new float[4] { 1.5f, 1.5f, 1.5f, 1.5f},
+        new float[MAX_UNIT_TYPE] { 1, 1, 1, 1},
+        new float[MAX_UNIT_TYPE] { 1.5f, 1.5f, 2, 2},
+        new float[MAX_UNIT_TYPE] { 1, 1, 1, 1},
+        new float[MAX_UNIT_TYPE] { 0.66f, 0.75f, 0.5f, 0.5f},
+        new float[MAX_UNIT_TYPE] { 0.66f, 0.66f, 0.5f, 0.5f},
+        new float[MAX_UNIT_TYPE] { 1.5f, 1.5f, 1.5f, 1.5f},
     };
     public static Color[] coloresUnidades = { Color.red, Color.blue, Color.black, Color.cyan };
     public static float[] potenciaInfluenciaUnidades = { 10f, 20f, 30f, 40f };
     public static float[] distanciaInfluenciaUnidades = { 5f, 10f, 5f, 5f };
     public static float basePotenciaInfluencia = 75f;
     public static float baseDistanciaInfluencia = 15f;
+
+    /*COMBAT STATS*/
+    public static float [] healthPerClass = {100f,80f,200f,130f};         //INF - ARQ - PES - MAG
+    public static float [][] damageModifiers =
+    {
+                                    //  INF     ARQ     PES     MAG
+       /*INF*/ new float[MAX_UNIT_TYPE] {1f,    1.5f,   0.5f,   1f},
+       /*ARQ*/ new float[MAX_UNIT_TYPE] {1.5f,  1.5f,   0.5f,   1f},
+       /*PES*/ new float[MAX_UNIT_TYPE] {1f,    1f,     1f,     1f},
+       /*MAG*/ new float[MAX_UNIT_TYPE] {1f,    1f,     1.5f,   0.5f},
+
+    };
 
     public static float[] distanciaVisionUnidades = { 2f, 3f, 1f, 2f };
 
@@ -70,5 +85,9 @@ public class StatsInfo
 
     public static Color[] coloresTerrenos = { Color.black, Color.gray, Color.green, Color.green + Color.gray, Color.yellow, Color.yellow + Color.red };
 
-
+    //funciona para devolver la vida asociada a un tipo de unidad
+    public static float getHealthFromClass(TIPO_PERSONAJE tp)
+    {
+        return healthPerClass[((int)tp)]; //esto funciona?
+    }
 }

@@ -60,6 +60,9 @@ public abstract class PersonajeBase : Bodi
     protected StatsInfo.TIPO_TERRENO terrenoQuePiso = 0;
 
 
+    /*COMBAT ATRIBUTES*/
+    protected internal float health;
+
 
     private void Start()
     {
@@ -77,6 +80,8 @@ public abstract class PersonajeBase : Bodi
     protected internal void applyTipo(StatsInfo.TIPO_PERSONAJE tipo)
     {
         this.tipo = tipo;
+        this.health = StatsInfo.getHealthFromClass(tipo);
+        
         /*switch (tipo)
         {
             case UnitsInfo.TIPO_PERSONAJE.INFANTERIA:
