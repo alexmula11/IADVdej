@@ -55,8 +55,8 @@ public class StatsInfo
     public static Color[] coloresUnidades = { Color.red, Color.blue, Color.black, Color.cyan };
     public static float[] potenciaInfluenciaUnidades = { 10f, 20f, 30f, 40f };
     public static float[] distanciaInfluenciaUnidades = { 5f, 10f, 5f, 5f };
-    public static float basePotenciaInfluencia = 100f;
-    public static float baseDistanciaInfluencia = 25f;
+    public static float basePotenciaInfluencia = 75f;
+    public static float baseDistanciaInfluencia = 15f;
 
     public static float[] distanciaVisionUnidades = { 2f, 3f, 1f, 2f };
 
@@ -67,5 +67,8 @@ public class StatsInfo
         new ACCION[2]{ACCION.MOVE_OR_FOLLOW, ACCION.FORMATION},
         new ACCION[2]{ACCION.MOVE_OR_FOLLOW, ACCION.FORMATION}
     };
+
+    public static Color[] coloresTerrenos = { Color.black, Color.gray, Color.green, Color.green + Color.gray, Color.yellow, Color.yellow + Color.red };
+
 
 }

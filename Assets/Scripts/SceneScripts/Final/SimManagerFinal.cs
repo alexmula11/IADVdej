@@ -17,10 +17,10 @@ public class SimManagerFinal : SimulationManager
     static protected Vector2 blocksize;
     static float minX, minY;
 
-    protected float influenceMapTimer = 5f;
+    protected float mapsTimer = 2f;
     protected float[][] influences;
 
-    protected bool [][] visibleTerrain;
+    protected Color [][] visibleTerrain;
 
     static StatsInfo.TIPO_TERRENO[][] terrenos;
 
@@ -30,7 +30,7 @@ public class SimManagerFinal : SimulationManager
 
         terrenos = new StatsInfo.TIPO_TERRENO[(int)gridDimensions.x][];
         influences = new float[(int)gridDimensions.x][];
-        visibleTerrain = new bool[(int)gridDimensions.x][];
+        visibleTerrain = new Color[(int)gridDimensions.x][];
 
         float widthStep = (mapMaxLimits.x - mapMinLimits.x) / gridDimensions.x;
         float heightStep = (mapMaxLimits.y - mapMinLimits.y) / gridDimensions.y;
@@ -38,7 +38,7 @@ public class SimManagerFinal : SimulationManager
         {
             terrenos[i] = new StatsInfo.TIPO_TERRENO[(int)gridDimensions.y];            //Inic terrenos, influences y terrenos visibles
             influences[i] = new float[(int)gridDimensions.y];
-            visibleTerrain[i] = new bool[(int)gridDimensions.y];
+            visibleTerrain[i] = new Color[(int)gridDimensions.y];
 
             for (int j = 0; j < gridDimensions.y; j++)
             {
@@ -152,15 +152,17 @@ public class SimManagerFinal : SimulationManager
 
     private new void FixedUpdate()
     {
-        if (influenceMapTimer > 3)
+        if (mapsTimer > 1)
         {
             calculateInfluenceMap();
             ui.actualizeInfluenceMinimap(influences);
-            influenceMapTimer = 0;
+            calculateVisionMap();
+            ui.actualizeVisionMinimap(visibleTerrain);
+            mapsTimer = 0;
         }
         else
         {
-            influenceMapTimer += Time.fixedDeltaTime;
+            mapsTimer += Time.fixedDeltaTime;
         }
     }
 
@@ -177,37 +179,64 @@ public class SimManagerFinal : SimulationManager
 
         foreach (PersonajeBase person in charactersInScene)
         {
-            if (!(person is PersonajeFake))
+            Vector2 origenInfluencia = positionToGrid(person.posicion);
+            float distanciaInfluencia = StatsInfo.distanciaInfluenciaUnidades[(int)person.tipo];
+            float potenciaInfluencia = StatsInfo.potenciaInfluenciaUnidades[(int)person.tipo];
+            for (int i = (int)System.Math.Max((origenInfluencia.x - distanciaInfluencia), 0); i < (int)System.Math.Min((origenInfluencia.x + distanciaInfluencia), gridDimensions.x - 1); i++)
             {
-                Vector2 origenInfluencia = positionToGrid(person.posicion);
-                float distanciaInfluencia = StatsInfo.distanciaInfluenciaUnidades[(int)person.tipo];
-                float potenciaInfluencia = StatsInfo.potenciaInfluenciaUnidades[(int)person.tipo];
-                for (int i = (int)System.Math.Max((origenInfluencia.x - distanciaInfluencia), 0); i < (int)System.Math.Min((origenInfluencia.x + distanciaInfluencia), gridDimensions.x - 1); i++)
+                for (int j = (int)System.Math.Max((origenInfluencia.y - distanciaInfluencia), 0); j < (int)System.Math.Min((origenInfluencia.y + distanciaInfluencia), gridDimensions.y - 1); j++)
                 {
-                    for (int j = (int)System.Math.Max((origenInfluencia.y - distanciaInfluencia), 0); j < (int)System.Math.Min((origenInfluencia.y + distanciaInfluencia), gridDimensions.y - 1); j++)
+                    float distanciaActual = (new Vector2(i, j) - origenInfluencia).magnitude;
+                    float distanciaRelativa = System.Math.Min(1, distanciaActual / distanciaInfluencia);
+                    float influenciaActual = potenciaInfluencia - potenciaInfluencia * distanciaRelativa;
+                    if (terrenos[i][j] != StatsInfo.TIPO_TERRENO.INFRANQUEABLE)
                     {
-                        float distanciaActual = (new Vector2(i, j) - origenInfluencia).magnitude;
-                        float distanciaRelativa = System.Math.Min(1, distanciaActual / distanciaInfluencia);
-                        float influenciaActual = potenciaInfluencia - potenciaInfluencia * distanciaRelativa;
-                        if (terrenos[i][j] != StatsInfo.TIPO_TERRENO.INFRANQUEABLE)
+                        if (person is PersonajePlayer)
                         {
-                            if (person is PersonajePlayer)
-                            {
-                                influences[i][j] = influences[i][j] + influenciaActual;
-                            }
-                            else if (person)
-                            {
-                                influences[i][j] = influences[i][j] - influenciaActual;
-                            }
+                            influences[i][j] = influences[i][j] + influenciaActual;
+                        }
+                        else if (person)
+                        {
+                            influences[i][j] = influences[i][j] - influenciaActual;
                         }
                     }
                 }
             }
-            //TODO LAS BASES
+        }
+        //BASE ALIADA
+        Vector2 origenInfluenciaBase = positionToGrid(baseAliada.position);
+        for (int i = (int)System.Math.Max((origenInfluenciaBase.x - StatsInfo.baseDistanciaInfluencia), 0); i < (int)System.Math.Min((origenInfluenciaBase.x + StatsInfo.baseDistanciaInfluencia), gridDimensions.x - 1); i++)
+        {
+            for (int j = (int)System.Math.Max((origenInfluenciaBase.y - StatsInfo.baseDistanciaInfluencia), 0); j < (int)System.Math.Min((origenInfluenciaBase.y + StatsInfo.baseDistanciaInfluencia), gridDimensions.y - 1); j++)
+            {
+                float distanciaActual = (new Vector2(i, j) - origenInfluenciaBase).magnitude;
+                float distanciaRelativa = System.Math.Min(1, distanciaActual / StatsInfo.baseDistanciaInfluencia);
+                float influenciaActual = StatsInfo.basePotenciaInfluencia - StatsInfo.basePotenciaInfluencia * distanciaRelativa;
+                if (terrenos[i][j] != StatsInfo.TIPO_TERRENO.INFRANQUEABLE)
+                {
+                    influences[i][j] = influences[i][j] + influenciaActual;
+                }
+            }
+        }
+
+        //BASE ENEMIGA
+        origenInfluenciaBase = positionToGrid(baseEnemiga.position);
+        for (int i = (int)System.Math.Max((origenInfluenciaBase.x - StatsInfo.baseDistanciaInfluencia), 0); i < (int)System.Math.Min((origenInfluenciaBase.x + StatsInfo.baseDistanciaInfluencia), gridDimensions.x - 1); i++)
+        {
+            for (int j = (int)System.Math.Max((origenInfluenciaBase.y - StatsInfo.baseDistanciaInfluencia), 0); j < (int)System.Math.Min((origenInfluenciaBase.y + StatsInfo.baseDistanciaInfluencia), gridDimensions.y - 1); j++)
+            {
+                float distanciaActual = (new Vector2(i, j) - origenInfluenciaBase).magnitude;
+                float distanciaRelativa = System.Math.Min(1, distanciaActual / StatsInfo.baseDistanciaInfluencia);
+                float influenciaActual = StatsInfo.basePotenciaInfluencia - StatsInfo.basePotenciaInfluencia * distanciaRelativa;
+                if (terrenos[i][j] != StatsInfo.TIPO_TERRENO.INFRANQUEABLE)
+                {
+                    influences[i][j] = influences[i][j] - influenciaActual;
+                }
+            }
         }
     }
-        
-    //TODO hacer mapa de vision
+
+    
     private void calculateVisionMap()
     {
         //mirar con distancia de vision de unidades   
@@ -217,28 +246,66 @@ public class SimManagerFinal : SimulationManager
         {
             for (int j = 0; j < gridDimensions.y; j++)
             {
-                visibleTerrain[i][j] = false;
+                visibleTerrain[i][j] = StatsInfo.coloresTerrenos[0];
             }
         }
 
 
         foreach (PersonajeBase person in charactersInScene)
         {
-            if (!(person is PersonajeFake))
-            {
-                Vector2 origenVision = positionToGrid(person.posicion);
-                float distanciaVision = StatsInfo.distanciaVisionUnidades[(int)person.tipo];
 
-                for (int i = (int)System.Math.Max((origenVision.x - distanciaVision), 0); i < (int)System.Math.Min((origenVision.x + distanciaVision), gridDimensions.x - 1); i++)
+            Vector2 origenVision = positionToGrid(person.posicion);
+            float distanciaVision = StatsInfo.distanciaVisionUnidades[(int)person.tipo];
+
+            for (int i = (int)System.Math.Max((origenVision.x - distanciaVision), 0); i < (int)System.Math.Min((origenVision.x + distanciaVision), gridDimensions.x - 1); i++)
+            {
+                for (int j = (int)System.Math.Max((origenVision.y - distanciaVision), 0); j < (int)System.Math.Min((origenVision.y + distanciaVision), gridDimensions.y - 1); j++)
                 {
-                    for (int j = (int)System.Math.Max((origenVision.y - distanciaVision), 0); j < (int)System.Math.Min((origenVision.y + distanciaVision), gridDimensions.y - 1); j++)
+                    Vector2 puntoActual = new Vector2(i, j);
+                    if ((puntoActual - origenVision).magnitude <= distanciaVision)
                     {
-                        visibleTerrain[i][j] = true;                    
+                        visibleTerrain[i][j] = StatsInfo.coloresTerrenos[(int)terrenos[i][j]];
                     }
                 }
             }
-            //TODO LAS BASES
         }
+        //BASE ALIADA
+        Vector2 origenInfluenciaBase = positionToGrid(baseAliada.position);
+        for (int i = (int)System.Math.Max((origenInfluenciaBase.x - StatsInfo.baseDistanciaInfluencia), 0); i < (int)System.Math.Min((origenInfluenciaBase.x + StatsInfo.baseDistanciaInfluencia), gridDimensions.x - 1); i++)
+        {
+            for (int j = (int)System.Math.Max((origenInfluenciaBase.y - StatsInfo.baseDistanciaInfluencia), 0); j < (int)System.Math.Min((origenInfluenciaBase.y + StatsInfo.baseDistanciaInfluencia), gridDimensions.y - 1); j++)
+            {
+                Vector2 puntoActual = new Vector2(i, j);
+                if ((puntoActual - origenInfluenciaBase).magnitude <= StatsInfo.baseDistanciaInfluencia)
+                {
+                    visibleTerrain[i][j] = StatsInfo.coloresTerrenos[(int)terrenos[i][j]];
+                }
+            }
+        }
+        //BASE ENEMIGA
+        origenInfluenciaBase = positionToGrid(baseEnemiga.position);
+        for (int i = (int)System.Math.Max((origenInfluenciaBase.x - StatsInfo.baseDistanciaInfluencia), 0); i < (int)System.Math.Min((origenInfluenciaBase.x + StatsInfo.baseDistanciaInfluencia), gridDimensions.x - 1); i++)
+        {
+            for (int j = (int)System.Math.Max((origenInfluenciaBase.y - StatsInfo.baseDistanciaInfluencia), 0); j < (int)System.Math.Min((origenInfluenciaBase.y + StatsInfo.baseDistanciaInfluencia), gridDimensions.y - 1); j++)
+            {
+                Vector2 puntoActual = new Vector2(i, j);
+                if ((puntoActual - origenInfluenciaBase).magnitude <= StatsInfo.baseDistanciaInfluencia)
+                {
+                    visibleTerrain[i][j] = StatsInfo.coloresTerrenos[(int)terrenos[i][j]];
+                }
+            }
+        }
+
+        foreach (PersonajeBase person in charactersInScene)
+        {
+            Vector2 origenVision = positionToGrid(person.posicion);
+            if (person is PersonajePlayer)
+                visibleTerrain[(int)origenVision.x][(int)origenVision.y] = Color.blue;
+            else
+                visibleTerrain[(int)origenVision.x][(int)origenVision.y] = Color.red;
+        }
+        visibleTerrain[(int)origenInfluenciaBase.x][(int)origenInfluenciaBase.y] = Color.blue;
+        visibleTerrain[(int)origenInfluenciaBase.x][(int)origenInfluenciaBase.y] = Color.red;
     }
 
     internal static Vector2 positionToGrid(Vector3 position)

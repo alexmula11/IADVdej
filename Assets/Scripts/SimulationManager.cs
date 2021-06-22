@@ -37,10 +37,14 @@ public class SimulationManager : MonoBehaviour
     protected void Start()
     {
         PersonajeBase[] personajes = FindObjectsOfType<PersonajeBase>();
-        charactersInScene = new List<PersonajeBase>(personajes);
-        foreach(PersonajeBase person in charactersInScene)
+        charactersInScene = new List<PersonajeBase>();
+        foreach (PersonajeBase person in personajes)
         {
-            person.newTask(person.defaultSteering);
+            if (!person.isFake)
+            {
+                charactersInScene.Add(person);
+                person.newTask(person.defaultSteering);
+            }
         }
     }
 

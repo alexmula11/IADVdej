@@ -48,7 +48,7 @@ MonoBehaviour:
   m_MinSize: {x: 679, y: 342}
   m_MaxSize: {x: 12004, y: 8042}
   vertical: 0
-  controlID: 16
+  controlID: 121
 --- !u!114 &3
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -219,7 +219,7 @@ MonoBehaviour:
   m_MinSize: {x: 403, y: 342}
   m_MaxSize: {x: 8003, y: 8042}
   vertical: 1
-  controlID: 100
+  controlID: 84
 --- !u!114 &10
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -244,7 +244,7 @@ MonoBehaviour:
   m_MinSize: {x: 403, y: 221}
   m_MaxSize: {x: 8003, y: 4021}
   vertical: 0
-  controlID: 101
+  controlID: 59
 --- !u!114 &11
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -338,20 +338,20 @@ MonoBehaviour:
     m_SkipHidden: 0
     m_SearchArea: 1
     m_Folders:
-    - Assets/Scripts/SceneScripts/Final
+    - Assets/Prefabs
   m_ViewMode: 1
   m_StartGridSize: 64
   m_LastFolders:
-  - Assets/Scripts/SceneScripts/Final
+  - Assets/Prefabs
   m_LastFoldersGridSize: -1
-  m_LastProjectPath: C:\Users\jandr\Desktop\Universidad\CUARTO 2 CUATRI\IA\IADVdej
+  m_LastProjectPath: P:\Documentos\UnityProjects\TacticsLegends\WarIARep\WarIA
   m_LockTracker:
     m_IsLocked: 0
   m_FolderTreeState:
     scrollPos: {x: 0, y: 39}
-    m_SelectedIDs: 18480000
-    m_LastClickedID: 18456
-    m_ExpandedIDs: 00000000f6470000f8470000fa470000fc47000000ca9a3b
+    m_SelectedIDs: b4410000
+    m_LastClickedID: 16820
+    m_ExpandedIDs: 00000000ae410000b0410000b2410000b4410000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -379,7 +379,7 @@ MonoBehaviour:
     scrollPos: {x: 0, y: 0}
     m_SelectedIDs: 
     m_LastClickedID: 0
-    m_ExpandedIDs: 00000000f6470000f8470000fa470000fc470000
+    m_ExpandedIDs: 00000000ae410000b0410000b2410000b4410000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -404,8 +404,8 @@ MonoBehaviour:
       m_Icon: {fileID: 0}
       m_ResourceFile: 
   m_ListAreaState:
-    m_SelectedInstanceIDs: 7c420000
-    m_LastClickedInstanceID: 17020
+    m_SelectedInstanceIDs: 
+    m_LastClickedInstanceID: 0
     m_HadKeyboardFocusLastEvent: 1
     m_ExpandedInstanceIDs: c6230000
     m_RenameOverlay:
@@ -502,9 +502,9 @@ MonoBehaviour:
   m_SceneHierarchy:
     m_TreeViewState:
       scrollPos: {x: 0, y: 16}
-      m_SelectedIDs: e2b6feff
-      m_LastClickedID: -84254
-      m_ExpandedIDs: e2b6feff82cfffffbcdaffff783c0000b03e0000d83e0000103f00000c4000003c41000064410000b04100007c420000
+      m_SelectedIDs: 28380000
+      m_LastClickedID: 14376
+      m_ExpandedIDs: 82d7feff98d7feff38f5feff4af5feffa8e6ffffbae6ffff68fbfffff0340000f03700002838000024390000543a00007c3a0000943b0000b03c0000
       m_RenameOverlay:
         m_UserAcceptedRename: 0
         m_Name: 
@@ -564,9 +564,9 @@ MonoBehaviour:
   m_PlayAudio: 0
   m_AudioPlay: 0
   m_Position:
-    m_Target: {x: -2.749054, y: 57.44516, z: 21.978247}
+    m_Target: {x: 25.521774, y: 29.718124, z: 23.897213}
     speed: 2
-    m_Value: {x: -2.749054, y: 57.44516, z: 21.978247}
+    m_Value: {x: 25.521774, y: 29.718124, z: 23.897213}
   m_RenderMode: 0
   m_CameraMode:
     drawMode: 0
@@ -616,9 +616,9 @@ MonoBehaviour:
     speed: 2
     m_Value: {x: -0.25726253, y: 0.6892811, z: -0.28964835, w: -0.6122184}
   m_Size:
-    m_Target: 119.23727
+    m_Target: 185.17183
     speed: 2
-    m_Value: 114.102646
+    m_Value: 185.17183
   m_Ortho:
     m_Target: 0
     speed: 2

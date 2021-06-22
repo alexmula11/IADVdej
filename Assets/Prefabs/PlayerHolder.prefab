@@ -310,7 +310,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7278142580328622301}
-  - component: {fileID: 3190925707189746513}
+  - component: {fileID: 8369445313772590804}
   m_Layer: 8
   m_Name: FakeTargetWallAvoidance
   m_TagString: Untagged
@@ -333,7 +333,7 @@ Transform:
   m_Father: {fileID: 7278142581749419836}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &3190925707189746513
+--- !u!114 &8369445313772590804
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -342,7 +342,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 7278142580328622302}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3a7605b0f74690141a2aff5db0611629, type: 3}
+  m_Script: {fileID: 11500000, guid: fefd3ce6c9ea2ed41bd311defbd5a7e4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   rotationSpeed: 0
@@ -350,7 +350,7 @@ MonoBehaviour:
   movementAccel: 0
   mass: 0
   movementDeccel: 0
-  nombre: Fake Wall
+  nombre: Fake Character
   fakeMovementObjetive: {fileID: 0}
   fakeAvoidObjetive: {fileID: 0}
   fakeAlignObjetive: {fileID: 0}
@@ -358,6 +358,7 @@ MonoBehaviour:
   routeMarkers: {fileID: 0}
   bodyMesh: {fileID: 0}
   headMesh: {fileID: 0}
+  fake: 1
   tipo: 0
   innerDetector: 2
   outterDetector: 10
@@ -615,9 +616,9 @@ MonoBehaviour:
   mass: 1
   movementDeccel: 5
   nombre: Base Character
-  fakeMovementObjetive: {fileID: 0}
-  fakeAvoidObjetive: {fileID: 0}
-  fakeAlignObjetive: {fileID: 0}
+  fakeMovementObjetive: {fileID: 856720802880267032}
+  fakeAvoidObjetive: {fileID: 8369445313772590804}
+  fakeAlignObjetive: {fileID: 1189001394056277758}
   gizmosGOs:
   - {fileID: 7278142580627032917}
   - {fileID: 7278142580169147707}
@@ -627,6 +628,7 @@ MonoBehaviour:
   routeMarkers: {fileID: 7278142581038659060}
   bodyMesh: {fileID: 7278142580919666079}
   headMesh: {fileID: 7278142581568626052}
+  fake: 0
   tipo: 0
   innerDetector: 2
   outterDetector: 10
@@ -640,7 +642,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7278142581145093285}
-  - component: {fileID: 2033585640056316565}
+  - component: {fileID: 856720802880267032}
   m_Layer: 8
   m_Name: FakeTargetMovement
   m_TagString: Untagged
@@ -664,7 +666,7 @@ Transform:
   m_Father: {fileID: 7278142581749419836}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2033585640056316565
+--- !u!114 &856720802880267032
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -673,7 +675,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 7278142581145093286}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3a7605b0f74690141a2aff5db0611629, type: 3}
+  m_Script: {fileID: 11500000, guid: fefd3ce6c9ea2ed41bd311defbd5a7e4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   rotationSpeed: 0
@@ -681,7 +683,7 @@ MonoBehaviour:
   movementAccel: 0
   mass: 0
   movementDeccel: 0
-  nombre: Fake Movement
+  nombre: Fake
   fakeMovementObjetive: {fileID: 0}
   fakeAvoidObjetive: {fileID: 0}
   fakeAlignObjetive: {fileID: 0}
@@ -689,6 +691,7 @@ MonoBehaviour:
   routeMarkers: {fileID: 0}
   bodyMesh: {fileID: 0}
   headMesh: {fileID: 0}
+  fake: 1
   tipo: 0
   innerDetector: 2
   outterDetector: 10
@@ -701,7 +704,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7278142581147376519}
-  - component: {fileID: 1574997570327172755}
+  - component: {fileID: 1189001394056277758}
   m_Layer: 8
   m_Name: FakeTargetAlign
   m_TagString: Untagged
@@ -724,7 +727,7 @@ Transform:
   m_Father: {fileID: 7278142581145093285}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1574997570327172755
+--- !u!114 &1189001394056277758
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -733,15 +736,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 7278142581147376520}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3a7605b0f74690141a2aff5db0611629, type: 3}
+  m_Script: {fileID: 11500000, guid: fefd3ce6c9ea2ed41bd311defbd5a7e4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   rotationSpeed: 0
   maxMovementSpeed: 0
   movementAccel: 0
-  mass: 1
+  mass: 0
   movementDeccel: 0
-  nombre: Fake Align
+  nombre: Fake Character
   fakeMovementObjetive: {fileID: 0}
   fakeAvoidObjetive: {fileID: 0}
   fakeAlignObjetive: {fileID: 0}
@@ -749,6 +752,7 @@ MonoBehaviour:
   routeMarkers: {fileID: 0}
   bodyMesh: {fileID: 0}
   headMesh: {fileID: 0}
+  fake: 1
   tipo: 0
   innerDetector: 2
   outterDetector: 10

@@ -16,6 +16,11 @@ public abstract class PersonajeBase : Bodi
     [SerializeField]
     protected MeshRenderer bodyMesh, headMesh;
 
+    [SerializeField]
+    protected bool fake;
+
+    internal bool isFake { get { return fake; } }
+
     internal PersonajeNPC fakeMovement { get { return fakeMovementObjetive; } }
     internal PersonajeNPC fakeAvoid { get { return fakeAvoidObjetive; } }
     internal PersonajeNPC fakeAlign { get { return fakeAlignObjetive; } }
@@ -59,7 +64,7 @@ public abstract class PersonajeBase : Bodi
     private void Start()
     {
         orientacion = transform.eulerAngles.y * GradosARadianes;
-        if(!(this is PersonajeFake))applyTipo(tipo);
+        if (!fake) applyTipo(tipo);
         
         
         //VARIAR COMO EMPIEZA EL PERSONAJE EN FUNCIÓN DE LA ESCENA
@@ -101,7 +106,7 @@ public abstract class PersonajeBase : Bodi
     }
 
 
-    private void FixedUpdate()
+    protected void FixedUpdate()
     {
         checkTerrainBelow();
         arbitro();
@@ -174,7 +179,7 @@ public abstract class PersonajeBase : Bodi
     //actualizando el atributo steeringActual
     private void arbitro()
     {
-
+        
         //auxiliarmente elegimos el primero de la lista
         if (kinetic.Count > 0)
         {
