@@ -13,4 +13,6 @@ public abstract class Accion
     }
     
     protected internal abstract void doit();
+
+    protected internal abstract bool isDone();
 }

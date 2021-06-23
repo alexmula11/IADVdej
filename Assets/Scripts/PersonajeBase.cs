@@ -67,7 +67,17 @@ public abstract class PersonajeBase : Bodi
 
     public bool isAlive()
     {
-        return (this.health >= 0);
+        return (this.health > 0);
+    }
+
+    public void actualizeHealth(float healthInput)
+    {
+        this.health += healthInput;
+    }
+
+    public bool isFullHealth()
+    {
+        return this.health == StatsInfo.healthPerClass[(int)tipo];
     }
 
     private void Start()

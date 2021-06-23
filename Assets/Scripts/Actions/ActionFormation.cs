@@ -12,4 +12,9 @@ public class ActionFormation : Accion
     {
         throw new System.NotImplementedException();
     }
+
+    protected internal override bool isDone()
+    {
+        return false;
+    }
 }

@@ -18,4 +18,9 @@ public class ActionGo : Accion
     {
         sujeto.newTask(recorrer);
     }
+
+    protected internal override bool isDone()
+    {
+        return false;
+    }
 }
