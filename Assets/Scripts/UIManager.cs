@@ -6,21 +6,21 @@ using UnityEngine.UI;
 public class UIManager : MonoBehaviour
 {
     [SerializeField]
-    private SimulationManager simManager;
+    protected SimulationManager simManager;
 
     [SerializeField]
-    private Image unitSelectionMark;
+    protected Image unitSelectionMark;
 
     [SerializeField]
-    private GameObject debugInfo;
+    protected GameObject debugInfo;
     [SerializeField]
-    private Text debugAgentName, debugAgentAction, debugAgentLookingDirectionAngle, debugAgentTargetLookingDirectionAngle, debugAgentSteeringLinear, debugAgentSteeringAngular, debugAgentSteeringCombination;
+    protected Text debugAgentName, debugAgentBehaviour, debugAgentLookingDirectionAngle, debugAgentTargetLookingDirectionAngle, debugAgentSteeringLinear, debugAgentSteeringAngular, debugAgentSteeringCombination;
 
     [SerializeField]
-    private MouseOptionDelegate[] mouseButtons;
+    protected MouseOptionDelegate[] mouseButtons;
 
     [SerializeField]
-    private RectTransform influenceMinimap, visionMinimap;
+    protected RectTransform influenceMinimap, visionMinimap;
 
 
     private Vector2 selectionOrigin;
@@ -33,8 +33,8 @@ public class UIManager : MonoBehaviour
     internal void actualizeAgentDebugInfo(PersonajeBase character)
     {
         debugAgentName.text = "Agent Name: " + character.nick;
-        if (character.selectedBehaviour != null) debugAgentAction.text = "Selected Behaviour: " + character.selectedBehaviour.GetType().Name;
-        else debugAgentAction.text = "Selected Behaviour: No behaviour";
+        if (character.selectedBehaviour != null) debugAgentBehaviour.text = "Selected Behaviour: " + character.selectedBehaviour.GetType().Name;
+        else debugAgentBehaviour.text = "Selected Behaviour: No behaviour";
         debugAgentLookingDirectionAngle.text = "Looking Direction Angle: " + character.orientacion;
         if (character.steeringActual != null)
         {

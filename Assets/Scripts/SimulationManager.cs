@@ -5,7 +5,7 @@ using UnityEngine;
 public class SimulationManager : MonoBehaviour
 {
 
-    private List<Formacion> formaciones = new List<Formacion>();
+    protected List<Formacion> formaciones = new List<Formacion>();
     protected static List<PersonajeBase> charactersInScene;
     [SerializeField]
     protected UIManager ui;
@@ -18,8 +18,8 @@ public class SimulationManager : MonoBehaviour
 
 
     [SerializeField]
-    private GameObject routeMarkPrefab, routeLinePrefab;
-    private List<Vector3> pathToSet = new List<Vector3>();
+    protected GameObject routeMarkPrefab, routeLinePrefab;
+    protected List<Vector3> pathToSet = new List<Vector3>();
 
 
     protected enum MOUSE_ACTION
@@ -324,7 +324,7 @@ public class SimulationManager : MonoBehaviour
 
     
 
-    private void setRouteOnUnits()
+    protected void setRouteOnUnits()
     {
         if (pathToSet.Count == 1)
         {

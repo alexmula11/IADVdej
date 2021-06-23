@@ -1,9 +1,11 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public abstract class PersonajeBase : Bodi
 {
+    private bool escenaFinal = false;
 
     [SerializeField]
     protected string nombre = "Base Character";
@@ -46,9 +48,8 @@ public abstract class PersonajeBase : Bodi
     //MOVEMENT MANAGE
     internal float currentMovementSpeed { get { return velocidad.magnitude; } }
 
-
-    
-
+    protected Accion currentAction;
+    protected internal Accion accion { get { return currentAction; } set { currentAction = value; } }
 
     protected List<SteeringBehaviour> kinetic = new List<SteeringBehaviour>();
     protected internal SteeringBehaviour selectedBehaviour = null;
@@ -71,6 +72,7 @@ public abstract class PersonajeBase : Bodi
 
     private void Start()
     {
+        escenaFinal = SceneManager.GetActiveScene().name == "GeneralStrategy";
         orientacion = transform.eulerAngles.y * GradosARadianes;
         if (!fake) applyTipo(tipo);
         
@@ -85,7 +87,7 @@ public abstract class PersonajeBase : Bodi
     protected internal void applyTipo(StatsInfo.TIPO_PERSONAJE tipo)
     {
         this.tipo = tipo;
-        this.health = StatsInfo.getHealthFromClass(tipo);
+        this.health = StatsInfo.healthPerClass[(int)tipo];
         
         /*switch (tipo)
         {
@@ -119,7 +121,10 @@ public abstract class PersonajeBase : Bodi
     protected void FixedUpdate()
     {
         checkTerrainBelow();
-        arbitro();
+        if (escenaFinal)
+            arbitro();
+        else
+            arbitroEscenaFinal();
         applySteering();
     }
 
@@ -282,6 +287,28 @@ public abstract class PersonajeBase : Bodi
             maxMovementSpeed = StatsInfo.velocidadUnidades[(int)tipo] * StatsInfo.velocidadUnidadPorTerreno[(int)terrenoQuePiso][(int)tipo];
         }
     }
+
+
+
+
+
+
+    private void arbitroEscenaFinal()
+    {
+
+    }
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

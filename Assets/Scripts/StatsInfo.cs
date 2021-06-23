@@ -86,9 +86,5 @@ public class StatsInfo
 
     public static Color[] coloresTerrenos = { Color.black, Color.gray, Color.green, Color.green + Color.gray, Color.yellow, Color.yellow + Color.red };
 
-    //funciona para devolver la vida asociada a un tipo de unidad
-    public static float getHealthFromClass(TIPO_PERSONAJE tp)
-    {
-        return healthPerClass[((int)tp)]; //esto funciona?
-    }
+
 }

@@ -61,6 +61,20 @@ public abstract class Formacion
         }
     }
 
+    internal void formacionASusPuestosGrid()
+    {
+        for (int i = 1; i < maximoMiembros; i++)
+        {
+            if (miembros[i] != null)
+            {
+                Vector2 start = SimManagerFinal.positionToGrid(offsetPositions[i - 1]);
+                FormacionGridSD opSD = new FormacionGridSD(offsetPositions[i - 1], offsetRotations[i - 1]);
+                opSD.target = lider;
+                miembros[i].newTask(opSD);
+            }
+        }
+    }
+
     internal void disband()
     {
         for (int i=0; i<miembros.Length; i++)

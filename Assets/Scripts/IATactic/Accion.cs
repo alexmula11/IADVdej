@@ -5,14 +5,11 @@ using UnityEngine;
 public abstract class Accion
 {
     protected internal string nombreAccion;
-    protected internal PersonajeBase sujeto;            //sujeto que realiza la accion
-    protected internal PersonajeBase receptor;          //sujeto que recibe la accion
+    protected internal PersonajeBase sujeto;
 
-    public Accion(string _nombreAccion, PersonajeBase _sujeto, PersonajeBase _receptor)
+    public Accion(PersonajeBase _sujeto)
     {
-        nombreAccion = _nombreAccion;
         sujeto = _sujeto;
-        receptor = _receptor;
     }
     
     protected internal abstract void doit();

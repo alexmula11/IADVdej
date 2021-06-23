@@ -23,6 +23,9 @@ public class SimManagerFinal : SimulationManager
     protected Color [][] visibleTerrain;
 
     static StatsInfo.TIPO_TERRENO[][] terrenos;
+    
+
+
 
     protected new void Start()
     {
@@ -138,9 +141,109 @@ public class SimManagerFinal : SimulationManager
                             {
                                 Vector2 posicionDestino = positionToGrid(hit.point);
                                 Vector2 posicionOrigen = positionToGrid(person.posicion);
-                                AStarSD aEstrella = new AStarSD(terrenos, posicionOrigen, posicionDestino);
-                                person.newTaskWOWA(aEstrella);
 
+                                ActionGo moverse = new ActionGo(person, posicionDestino);
+                                moverse.doit();
+                            }
+                        }
+                    }
+                }
+            }
+            else if (mouseBehav == MOUSE_ACTION.FORM_T || mouseBehav == MOUSE_ACTION.FORM_S || mouseBehav == MOUSE_ACTION.FORM_R)
+            {
+                if (selectedUnits.Count > 0)
+                {
+                    if (Input.GetMouseButtonDown(0))
+                    {
+                        RaycastHit hit;
+                        if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit, 10000f, 1 << 8))
+                        {
+
+                            // PARA FORMACIONES
+                            foreach (PersonajeBase person in selectedUnits)
+                            {
+                                if (person.currentFormacion != null)
+                                {
+                                    formaciones.Add(person.currentFormacion);
+                                    person.currentFormacion.disband();
+                                }
+                            }
+                            //Asignamos el lider que clicamos
+                            PersonajeBase lider = hit.collider.gameObject.GetComponent<PersonajeBase>();
+
+                            Formacion formacion = null;
+
+                            switch (mouseBehav)
+                            {
+                                case MOUSE_ACTION.FORM_T:
+                                    formacion = new FormacionTriangulo(lider);
+                                    break;
+                                case MOUSE_ACTION.FORM_S:
+                                    formacion = new FormacionCuadrado(lider);
+                                    break;
+                                case MOUSE_ACTION.FORM_R:
+                                    formacion = new FormacionPorRoles(lider);
+                                    break;
+                            }
+                            foreach (PersonajeBase person in selectedUnits)
+                            {
+                                person.currentFormacion = formacion;
+                                if (person != lider)
+                                {
+                                    formacion.addMiembro(person);
+                                }
+                            }
+                            formacion.formacionASusPuestosGrid();
+                            //formacion.formacionASusPuestos();
+                            formaciones.Add(formacion);
+                        }
+                    }
+                }
+            }
+            else if (mouseBehav == MOUSE_ACTION.ROUTE_SET)
+            {
+                if (selectedUnits.Count > 0)
+                {
+                    if (Input.GetMouseButtonDown(0))
+                    {
+                        RaycastHit hit;
+                        if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit, 10000f, 1 << 11))
+                        {
+                            setRouteOnUnits();
+                            pathToSet.Clear();
+                            setMouseBehaviour(0);
+                            ui.selectMouseOption(0);
+                            /*foreach (PersonajeBase person in selectedUnits)
+                            {
+                                if (person.currentFormacion != null)
+                                {
+                                    formationManager.removeFormacion(person.currentFormacion);
+                                    person.currentFormacion.disband();
+                                }
+                            }*/
+                        }
+                        else if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit, 10000f, 1 << 10))
+                        {
+                            if (pathToSet.Count == 0)
+                            {
+                                foreach (PersonajeBase unit in selectedUnits)
+                                {
+                                    foreach (Transform routeElem in unit.routeMarks)
+                                    {
+                                        Destroy(routeElem.gameObject);
+                                    }
+                                }
+                            }
+                            pathToSet.Add(hit.point);
+                            foreach (PersonajeBase unit in selectedUnits)
+                            {
+                                GameObject routeMark = Instantiate(routeMarkPrefab, unit.routeMarks);
+                                routeMark.transform.position = new Vector3(hit.point.x, 0.05f, hit.point.z);
+                                if (pathToSet.Count > 1)
+                                {
+                                    GameObject routeLine = Instantiate(routeLinePrefab, unit.routeMarks);
+                                    routeLine.GetComponent<FlechaDeRutaDelegate>().setRouteDirection(pathToSet[pathToSet.Count - 2], pathToSet[pathToSet.Count - 1]);
+                                }
                             }
                         }
                     }
@@ -336,5 +439,127 @@ public class SimManagerFinal : SimulationManager
             }
         }
         return lista;
+    }
+
+
+    internal static List<Vector2> aStarPath(Vector2 origen, Vector2 end, StatsInfo.TIPO_PERSONAJE tipo)
+    {
+        NodoGrafoAStar nodoOrigen = new NodoGrafoAStar(origen, (end - origen).magnitude, 0f, null);
+        LinkedList<Vector2> recorrido = new LinkedList<Vector2>();
+        float estimatedCost = (end - origen).magnitude;
+
+        LinkedList<NodoGrafoAStar> closedPositions = new LinkedList<NodoGrafoAStar>();
+        closedPositions.AddLast(nodoOrigen);
+        SortedListNodoGrafoA openPositions = new SortedListNodoGrafoA();
+
+
+        NodoGrafoAStar nodoActual = nodoOrigen;
+        bool setupAEstrella = false;
+        while (!setupAEstrella)
+        {
+            LinkedList<NodoGrafoAStar> adyacentes = calcularAdyacentes(nodoActual, end,tipo);
+            //LinkedList<NodoGrafoAStar> adyacentesFiltrados 
+            foreach (NodoGrafoAStar nodito in adyacentes)
+            {
+                //Observamos lista closed
+                bool estaEnListaClosed = false;
+                foreach (NodoGrafoAStar noditoClosed in closedPositions)
+                {
+                    //Si el nodo ya está en la lista closed, no se considera
+                    if (noditoClosed.posicionGrid == nodito.posicionGrid)
+                    {
+                        estaEnListaClosed = true;
+                        break;
+                    }
+                }
+                if (estaEnListaClosed)
+                {
+                    continue;
+                }
+                openPositions.addOrReplace(nodito);
+                //Observamos lista open
+                /*NodoGrafoAStar posibleaASustituir = null;
+                bool estaEnListaOpen = false;
+                foreach (NodoGrafoAStar noditoOpen in openPositions)
+                {
+                    if (nodito.posicionGrid == noditoOpen.posicionGrid)
+                    {
+                        estaEnListaOpen = true;
+                        if (noditoOpen.totalCost > nodito.totalCost)
+                        {
+                            posibleaASustituir = noditoOpen;
+                        }
+                        break;
+                    }
+                }
+                if (posibleaASustituir != null)
+                {
+                    openPositions.Remove(posibleaASustituir);
+                    openPositions.AddLast(nodito);
+                }
+                else if (!estaEnListaOpen)
+                {
+                    openPositions.AddLast(nodito);
+                }*/
+            }
+            //Calculamos siguiente nodo
+            NodoGrafoAStar next = openPositions.pop();
+            nodoActual = next;
+            //openPositions.Remove(nodoActual);
+            closedPositions.AddLast(nodoActual);
+            //Comprobacion de parada(llegamos al destina)
+            foreach (NodoGrafoAStar noditoClosed in closedPositions)
+            {
+                if (noditoClosed.posicionGrid == end)
+                {
+                    setupAEstrella = true;
+                }
+            }
+
+        }
+        //Calculamos el camino a seguir en base a los padres del nodo destino
+        NodoGrafoAStar aux = nodoActual;
+        while (aux.padre != null)
+        {
+            recorrido.AddFirst(aux.posicionGrid);
+            aux = aux.padre;
+        }
+        
+        return new List<Vector2>(recorrido);
+    }
+
+    internal static List<Vector3> aStarPathV3(Vector2 origen, Vector2 end, StatsInfo.TIPO_PERSONAJE tipo)
+    {
+        List<Vector2> camino = aStarPath(origen, end, tipo);
+        List<Vector3> caminoV3 = new List<Vector3>();
+        foreach (Vector2 pos in camino)
+        {
+            caminoV3.Add(gridToPosition(pos));
+        }
+        return caminoV3;
+    }
+
+    private static LinkedList<NodoGrafoAStar> calcularAdyacentes(NodoGrafoAStar actual,Vector2 destino, StatsInfo.TIPO_PERSONAJE type)
+    {
+        LinkedList<NodoGrafoAStar> listanodos = new LinkedList<NodoGrafoAStar>();
+
+        for (int i = -1; i < 2; i++)
+        {
+            for (int j = -1; j < 2; j++)
+            {
+                if (i != 0 || j != 0)
+                {
+                    Vector2 newPosi = new Vector2(actual.posicionGrid.x + i, actual.posicionGrid.y + j);
+                    if (terrenos[(int)newPosi.x][(int)newPosi.y] != StatsInfo.TIPO_TERRENO.INFRANQUEABLE)
+                    {
+                        float inversaVelocidad = 1 / StatsInfo.velocidadUnidadPorTerreno[(int)terrenos[(int)newPosi.x][(int)newPosi.y]][(int)type];
+                        float newG = actual.costFromOrigin + (destino - newPosi).magnitude * inversaVelocidad;
+                        listanodos.AddLast(new NodoGrafoAStar(newPosi, (destino - newPosi).magnitude, newG, actual));
+                    }
+
+                }
+            }
+        }
+        return listanodos;
     }
 }
