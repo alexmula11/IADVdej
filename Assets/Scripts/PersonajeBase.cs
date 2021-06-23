@@ -64,6 +64,11 @@ public abstract class PersonajeBase : Bodi
     protected internal float health;
 
 
+    public bool isAlive()
+    {
+        return (this.health >= 0);
+    }
+
     private void Start()
     {
         orientacion = transform.eulerAngles.y * GradosARadianes;
