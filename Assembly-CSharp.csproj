@@ -57,6 +57,7 @@
      <Compile Include="Assets\Scripts\GroupDelegate.cs" />
      <Compile Include="Assets\Scripts\IATactic\Accion.cs" />
      <Compile Include="Assets\Scripts\IATactic\AggresiveTM.cs" />
+     <Compile Include="Assets\Scripts\IATactic\CombatManager.cs" />
      <Compile Include="Assets\Scripts\IATactic\DefensiveTM.cs" />
      <Compile Include="Assets\Scripts\IATactic\TacticIA.cs" />
      <Compile Include="Assets\Scripts\IATactic\TacticalModule.cs" />

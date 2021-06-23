@@ -63,6 +63,7 @@ public class StatsInfo
 
     /*COMBAT STATS*/
     public static float [] healthPerClass = {100f,80f,200f,130f};         //INF - ARQ - PES - MAG
+    public static float [] damagePerClass = {10f,12f,10f,15f};
     public static float [][] damageModifiers =
     {
                                     //  INF     ARQ     PES     MAG
