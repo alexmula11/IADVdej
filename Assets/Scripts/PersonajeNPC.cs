@@ -19,6 +19,11 @@ public class PersonajeNPC : PersonajeBase
         kinetic.Add(st);
     }
 
+    internal override void newTaskLowWA(SteeringBehaviour st)
+    {
+        throw new System.NotImplementedException();
+    }
+
     internal override void newTaskWOWA(SteeringBehaviour st)
     {
         throw new System.NotImplementedException();

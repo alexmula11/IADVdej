@@ -23,13 +23,35 @@ public class SimManagerFinal : SimulationManager
     protected Color [][] visibleTerrain;
 
     static StatsInfo.TIPO_TERRENO[][] terrenos;
-    
 
 
+    protected enum MOUSE_ACTION_FINAL
+    {
+        SELECT = 0,
+        MOVE = 1,
+        FORM_T = 2,
+        FORM_S = 3,
+        FORM_R = 4,
+        ROUTE_SET = 5,
+        ATTACK = 6
+    }
+    protected new MOUSE_ACTION_FINAL mouseBehav = 0;
+    internal override void setMouseBehaviour(int behaviour)
+    {
+        mouseBehav = (MOUSE_ACTION_FINAL)behaviour;
+    }
 
     protected new void Start()
     {
-        base.Start();
+        PersonajeBase[] personajes = FindObjectsOfType<PersonajeBase>();
+        charactersInScene = new List<PersonajeBase>();
+        foreach (PersonajeBase person in personajes)
+        {
+            if (!person.isFake)
+            {
+                charactersInScene.Add(person);
+            }
+        }
 
         terrenos = new StatsInfo.TIPO_TERRENO[(int)gridDimensions.x][];
         influences = new float[(int)gridDimensions.x][];
@@ -64,7 +86,7 @@ public class SimManagerFinal : SimulationManager
     {
         if (!mouseOverUI)
         {
-            if (mouseBehav == MOUSE_ACTION.SELECT)
+            if (mouseBehav == MOUSE_ACTION_FINAL.SELECT)
             {
                 if (Input.GetMouseButton(0))
                 {
@@ -124,7 +146,7 @@ public class SimManagerFinal : SimulationManager
 
                 }
             }
-            else if (mouseBehav == MOUSE_ACTION.MOVE)
+            else if (mouseBehav == MOUSE_ACTION_FINAL.MOVE)
             {
                 if (selectedUnits.Count > 0)
                 {
@@ -142,14 +164,19 @@ public class SimManagerFinal : SimulationManager
                                 Vector2 posicionDestino = positionToGrid(hit.point);
                                 Vector2 posicionOrigen = positionToGrid(person.posicion);
 
-                                ActionGo moverse = new ActionGo(person, posicionDestino);
-                                moverse.doit();
+                                ActionGo moverse = new ActionGo(person, posicionDestino,null);
+                                person.accion = moverse;
+                                person.accion.doit();
                             }
+                        }
+                        else if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit, 10000f, 1 << 13))
+                        {
+
                         }
                     }
                 }
             }
-            else if (mouseBehav == MOUSE_ACTION.FORM_T || mouseBehav == MOUSE_ACTION.FORM_S || mouseBehav == MOUSE_ACTION.FORM_R)
+            else if (mouseBehav == MOUSE_ACTION_FINAL.FORM_T || mouseBehav == MOUSE_ACTION_FINAL.FORM_S || mouseBehav == MOUSE_ACTION_FINAL.FORM_R)
             {
                 if (selectedUnits.Count > 0)
                 {
@@ -164,7 +191,7 @@ public class SimManagerFinal : SimulationManager
                             {
                                 if (person.currentFormacion != null)
                                 {
-                                    formaciones.Add(person.currentFormacion);
+                                    formaciones.Remove(person.currentFormacion);
                                     person.currentFormacion.disband();
                                 }
                             }
@@ -175,13 +202,13 @@ public class SimManagerFinal : SimulationManager
 
                             switch (mouseBehav)
                             {
-                                case MOUSE_ACTION.FORM_T:
+                                case MOUSE_ACTION_FINAL.FORM_T:
                                     formacion = new FormacionTriangulo(lider);
                                     break;
-                                case MOUSE_ACTION.FORM_S:
+                                case MOUSE_ACTION_FINAL.FORM_S:
                                     formacion = new FormacionCuadrado(lider);
                                     break;
-                                case MOUSE_ACTION.FORM_R:
+                                case MOUSE_ACTION_FINAL.FORM_R:
                                     formacion = new FormacionPorRoles(lider);
                                     break;
                             }
@@ -193,14 +220,14 @@ public class SimManagerFinal : SimulationManager
                                     formacion.addMiembro(person);
                                 }
                             }
-                            formacion.formacionASusPuestosGrid();
+                            formacion.formacionASusPuestosAccion();
                             //formacion.formacionASusPuestos();
                             formaciones.Add(formacion);
                         }
                     }
                 }
             }
-            else if (mouseBehav == MOUSE_ACTION.ROUTE_SET)
+            else if (mouseBehav == MOUSE_ACTION_FINAL.ROUTE_SET)
             {
                 if (selectedUnits.Count > 0)
                 {
@@ -547,7 +574,10 @@ public class SimManagerFinal : SimulationManager
         {
             for (int j = -1; j < 2; j++)
             {
-                if (i != 0 || j != 0)
+                //8 vecinos
+                //if (i != 0 || j != 0)
+                //4 vecinos
+                if (System.Math.Abs(i) != System.Math.Abs(j))
                 {
                     Vector2 newPosi = new Vector2(actual.posicionGrid.x + i, actual.posicionGrid.y + j);
                     if (terrenos[(int)newPosi.x][(int)newPosi.y] != StatsInfo.TIPO_TERRENO.INFRANQUEABLE)

@@ -7,9 +7,11 @@ using UnityEngine;
 
 public class AccionHealing : AccionCombate
 {
-      public AccionHealing(PersonajeBase _sujeto, PersonajeBase _receptor) : base(_sujeto, _receptor)
+    Vector3 healingPoint;
+    public AccionHealing(PersonajeBase _sujeto, PersonajeBase _receptor, Vector3 healingPoint) : base(_sujeto, _receptor)
     {
         this.nombreAccion = "CURAR";
+        this.healingPoint = healingPoint;
     }
 
     protected internal override void doit()
@@ -22,13 +24,17 @@ public class AccionHealing : AccionCombate
 
     protected internal override bool isDone()
     {
-        return (isInRange());                                                                   //la accion finaliza si la unidad sale de rango de la base
+        return false;                                                                   //la accion finaliza si la unidad sale de rango de la base
     }
 
     protected internal override bool isInRange()                                                //Comprobacion del rango de curacion
     {
-        //TODO
-        return false;
+        return (healingPoint - receptor.posicion).magnitude <= StatsInfo.baseDistaciaCuracion;
+    }
+
+    protected internal override bool isPossible()
+    {
+        return receptor.isAlive() && isInRange();
     }
 
     private float calculateHealingOutput()

@@ -2,17 +2,61 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class AccionCompuesta : Accion
+public class AccionCompuesta : Accion
 {
     protected internal int actionIndex = 0;
-    public AccionCompuesta(PersonajeBase _sujeto) : base(_sujeto)
+    protected List<Accion> acciones;
+    protected bool loop, allDone;
+    public AccionCompuesta(PersonajeBase _sujeto, List<Accion> acciones, bool loop) : base(_sujeto)
     {
+        this.acciones = new List<Accion>(acciones);
+        this.loop = loop;
     }
 
     protected internal override void doit()
     {
-        throw new System.NotImplementedException();
+        if (!allDone)
+        {
+            if (acciones[actionIndex].isDone())
+            {
+                actionIndex++;
+            }
+            if (actionIndex >= acciones.Count)
+            {
+                if (loop) actionIndex = 0;
+                else
+                {
+                    allDone = true;
+                    return;
+                }
+            }
+            while (!acciones[actionIndex].isPossible() && actionIndex>=0)
+            {
+                actionIndex--;
+            }
+            if (actionIndex >= 0)
+                acciones[actionIndex].doit();
+            else
+            {
+                allDone = true;
+                loop = false;
+            }
+        }
     }
 
-    protected internal abstract void actualizeIt();
+    protected internal override bool isDone()
+    {
+        if (loop) return false;
+        else return allDone;
+    }
+
+    protected internal override bool isPossible()
+    {
+        foreach(Accion action in acciones)
+        {
+            if (action.isPossible())
+                return true;
+        }
+        return false;
+    }
 }

@@ -4,17 +4,28 @@ using UnityEngine;
 
 public class ActionFormation : Accion
 {
-    public ActionFormation(PersonajeBase _sujeto) : base(_sujeto)
+    FormacionSD formacionSD;
+
+
+    public ActionFormation(PersonajeBase _sujeto, PersonajeBase lider, Vector3 offsetPos, float offsetRotation) : base(_sujeto)
     {
+        nombreAccion = "FORMAR";
+        formacionSD = new FormacionSD(offsetPos, offsetRotation);
+        formacionSD.target = lider;
     }
 
     protected internal override void doit()
     {
-        throw new System.NotImplementedException();
+        sujeto.newTask(formacionSD);
     }
 
     protected internal override bool isDone()
     {
         return false;
+    }
+
+    protected internal override bool isPossible()
+    {
+        return sujeto.isAlive() && formacionSD.target.isAlive();
     }
 }

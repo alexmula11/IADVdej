@@ -4,8 +4,7 @@ using UnityEngine;
 
 public class SimManagerFormation : SimulationManager
 {
-
-    private List<Formacion> formaciones = new List<Formacion>();
+    
 
     protected enum MOUSE_ACTION_FORMATION
     {

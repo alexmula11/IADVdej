@@ -12,6 +12,10 @@ public abstract class Formacion
     protected float[] offsetRotations;
 
 
+    protected internal PersonajeBase[] getMiembros { get { return miembros; } }
+    protected internal Vector3[] getOffsetsPos { get { return offsetPositions; } }
+    protected internal float[] getOffsetsRots { get { return offsetRotations; } }
+
     protected internal PersonajeBase lider { get { return miembros[0]; } }
     protected float rotacion { get { return lider.orientacion; } }
 
@@ -71,6 +75,19 @@ public abstract class Formacion
                 FormacionGridSD opSD = new FormacionGridSD(offsetPositions[i - 1], offsetRotations[i - 1]);
                 opSD.target = lider;
                 miembros[i].newTask(opSD);
+            }
+        }
+    }
+
+    internal void formacionASusPuestosAccion()
+    {
+        for (int i = 1; i < maximoMiembros; i++)
+        {
+            if (miembros[i] != null)
+            {
+                ActionFormation formacionAccion = new ActionFormation(miembros[i],lider, offsetPositions[i - 1], offsetRotations[i - 1]);
+                miembros[i].accion = formacionAccion;
+                miembros[i].accion.doit();
             }
         }
     }

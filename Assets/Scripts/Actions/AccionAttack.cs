@@ -5,6 +5,7 @@ using UnityEngine;
 public class AccionAttack : AccionCombate
 {
 
+
     public AccionAttack(PersonajeBase _sujeto, PersonajeBase _receptor) : base(_sujeto, _receptor)
     {
         this.nombreAccion = "ATACAR";
@@ -28,6 +29,11 @@ public class AccionAttack : AccionCombate
         return ((sujeto.posicion-receptor.posicion).magnitude 
         <= 
         StatsInfo.attackRangePerClass[(int)sujeto.tipo]);
+    }
+
+    protected internal override bool isPossible()
+    {
+        return sujeto.isAlive() && receptor.isAlive() && isInRange();
     }
 
     private float calculateDamageOutput()

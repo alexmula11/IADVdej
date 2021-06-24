@@ -27,7 +27,7 @@ public class StatsInfo
 
     public enum ACCION
     {
-        MOVE_OR_FOLLOW,
+        MOVE_ATTACK_OR_FOLLOW,
         FORMATION,
         ROUTE
     }
@@ -60,6 +60,7 @@ public class StatsInfo
     public static float[] distanciaInfluenciaUnidades = { 5f, 10f, 5f, 5f };
     public static float basePotenciaInfluencia = 75f;
     public static float baseDistanciaInfluencia = 15f;
+    public static float baseDistaciaCuracion = 37.5f;
 
     /*COMBAT STATS*/
     public static float [] healthPerClass = {100f,80f,200f,130f};         //INF - ARQ - PES - MAG
@@ -80,10 +81,10 @@ public class StatsInfo
 
     public static ACCION[][] accionesDeUnidades =
     {
-        new ACCION[3]{ACCION.MOVE_OR_FOLLOW, ACCION.FORMATION, ACCION.ROUTE},
-        new ACCION[3]{ACCION.MOVE_OR_FOLLOW, ACCION.FORMATION, ACCION.ROUTE},
-        new ACCION[2]{ACCION.MOVE_OR_FOLLOW, ACCION.FORMATION},
-        new ACCION[2]{ACCION.MOVE_OR_FOLLOW, ACCION.FORMATION}
+        new ACCION[3]{ACCION.MOVE_ATTACK_OR_FOLLOW, ACCION.FORMATION, ACCION.ROUTE},
+        new ACCION[3]{ACCION.MOVE_ATTACK_OR_FOLLOW, ACCION.FORMATION, ACCION.ROUTE},
+        new ACCION[2]{ACCION.MOVE_ATTACK_OR_FOLLOW, ACCION.FORMATION},
+        new ACCION[2]{ACCION.MOVE_ATTACK_OR_FOLLOW, ACCION.FORMATION}
     };
 
     public static Color[] coloresTerrenos = { Color.black, Color.gray, Color.green, Color.green + Color.gray, Color.yellow, Color.yellow + Color.red };

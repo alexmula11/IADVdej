@@ -112,7 +112,7 @@ public class UIManager : MonoBehaviour
         {
             switch (accion)
             {
-                case StatsInfo.ACCION.MOVE_OR_FOLLOW:
+                case StatsInfo.ACCION.MOVE_ATTACK_OR_FOLLOW:
                     mouseButtons[1].gameObject.SetActive(true);
                     break;
                 case StatsInfo.ACCION.FORMATION:

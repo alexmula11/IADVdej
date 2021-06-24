@@ -5,19 +5,20 @@ using UnityEngine;
 public class WallAvoidance3WhiswersSD : SteeringBehaviour
 {
     private PursueSD pursueSD = new PursueSD();
-    private float secondaryWhiskersAngle, secondaryWhiskersLength, primaryWhiskerLenght, wallOffset;
+    private float secondaryWhiskersAngle, secondaryWhiskersLength, primaryWhiskerLenght, wallOffset, multiplier=1;
     protected new bool _finishedLinear=true, _finishedAngular = true;
     protected internal new bool finishedLinear { get { return _finishedLinear; } }
     protected internal new bool finishedAngular { get { return _finishedAngular; } }
+    protected internal float mult { get { return multiplier; } set { multiplier = value; } }
 
     protected internal override Steering getSteering(PersonajeBase personaje)
     {
         secondaryWhiskersAngle = personaje.outterAngleVision;
         //secondaryWhiskersLength = personaje.velocidad.magnitude*1.5f;
         //primaryWhiskerLenght = personaje.velocidad.magnitude*2.5f;
-        secondaryWhiskersLength = personaje.maxMovSpeed*1.5f;
-        primaryWhiskerLenght = personaje.maxMovSpeed*2f;
-        wallOffset = personaje.innerDetector*1.1f;
+        secondaryWhiskersLength = personaje.maxMovSpeed*1.5f* multiplier;
+        primaryWhiskerLenght = personaje.maxMovSpeed*2f* multiplier;
+        wallOffset = personaje.innerDetector*1.1f*multiplier;
 
         RaycastHit leftWHit, rightWHit, midWHit;
         float leftOri = personaje.orientacion - secondaryWhiskersAngle;

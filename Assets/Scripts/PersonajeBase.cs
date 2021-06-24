@@ -6,6 +6,7 @@ using UnityEngine.SceneManagement;
 public abstract class PersonajeBase : Bodi
 {
     private bool escenaFinal = false;
+    private bool recalcularAccion = false;
 
     [SerializeField]
     protected string nombre = "Base Character";
@@ -132,9 +133,9 @@ public abstract class PersonajeBase : Bodi
     {
         checkTerrainBelow();
         if (escenaFinal)
-            arbitro();
-        else
             arbitroEscenaFinal();
+        else
+            arbitro();
         applySteering();
     }
 
@@ -180,11 +181,11 @@ public abstract class PersonajeBase : Bodi
             //transform.Rotate(Vector3.up, orientacion);
             transform.eulerAngles = new Vector3(0, orientacion * RadianesAGrados, 0);
             //SI ACABA REINICIAMOS VARIABLES?
-            if (selectedBehaviour.finishedLinear)
+            if (selectedBehaviour==null || selectedBehaviour.finishedLinear)
             {
                 velocidad = Vector3.zero;
             }
-            if (selectedBehaviour.finishedAngular)
+            if (selectedBehaviour == null || selectedBehaviour.finishedAngular)
             {
                 rotacion = 0;
             }
@@ -287,6 +288,40 @@ public abstract class PersonajeBase : Bodi
         }
     }
 
+    private void arbitroEscenaFinal()
+    {
+        if (currentAction != null && currentAction.isDone())
+        {
+            kinetic.Clear();
+            accion = null;
+            selectedBehaviour = null;
+            steeringActual = new Steering();
+        }
+        else
+        {
+            //auxiliarmente elegimos el primero de la lista
+            if (kinetic.Count > 0)
+            {
+                steeringActual = kinetic[0].getSteering(this);
+                if ((kinetic[0] as WallAvoidance3WhiswersSD).finishedLinear)
+                {
+                    if (recalcularAccion)
+                    {
+                        recalcularAccion = false;
+                        PathFollowingNOPathOffsetGridSD astar = (PathFollowingNOPathOffsetGridSD)kinetic[1];
+                    }
+                    selectedBehaviour = kinetic[1];
+                }
+                else
+                {
+                    recalcularAccion = true;
+                    selectedBehaviour = kinetic[0];
+                }
+                steeringActual = selectedBehaviour.getSteering(this);
+            }
+        }
+    }
+
     private void checkTerrainBelow()
     {
         RaycastHit hit;
@@ -303,10 +338,6 @@ public abstract class PersonajeBase : Bodi
 
 
 
-    private void arbitroEscenaFinal()
-    {
-
-    }
 
 
 
@@ -374,6 +405,7 @@ public abstract class PersonajeBase : Bodi
     internal abstract void newTask(SteeringBehaviour st);
     internal abstract void addTask(SteeringBehaviour st);
     internal abstract void newTaskWOWA(SteeringBehaviour st);
+    internal abstract void newTaskLowWA(SteeringBehaviour st);
 
 
     internal abstract void disband();

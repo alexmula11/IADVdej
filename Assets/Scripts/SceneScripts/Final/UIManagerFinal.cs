@@ -12,8 +12,8 @@ public class UIManagerFinal : UIManager
     {
         debugAgentName.text = "Agent Name: " + character.nick;
 
-        if (character.accion != null) debugAgentName.text = "Selected Action: " + character.accion.GetType().Name;
-        else debugAgentName.text = "Selected Behaviour: No action";
+        if (character.accion != null) debugAgentAction.text = "Selected Action: " + character.accion.nombreAccion;
+        else debugAgentAction.text = "Selected Action: No action";
 
         if (character.selectedBehaviour != null) debugAgentBehaviour.text = "Selected Behaviour: " + character.selectedBehaviour.GetType().Name;
         else debugAgentBehaviour.text = "Selected Behaviour: No behaviour";
