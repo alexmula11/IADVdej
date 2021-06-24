@@ -62,6 +62,10 @@ public class StatsInfo
     public static float baseDistanciaInfluencia = 15f;
     public static float baseDistaciaCuracion = 37.5f;
 
+    /*COORDENADAS DE LAS BASES*/
+    public static Vector2 BLUE_TEAM_BASE_POS = new Vector2(10f,10f);
+    public static Vector2 RED_TEAM_BASE_POS = new Vector2(10f,10f);
+
     /*COMBAT STATS*/
     public static float [] healthPerClass = {100f,80f,200f,130f};         //INF - ARQ - PES - MAG
     public static float [] damagePerClass = {10f,12f,10f,15f};

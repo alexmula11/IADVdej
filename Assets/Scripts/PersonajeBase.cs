@@ -49,7 +49,7 @@ public abstract class PersonajeBase : Bodi
     //MOVEMENT MANAGE
     internal float currentMovementSpeed { get { return velocidad.magnitude; } }
 
-    protected Accion currentAction;
+    protected internal Accion currentAction;
     protected internal Accion accion { get { return currentAction; } set { currentAction = value; } }
 
     protected List<SteeringBehaviour> kinetic = new List<SteeringBehaviour>();
@@ -79,6 +79,16 @@ public abstract class PersonajeBase : Bodi
     public bool isFullHealth()
     {
         return this.health == StatsInfo.healthPerClass[(int)tipo];
+    }
+
+    public bool isInCombat()
+    {
+        return (currentAction.nombreAccion != "ATACAR");
+    }
+
+    public bool betterToRun()
+    {
+        return this.health < StatsInfo.healthPerClass[(int)tipo]*0.3;
     }
 
     private void Start()
