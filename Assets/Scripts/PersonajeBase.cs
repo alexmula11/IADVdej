@@ -73,9 +73,12 @@ public abstract class PersonajeBase : Bodi
         return (this.health > 0);
     }
 
-    public void actualizeHealth(float healthInput)
+    public void actualizeHealth(float healthInput)  //esto pide a gritos un mutex
     {
         this.health += healthInput;
+        float percent = this.health*100/StatsInfo.healthPerClass[(int)tipo];
+        this.hPMarker.changeActualHP(percent);
+        Debug.Log("Mi vida es "+ this.health);
     }
 
     public bool isFullHealth()
@@ -310,8 +313,13 @@ public abstract class PersonajeBase : Bodi
 
     private void arbitroEscenaFinal()
     {
+        if(currentAction != null && currentAction is AccionCompuesta)       //siguiente accion de la lista
+        {
+           ((AccionCompuesta)currentAction).actualizeAction(); //aceder a currentaction 
+        } 
         if (currentAction != null && currentAction.isDone())
         {
+            Debug.Log("Pues ya he terminao");
             kinetic.Clear();
             accion = null;
             selectedBehaviour = null;
@@ -319,6 +327,8 @@ public abstract class PersonajeBase : Bodi
         }
         else
         {
+            //ESTO ESTA MAL DE ALGUNA FORMA
+
             //auxiliarmente elegimos el primero de la lista
             if (kinetic.Count > 0)
             {
@@ -328,7 +338,7 @@ public abstract class PersonajeBase : Bodi
                     if (recalcularAccion)
                     {
                         recalcularAccion = false;
-                        PathFollowingNOPathOffsetGridSD astar = (PathFollowingNOPathOffsetGridSD)kinetic[1];
+                        //PathFollowingNOPathOffsetGridSD astar = (PathFollowingNOPathOffsetGridSD)kinetic[1];
                     }
                     selectedBehaviour = kinetic[1];
                 }

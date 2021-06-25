@@ -17,7 +17,14 @@ public class SortedListNodoGrafoA
             }
             index++;
         }
-        lista.Insert(index, nodo);
+        if(index >= 0 && index < lista.Count)
+        {
+            lista.Insert(index, nodo);
+        }
+        else
+        {
+            lista.Add(nodo);
+        }
     }
 
     protected internal void addOrReplace(NodoGrafoAStar nuevoNodo)
@@ -42,6 +49,7 @@ public class SortedListNodoGrafoA
         {
             lista.RemoveAt(index);
             lista.Insert(index,nuevoNodo);
+            
         }
         else if (!estaEnListaOpen)
         {

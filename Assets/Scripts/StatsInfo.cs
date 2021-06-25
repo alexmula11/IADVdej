@@ -69,7 +69,8 @@ public class StatsInfo
     /*COMBAT STATS*/
     public static float [] healthPerClass = {100f,80f,200f,130f};         //INF - ARQ - PES - MAG
     public static float [] damagePerClass = {10f,12f,10f,15f};
-    public static float [] attackRangePerClass = {1f,10f,1f,12f};
+    public static float [] attackRangePerClass = {2f,10f,2f,12f};
+    public static float [] detectionRangePerClass = {5f,15f,5f,15f};
     public static float BASEHEALING = 5f;
     public static float [][] damageModifiers =
     {

@@ -8,6 +8,7 @@ public class AccionCompuesta : Accion
     protected List<Accion> acciones;
     protected bool loop, allDone;
 
+
     public AccionCompuesta(PersonajeBase _sujeto, List<Accion> acciones, bool loop) : base(_sujeto)
     {
         this.acciones = new List<Accion>(acciones);
@@ -22,33 +23,53 @@ public class AccionCompuesta : Accion
             {
                 actionIndex++;
             }
+
             if (actionIndex >= acciones.Count)
             {
-                if (loop) actionIndex = 0;
+                /*if (loop)
+                {
+                    actionIndex = 0;
+                } 
                 else
+                {*/
+                allDone = true;
+                return;
+               // }
+            }
+            else
+            {
+                while (actionIndex>=0 && !acciones[actionIndex].isPossible())           //intentamos realizar las acciones anteriores
+                {
+                    actionIndex--;
+                }
+                if(actionIndex < 0)                                                     //si no es posible, damos la accion por terminada
                 {
                     allDone = true;
-                    return;
+                }
+                else
+                {
+                    acciones[actionIndex].doit();
                 }
             }
-            while (!acciones[actionIndex].isPossible() && actionIndex>=0)
+           /* while (!acciones[actionIndex].isPossible() && actionIndex>=0)
             {
                 actionIndex--;
             }
-            if (actionIndex >= 0)
-                acciones[actionIndex].doit();
+            if (actionIndex >= 0){
+                Debug.Log("realizando accion "+ acciones[actionIndex].nombreAccion);
+                acciones[actionIndex].doit();          
+            }
             else
             {
                 allDone = true;
                 loop = false;
-            }
+            }*/
         }
     }
 
     protected internal override bool isDone()
     {
-        if (loop) return false;
-        else return allDone;
+        return allDone;
     }
 
     protected internal override bool isPossible()
@@ -59,5 +80,11 @@ public class AccionCompuesta : Accion
                 return true;
         }
         return false;
+    }
+
+    protected internal void actualizeAction()
+    {
+        if(!allDone && (acciones[actionIndex].isDone() || !acciones[actionIndex].isPossible()))
+            doit();
     }
 }

@@ -31,11 +31,13 @@ public class ActionGo : Accion
 
     protected internal override bool isDone()
     {
-        return (receptor && (receptor.posicion - sujeto.posicion).magnitude <= StatsInfo.attackRangePerClass[(int)sujeto.tipo]) || (recorrer!=null && recorrer.finishedLinear);
+        //if(receptor != null)Debug.Log("Distancia al enemigo "+ (receptor.posicion - sujeto.posicion).magnitude + " rango de ataque "+ StatsInfo.attackRangePerClass[(int)sujeto.tipo] + "receptor "+ receptor.posicion + "sujeto "+ sujeto.posicion);
+        //if(receptor!=null && (receptor.posicion - sujeto.posicion).magnitude < StatsInfo.attackRangePerClass[(int)sujeto.tipo])Debug.Log("ya estoy a rango");
+        return (receptor && (receptor.posicion - sujeto.posicion).magnitude < StatsInfo.attackRangePerClass[(int)sujeto.tipo]) || (recorrer!=null && recorrer.finishedLinear);
     }
 
     protected internal override bool isPossible()
     {
-        return (receptor && receptor.isAlive() && sujeto.isAlive()) || (!receptor && sujeto.isAlive());
+        return (receptor && receptor.isAlive() && sujeto.isAlive()) || (receptor==null && sujeto.isAlive());
     }
 }

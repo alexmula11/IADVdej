@@ -7,6 +7,7 @@ using UnityEngine;
 public class DefensiveTM : TacticalModule
 {
 
+    private bool defended = false;
     public DefensiveTM(Vector2 _baseCoords, List<PersonajeBase> _npcs, List<PersonajeBase> _players) : base(_baseCoords, _npcs, _players)
     {
     }
@@ -45,15 +46,16 @@ public class DefensiveTM : TacticalModule
             else 
             {
                 //2 - COMPROBAR SI HAY ENEMIGOS EN EL AREA DE LA BASE INTERRUMPIENDO SPAWN
-                List<PersonajeBase> enemies = enemiesOnBase();
-                if(enemies.Count > 0)
+                List<PersonajeBase> enemies_attacking = enemiesOnBase();
+                if(enemies_attacking.Count > 0)
                 {
-                    PersonajeBase closestEnemy = getClosestEnemy(ally, base.enemies);
+                    PersonajeBase closestEnemy = getClosestEnemy(ally, enemies_attacking);
                     ActionGo goToEnemy = new ActionGo(ally,SimManagerFinal.positionToGrid(closestEnemy.posicion),closestEnemy);
                     AccionAttack attackEnemy = new AccionAttack(ally,closestEnemy);
                     List<Accion> orders = new List<Accion>{goToEnemy,attackEnemy};
                     AccionCompuesta defendBase = new AccionCompuesta(ally,orders,true);
                     defensiveActions.Add(defendBase);
+                    defended = true;
                 }
                 else
                 {

@@ -10,6 +10,7 @@ public enum IA_MODE
     TOTAL_WAR
 }
 
+
 public class TacticIA
 {
      private List<PersonajeBase> allies;
@@ -37,7 +38,7 @@ public class TacticIA
 
         foreach(Accion ord in orders)
         {
-            ord.sujeto.currentAction = ord;
+            ord.sujeto.currentAction = ord; //TODO comprobar que no es la misma
             ord.sujeto.currentAction.doit();
         }
         baseUnderAttack = comander.ourBaseIsUnderAttack();
@@ -48,6 +49,7 @@ public class TacticIA
         }     
     }
 
+    //private 
 
      public void change_IA_Mode(IA_MODE new_mode)
      {

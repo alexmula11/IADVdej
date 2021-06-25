@@ -27,7 +27,7 @@ public class AccionAttack : AccionCombate
     protected internal override bool isInRange()                                                //Comprobacion de rango de ataque
     {
         return ((sujeto.posicion-receptor.posicion).magnitude 
-        <= 
+        < 
         StatsInfo.attackRangePerClass[(int)sujeto.tipo]);
     }
 
