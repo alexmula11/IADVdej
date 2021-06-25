@@ -12,22 +12,22 @@ public enum IA_MODE
 
 public class TacticIA
 {
-     private List<PersonajeNPC> npcs;
-     private List<PersonajePlayer> players;
+     private List<PersonajeBase> allies;
+     private List<PersonajeBase> enemies;
      
      private TacticalModule comander;
      private IA_MODE playingMode;
 
-     private Vector2 baseCoords;
+     private Vector2 allyBasePos, enemyBasePos;
      private bool baseUnderAttack = false;
 
 
-    public TacticIA(List<PersonajeNPC> _npcs, List<PersonajePlayer> _players, IA_MODE mode, Vector2 _baseCoords)
+    public TacticIA(List<PersonajeBase> allis, List<PersonajeBase> enemis, Vector2 allyBase, Vector2 enemyBase)
     {
-        npcs = _npcs;
-        players = _players;
-        playingMode = mode;
-        baseCoords = _baseCoords;
+        allies = allis;
+        enemies = enemis;
+        playingMode = IA_MODE.DEFEND;
+        allyBasePos = allyBase;
         comander = factoryTM(playingMode);
     }
 
@@ -37,11 +37,8 @@ public class TacticIA
 
         foreach(Accion ord in orders)
         {
-            if(ord.sujeto.currentAction != ord)                     //si es la misma orden no hace falta machacarla
-            {
-                ord.sujeto.currentAction = ord;
-                ord.sujeto.currentAction.doit();
-            }
+            ord.sujeto.currentAction = ord;
+            ord.sujeto.currentAction.doit();
         }
         baseUnderAttack = comander.ourBaseIsUnderAttack();
         if(!baseUnderAttack)                                        //si no estamos siendo atacados las curaciones y respawn estan activos
@@ -67,13 +64,13 @@ public class TacticIA
          switch(mode)
         {
             case IA_MODE.ATTACK:
-                 tm = new AggresiveTM(baseCoords,npcs,players);
+                 tm = new AggresiveTM(allyBasePos,allies,enemies);
             break;
             case IA_MODE.DEFEND:
-                 tm = new DefensiveTM(baseCoords,npcs,players);
+                 tm = new DefensiveTM(allyBasePos,allies,enemies);
             break;
             case IA_MODE.TOTAL_WAR:
-                tm = new TotalWarTM(baseCoords,npcs,players);
+                tm = new TotalWarTM(allyBasePos,allies,enemies);
             break;
         }
         return tm;

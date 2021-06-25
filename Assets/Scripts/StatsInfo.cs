@@ -93,5 +93,8 @@ public class StatsInfo
 
     public static Color[] coloresTerrenos = { Color.black, Color.gray, Color.green, Color.green + Color.gray, Color.yellow, Color.yellow + Color.red };
 
+    public static Color colorPlayerTeam = Color.blue;
+    public static Color colorIATeam = Color.red;
+
 
 }

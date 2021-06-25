@@ -63,6 +63,8 @@ public abstract class PersonajeBase : Bodi
 
 
     /*COMBAT ATRIBUTES*/
+    [SerializeField]
+    protected HPMarker hPMarker;
     protected internal float health;
 
 
@@ -130,23 +132,31 @@ public abstract class PersonajeBase : Bodi
         posiblesAcciones = StatsInfo.accionesDeUnidades[(int)tipo];
         if (this is PersonajePlayer)
         {
-            headMesh.material.color = Color.white;
+            headMesh.material.color = StatsInfo.colorPlayerTeam;
+            hPMarker.setHpColor(StatsInfo.colorPlayerTeam);
         }
         else
         {
-            headMesh.material.color = Color.gray;
+            headMesh.material.color = StatsInfo.colorIATeam;
+            hPMarker.setHpColor(StatsInfo.colorIATeam);
         }
     }
 
 
     protected void FixedUpdate()
     {
-        checkTerrainBelow();
-        if (escenaFinal)
-            arbitroEscenaFinal();
-        else
-            arbitro();
-        applySteering();
+        if (!fake)
+        {
+            checkTerrainBelow();
+            if (escenaFinal)
+            {
+                arbitroEscenaFinal();
+                hPMarker.setPosition(posicion);
+            }
+            else
+                arbitro();
+            applySteering();
+        }
     }
 
     //Realizamos la accion del steeringActual

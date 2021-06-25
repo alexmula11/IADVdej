@@ -7,6 +7,7 @@ public class UIManagerFinal : UIManager
 {
     [SerializeField]
     protected Text debugAgentAction;
+    
 
     internal new void actualizeAgentDebugInfo(PersonajeBase character)
     {
@@ -29,4 +30,5 @@ public class UIManagerFinal : UIManager
             debugAgentSteeringAngular.text = "Angular Steering: 0";
         }
     }
+
 }

@@ -12,7 +12,7 @@ public class SimManagerFinal : SimulationManager
     protected Vector2 gridDimensions;
 
     [SerializeField]
-    protected Transform baseAliada, baseEnemiga;
+    protected GameManager gm;
 
     static protected Vector2 blocksize;
     static float minX, minY;
@@ -50,6 +50,7 @@ public class SimManagerFinal : SimulationManager
             if (!person.isFake)
             {
                 charactersInScene.Add(person);
+                gm.AddMatraca(person);
             }
         }
 
@@ -79,6 +80,7 @@ public class SimManagerFinal : SimulationManager
         blocksize = new Vector2(widthStep, heightStep);
         minX = mapMinLimits.x;
         minY = mapMinLimits.y;
+        gm.initIAs();
     }
 
 
@@ -334,7 +336,7 @@ public class SimManagerFinal : SimulationManager
             }
         }
         //BASE ALIADA
-        Vector2 origenInfluenciaBase = positionToGrid(baseAliada.position);
+        Vector2 origenInfluenciaBase = positionToGrid(gm.allyBase.position);
         for (int i = (int)System.Math.Max((origenInfluenciaBase.x - StatsInfo.baseDistanciaInfluencia), 0); i < (int)System.Math.Min((origenInfluenciaBase.x + StatsInfo.baseDistanciaInfluencia), gridDimensions.x - 1); i++)
         {
             for (int j = (int)System.Math.Max((origenInfluenciaBase.y - StatsInfo.baseDistanciaInfluencia), 0); j < (int)System.Math.Min((origenInfluenciaBase.y + StatsInfo.baseDistanciaInfluencia), gridDimensions.y - 1); j++)
@@ -350,7 +352,7 @@ public class SimManagerFinal : SimulationManager
         }
 
         //BASE ENEMIGA
-        origenInfluenciaBase = positionToGrid(baseEnemiga.position);
+        origenInfluenciaBase = positionToGrid(gm.enemyBase.position);
         for (int i = (int)System.Math.Max((origenInfluenciaBase.x - StatsInfo.baseDistanciaInfluencia), 0); i < (int)System.Math.Min((origenInfluenciaBase.x + StatsInfo.baseDistanciaInfluencia), gridDimensions.x - 1); i++)
         {
             for (int j = (int)System.Math.Max((origenInfluenciaBase.y - StatsInfo.baseDistanciaInfluencia), 0); j < (int)System.Math.Min((origenInfluenciaBase.y + StatsInfo.baseDistanciaInfluencia), gridDimensions.y - 1); j++)
@@ -400,7 +402,7 @@ public class SimManagerFinal : SimulationManager
             }
         }
         //BASE ALIADA
-        Vector2 origenInfluenciaBase = positionToGrid(baseAliada.position);
+        Vector2 origenInfluenciaBase = positionToGrid(gm.allyBase.position);
         for (int i = (int)System.Math.Max((origenInfluenciaBase.x - StatsInfo.baseDistanciaInfluencia), 0); i < (int)System.Math.Min((origenInfluenciaBase.x + StatsInfo.baseDistanciaInfluencia), gridDimensions.x - 1); i++)
         {
             for (int j = (int)System.Math.Max((origenInfluenciaBase.y - StatsInfo.baseDistanciaInfluencia), 0); j < (int)System.Math.Min((origenInfluenciaBase.y + StatsInfo.baseDistanciaInfluencia), gridDimensions.y - 1); j++)
@@ -413,7 +415,7 @@ public class SimManagerFinal : SimulationManager
             }
         }
         //BASE ENEMIGA
-        origenInfluenciaBase = positionToGrid(baseEnemiga.position);
+        origenInfluenciaBase = positionToGrid(gm.enemyBase.position);
         for (int i = (int)System.Math.Max((origenInfluenciaBase.x - StatsInfo.baseDistanciaInfluencia), 0); i < (int)System.Math.Min((origenInfluenciaBase.x + StatsInfo.baseDistanciaInfluencia), gridDimensions.x - 1); i++)
         {
             for (int j = (int)System.Math.Max((origenInfluenciaBase.y - StatsInfo.baseDistanciaInfluencia), 0); j < (int)System.Math.Min((origenInfluenciaBase.y + StatsInfo.baseDistanciaInfluencia), gridDimensions.y - 1); j++)
@@ -575,9 +577,9 @@ public class SimManagerFinal : SimulationManager
             for (int j = -1; j < 2; j++)
             {
                 //8 vecinos
-                //if (i != 0 || j != 0)
+                if (i != 0 || j != 0)
                 //4 vecinos
-                if (System.Math.Abs(i) != System.Math.Abs(j))
+                //if (System.Math.Abs(i) != System.Math.Abs(j))
                 {
                     Vector2 newPosi = new Vector2(actual.posicionGrid.x + i, actual.posicionGrid.y + j);
                     if (terrenos[(int)newPosi.x][(int)newPosi.y] != StatsInfo.TIPO_TERRENO.INFRANQUEABLE)

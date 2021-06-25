@@ -7,55 +7,61 @@ using UnityEngine;
 public class DefensiveTM : TacticalModule
 {
 
-    public DefensiveTM(Vector2 _baseCoords, List<PersonajeNPC> _npcs, List<PersonajePlayer> _players)
+    public DefensiveTM(Vector2 _baseCoords, List<PersonajeBase> _npcs, List<PersonajeBase> _players) : base(_baseCoords, _npcs, _players)
     {
-        baseCoords = _baseCoords;
-        npcs = _npcs;
-        players = _players;
     }
-    
+
     protected internal override List<Accion> getStrategyActions()
     {
         List<Accion> defensiveActions = new List<Accion>();
 
-        foreach(PersonajeNPC npc in npcs)
+        foreach(PersonajeBase ally in allies)
         {
             //1 -  COMPROBAR SI HAY UNIDADES QUE NECESITEN CURACION
-            if(!npc.isFullHealth())
+            if(!ally.isFullHealth())
             {
-                if(!npc.isInCombat())               //Si no esta en combate
+                if(!ally.isInCombat())               //Si no esta en combate
                 {
-                    ActionGo goToBase = new ActionGo(npc,baseCoords,null);         //TODO realmente debe ir al punto mas cercano dentro del area de curacion de la base
-                    defensiveActions.Add(goToBase);
+                    if (!isInBaseRange(ally))
+                    {
+                        Vector2 closestPoint = getClosestPointToBase(ally, baseCoords);
+                        ActionGo goToBase = new ActionGo(ally, closestPoint, null);
+                        defensiveActions.Add(goToBase);
+                    }
                 } 
                 else
                 {
-                    if(npc.betterToRun())           //vida por debajo del 30%
+                    if(ally.betterToRun())           //vida por debajo del 30%
                     {
-                         ActionGo goToBase = new ActionGo(npc,baseCoords,null);    //TODO realmente debe ir al punto mas cercano dentro del area de curacion de la base
-                         defensiveActions.Add(goToBase);
+                        if (!isInBaseRange(ally))
+                        {
+                            Vector2 closestPoint = getClosestPointToBase(ally, baseCoords);
+                            ActionGo goToBase = new ActionGo(ally, closestPoint, null);
+                            defensiveActions.Add(goToBase);
+                        }
                     }
                 }
             }
             else 
             {
                 //2 - COMPROBAR SI HAY ENEMIGOS EN EL AREA DE LA BASE INTERRUMPIENDO SPAWN
-                List<PersonajePlayer> enemies = enemiesOnBase();
+                List<PersonajeBase> enemies = enemiesOnBase();
                 if(enemies.Count > 0)
                 {
-                    PersonajePlayer closestEnemy = getClosestEnemy(npc,players);
-                    ActionGo goToEnemy = new ActionGo(npc,closestEnemy.posicion,closestEnemy);
-                    AccionAttack attackEnemy = new AccionAttack(npc,closestEnemy);
+                    PersonajeBase closestEnemy = getClosestEnemy(ally, base.enemies);
+                    ActionGo goToEnemy = new ActionGo(ally,SimManagerFinal.positionToGrid(closestEnemy.posicion),closestEnemy);
+                    AccionAttack attackEnemy = new AccionAttack(ally,closestEnemy);
                     List<Accion> orders = new List<Accion>{goToEnemy,attackEnemy};
-                    AccionCompuesta defendBase = new AccionCompuesta(npc,orders,true);
+                    AccionCompuesta defendBase = new AccionCompuesta(ally,orders,true);
                     defensiveActions.Add(defendBase);
                 }
                 else
                 {
                     //3 -  COMPROBAR UNIDADES FUERA DEL PERIMETRO DE LA BASE
-                    if(!isInBaseRange(npc))
+                    if(!isInBaseRange(ally))
                     {
-                        ActionGo goToBase = new ActionGo(npc,baseCoords,null);    //TODO realmente debe ir al punto mas cercano dentro del area de curacion de la base
+                        Vector2 closestPoint = getClosestPointToBase(ally, baseCoords);
+                        ActionGo goToBase = new ActionGo(ally, closestPoint, null);
                         defensiveActions.Add(goToBase);
                     }
                     //4 - AGRUPAR UNIDADES DENTRO DEL PERIMETRO DE LA BASE

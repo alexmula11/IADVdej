@@ -5,41 +5,62 @@ using UnityEngine;
 public abstract class TacticalModule
 {
   protected internal Vector2 baseCoords;
-  protected internal List<PersonajeNPC> npcs;
-  protected internal List<PersonajePlayer> players;
+  protected internal List<PersonajeBase> allies;
+  protected internal List<PersonajeBase> enemies;
 
   protected internal abstract List<Accion> getStrategyActions();
 
-  protected internal bool isInBaseRange(PersonajeNPC npc)                                                          //Comprobar si un npc esta en el area de defensa de la base
+    public TacticalModule(Vector2 _baseCoords, List<PersonajeBase> alice, List<PersonajeBase> nemy)
     {
-        return (new Vector2(npc.posicion.x,npc.posicion.y)-baseCoords).magnitude <= StatsInfo.baseDistaciaCuracion;
+        baseCoords = _baseCoords;
+        allies = alice;
+        enemies = nemy;
     }
 
-  protected internal List<PersonajePlayer> enemiesOnBase()                                                        //comprobar si hay enemigos en la base atacando
-  {
-      List<PersonajePlayer> enemies = new List<PersonajePlayer>();
-      foreach(PersonajePlayer pp in players)
-        if((new Vector2(pp.posicion.x,pp.posicion.y)-baseCoords).magnitude <= StatsInfo.baseDistaciaCuracion)
-            enemies.Add(pp);    
-      return enemies;
-   }
+      protected internal bool isInBaseRange(PersonajeBase person)                                                          
+        {
+            return (person.posicion - SimManagerFinal.gridToPosition(baseCoords)).magnitude <= StatsInfo.baseDistaciaCuracion;
+        }
 
-  protected internal bool ourBaseIsUnderAttack()
+      protected internal List<PersonajeBase> enemiesOnBase()                                                        //comprobar si hay enemigos en la base atacando
+      {
+          List<PersonajeBase> enemies = new List<PersonajeBase>();
+          foreach(PersonajeBase pp in this.enemies)
+            if((pp.posicion - SimManagerFinal.gridToPosition(baseCoords)).magnitude <= StatsInfo.baseDistaciaCuracion)
+                enemies.Add(pp);    
+          return enemies;
+       }
+
+      protected internal bool ourBaseIsUnderAttack()
+        {
+          foreach(PersonajeBase pp in enemies)
+            if((SimManagerFinal.positionToGrid(pp.posicion)-baseCoords).magnitude <= StatsInfo.baseDistaciaCuracion)
+                return true;    
+          return false;
+        }
+     protected internal PersonajeBase getClosestEnemy(PersonajeBase npc, List<PersonajeBase> enemies)              //seleccionar el enemigo mas cercano
+       {
+            PersonajeBase closestEnemy = null;
+         float minDist = float.MaxValue;
+
+          foreach(PersonajeBase pp in enemies)
+              if((npc.posicion-pp.posicion).magnitude < minDist)
+                  closestEnemy = pp;     
+         return closestEnemy; 
+        }
+
+    protected internal Vector2 getClosestPointToBase(PersonajeBase person, Vector2 basePos)
     {
-      foreach(PersonajePlayer pp in players)
-        if((new Vector2(pp.posicion.x,pp.posicion.y)-baseCoords).magnitude <= StatsInfo.baseDistaciaCuracion)
-            return true;    
-      return false;
-    }
- protected internal PersonajePlayer getClosestEnemy(PersonajeNPC npc, List<PersonajePlayer> enemies)              //seleccionar el enemigo mas cercano
-   {
-     PersonajePlayer closestEnemy = null;
-     float minDist = float.MaxValue;
 
-      foreach(PersonajePlayer pp in enemies)
-          if((npc.posicion-pp.posicion).magnitude < minDist)
-              closestEnemy = pp;     
-     return closestEnemy; 
+        Vector3 distance = SimManagerFinal.gridToPosition(basePos) - person.posicion;
+        if (distance.magnitude < StatsInfo.baseDistaciaCuracion)
+        {
+            return SimManagerFinal.positionToGrid(person.posicion);
+        }
+        else
+        {
+            distance = distance.normalized* (distance.magnitude  - StatsInfo.baseDistaciaCuracion + 5);
+            return SimManagerFinal.positionToGrid(person.posicion + distance);
+        }
     }
-
 }

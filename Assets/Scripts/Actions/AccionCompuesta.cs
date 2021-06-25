@@ -7,6 +7,7 @@ public class AccionCompuesta : Accion
     protected internal int actionIndex = 0;
     protected List<Accion> acciones;
     protected bool loop, allDone;
+
     public AccionCompuesta(PersonajeBase _sujeto, List<Accion> acciones, bool loop) : base(_sujeto)
     {
         this.acciones = new List<Accion>(acciones);

@@ -7,11 +7,9 @@ using UnityEngine;
 public class AggresiveTM : TacticalModule
 {
 
-    public AggresiveTM(Vector2 _baseCoords, List<PersonajeNPC> _npcs, List<PersonajePlayer> _players)
+
+    public AggresiveTM(Vector2 _baseCoords, List<PersonajeBase> _npcs, List<PersonajeBase> _players) : base(_baseCoords, _npcs, _players)
     {
-        baseCoords = _baseCoords;
-        npcs = _npcs;
-        players = _players;
     }
 
     protected internal override List<Accion> getStrategyActions()

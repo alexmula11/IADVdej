@@ -33,6 +33,7 @@ MonoBehaviour:
   tipo: 0
   innerDetector: 2
   outterDetector: 10
+  hPMarker: {fileID: 7701253649744598932}
 --- !u!1001 &5505934340251796448
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -282,3 +283,15 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 5505934340251796448}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &7701253649744598932 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2776851218039854196, guid: d79bcac0ed792794883aa6019f8ce5e3,
+    type: 3}
+  m_PrefabInstance: {fileID: 5505934340251796448}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6830e86d99071ed4d9335ef44a132fde, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
