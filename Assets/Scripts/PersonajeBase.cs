@@ -319,7 +319,6 @@ public abstract class PersonajeBase : Bodi
         } 
         if (currentAction != null && currentAction.isDone())
         {
-            Debug.Log("Pues ya he terminao");
             kinetic.Clear();
             accion = null;
             selectedBehaviour = null;

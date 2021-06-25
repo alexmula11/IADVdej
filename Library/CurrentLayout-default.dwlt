@@ -45,10 +45,10 @@ MonoBehaviour:
     y: 30
     width: 1920
     height: 947
-  m_MinSize: {x: 679, y: 342}
-  m_MaxSize: {x: 12004, y: 8042}
+  m_MinSize: {x: 678, y: 342}
+  m_MaxSize: {x: 12003, y: 8042}
   vertical: 0
-  controlID: 20
+  controlID: 121
 --- !u!114 &3
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -94,8 +94,8 @@ MonoBehaviour:
     y: 0
     width: 240
     height: 621
-  m_MinSize: {x: 200, y: 200}
-  m_MaxSize: {x: 4000, y: 4000}
+  m_MinSize: {x: 201, y: 221}
+  m_MaxSize: {x: 4001, y: 4021}
   m_ActualView: {fileID: 15}
   m_Panes:
   - {fileID: 15}
@@ -219,7 +219,7 @@ MonoBehaviour:
   m_MinSize: {x: 403, y: 342}
   m_MaxSize: {x: 8003, y: 8042}
   vertical: 1
-  controlID: 21
+  controlID: 51
 --- !u!114 &10
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -244,7 +244,7 @@ MonoBehaviour:
   m_MinSize: {x: 403, y: 221}
   m_MaxSize: {x: 8003, y: 4021}
   vertical: 0
-  controlID: 22
+  controlID: 52
 --- !u!114 &11
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -338,20 +338,20 @@ MonoBehaviour:
     m_SkipHidden: 0
     m_SearchArea: 1
     m_Folders:
-    - Assets
+    - Assets/Scripts/AlgorithmUtilies
   m_ViewMode: 1
   m_StartGridSize: 64
   m_LastFolders:
-  - Assets
+  - Assets/Scripts/AlgorithmUtilies
   m_LastFoldersGridSize: -1
   m_LastProjectPath: C:\Users\jandr\Desktop\Universidad\CUARTO 2 CUATRI\IA\IADVdej
   m_LockTracker:
     m_IsLocked: 0
   m_FolderTreeState:
-    scrollPos: {x: 0, y: 71}
-    m_SelectedIDs: 38420000
-    m_LastClickedID: 16952
-    m_ExpandedIDs: 00000000384200003a4200003c4200003e42000000ca9a3b
+    scrollPos: {x: 0, y: 55}
+    m_SelectedIDs: 7e420000
+    m_LastClickedID: 17022
+    m_ExpandedIDs: 000000003a4200003c4200003e42000000ca9a3b
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -379,7 +379,7 @@ MonoBehaviour:
     scrollPos: {x: 0, y: 0}
     m_SelectedIDs: 
     m_LastClickedID: 0
-    m_ExpandedIDs: 00000000384200003a4200003c4200003e420000
+    m_ExpandedIDs: 000000003a4200003c4200003e42000040420000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -501,10 +501,10 @@ MonoBehaviour:
   m_ViewDataDictionary: {fileID: 0}
   m_SceneHierarchy:
     m_TreeViewState:
-      scrollPos: {x: 0, y: 752}
-      m_SelectedIDs: 6c360000
-      m_LastClickedID: 13932
-      m_ExpandedIDs: d8d3feffe8d3feff66d4feff76d4feffdcf1feff9afdfeff6634ffff7845ffff2246ffff7258ffff9c78ffff8e8fffff58b6ffffcce5ffff40eeffff64f4ffff32faffff5afbffff2a380000b63800005e390000fa3c0000
+      scrollPos: {x: 0, y: 16}
+      m_SelectedIDs: 
+      m_LastClickedID: 0
+      m_ExpandedIDs: e0deffff5afbffff1a350000c6350000043800002c38000060390000ec390000903a0000043b00000c3c0000fc3c0000
       m_RenameOverlay:
         m_UserAcceptedRename: 0
         m_Name: 
@@ -564,9 +564,9 @@ MonoBehaviour:
   m_PlayAudio: 0
   m_AudioPlay: 0
   m_Position:
-    m_Target: {x: -268.8003, y: -153.85852, z: 295.69678}
+    m_Target: {x: 0.5, y: 5.757372, z: 0.5}
     speed: 2
-    m_Value: {x: -268.8003, y: -153.85852, z: 295.69678}
+    m_Value: {x: 0.5, y: 5.757372, z: 0.5}
   m_RenderMode: 0
   m_CameraMode:
     drawMode: 0
@@ -616,9 +616,9 @@ MonoBehaviour:
     speed: 2
     m_Value: {x: -0.21010284, y: 0.66630894, z: -0.20414938, w: -0.68572015}
   m_Size:
-    m_Target: 192.56706
+    m_Target: 219.7432
     speed: 2
-    m_Value: 192.56706
+    m_Value: 219.7432
   m_Ortho:
     m_Target: 0
     speed: 2

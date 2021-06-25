@@ -10,6 +10,7 @@ public class SimManagerFinal : SimulationManager
     protected Vector2 mapMinLimits, mapMaxLimits;
     [SerializeField]
     protected Vector2 gridDimensions;
+    protected internal static int maxHeapSize;
 
     [SerializeField]
     protected GameManager gm;
@@ -80,6 +81,8 @@ public class SimManagerFinal : SimulationManager
         blocksize = new Vector2(widthStep, heightStep);
         minX = mapMinLimits.x;
         minY = mapMinLimits.y;
+        Debug.Log(gridDimensions.x + "  " + gridDimensions.y);
+        maxHeapSize = ((int)gridDimensions.x) * ((int)gridDimensions.y);
         gm.initIAs();
     }
 
@@ -478,19 +481,27 @@ public class SimManagerFinal : SimulationManager
         float estimatedCost = (end - origen).magnitude;
 
         LinkedList<NodoGrafoAStar> closedPositions = new LinkedList<NodoGrafoAStar>();
-        closedPositions.AddLast(nodoOrigen);
-        SortedListNodoGrafoA openPositions = new SortedListNodoGrafoA();
 
+        Heap<NodoGrafoAStar> openPositions = new Heap<NodoGrafoAStar>(maxHeapSize);
+        openPositions.Add(nodoOrigen);
 
-        NodoGrafoAStar nodoActual = nodoOrigen;
-        bool setupAEstrella = false;
-        while (!setupAEstrella)
+        NodoGrafoAStar nodoActual = null;
+
+        while (openPositions.Count > 0)
         {
+            nodoActual = openPositions.RemoveFirst();
+            closedPositions.AddFirst(nodoActual);
+
+            if(nodoActual.posicionGrid == end)
+            {
+                break;
+            }
+
             LinkedList<NodoGrafoAStar> adyacentes = calcularAdyacentes(nodoActual, end,tipo);
             //LinkedList<NodoGrafoAStar> adyacentesFiltrados 
             foreach (NodoGrafoAStar nodito in adyacentes)
             {
-                //Observamos lista closed
+                //if closed.contains(neighbour)
                 bool estaEnListaClosed = false;
                 foreach (NodoGrafoAStar noditoClosed in closedPositions)
                 {
@@ -505,47 +516,24 @@ public class SimManagerFinal : SimulationManager
                 {
                     continue;
                 }
-                openPositions.addOrReplace(nodito);
-                //Observamos lista open
-                /*NodoGrafoAStar posibleaASustituir = null;
-                bool estaEnListaOpen = false;
-                foreach (NodoGrafoAStar noditoOpen in openPositions)
-                {
-                    if (nodito.posicionGrid == noditoOpen.posicionGrid)
-                    {
-                        estaEnListaOpen = true;
-                        if (noditoOpen.totalCost > nodito.totalCost)
-                        {
-                            posibleaASustituir = noditoOpen;
-                        }
-                        break;
-                    }
-                }
-                if (posibleaASustituir != null)
-                {
-                    openPositions.Remove(posibleaASustituir);
-                    openPositions.AddLast(nodito);
-                }
-                else if (!estaEnListaOpen)
-                {
-                    openPositions.AddLast(nodito);
-                }*/
-            }
-            //Calculamos siguiente nodo
-            NodoGrafoAStar next = openPositions.pop();
-            nodoActual = next;
-            //openPositions.Remove(nodoActual);
-            closedPositions.AddLast(nodoActual);
-            //Comprobacion de parada(llegamos al destina)
-            foreach (NodoGrafoAStar noditoClosed in closedPositions)
-            {
-                if (noditoClosed.posicionGrid == end)
-                {
-                    setupAEstrella = true;
-                }
-            }
+                //calculamos distancia al siguiente nodo desde el que estamos
+                float inversaVelocidad = 1 / StatsInfo.velocidadUnidadPorTerreno[(int)terrenos[(int)nodito.posicionGrid.x][(int)nodito.posicionGrid.y]][(int)tipo];
+                float newG = nodoActual.costFromOrigin + (nodoActual.posicionGrid - nodito.posicionGrid).magnitude * inversaVelocidad;
 
+                if (newG < nodito.costFromOrigin || !openPositions.Contains(nodito)) {
+					nodito.costFromOrigin = newG;
+					nodito.estimatedCost = (end-nodito.posicionGrid).magnitude;
+					nodito.padre = nodoActual;
+
+					if (!openPositions.Contains(nodito))
+						openPositions.Add(nodito);
+					else {
+						//openPositions.UpdateItem(nodito);
+					}
+				}
+            }
         }
+
         //Calculamos el camino a seguir en base a los padres del nodo destino
         NodoGrafoAStar aux = nodoActual;
         while (aux.padre != null)
@@ -594,4 +582,7 @@ public class SimManagerFinal : SimulationManager
         }
         return listanodos;
     }
+
+
+
 }

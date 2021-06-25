@@ -25,7 +25,9 @@ public class AggresiveTM : TacticalModule
     {
         List<Accion> aggresiveActions = new List<Accion>();
 
-        unitsNotAsigned = allies;                                                           //para marcar las unidades ya asignadas
+
+        checkAlliesDownAndFill();                                                           //actualizamos los grupos formados con las bajas producidas por el enemigo
+                                                                                            //y rellenamos la lista de unidades a las cuales podemos asignar ordenes
         
                         /*DEFENSA DE LA BASE*/
         if(ourBaseIsUnderAttack())
@@ -54,6 +56,22 @@ public class AggresiveTM : TacticalModule
                         /*ATAQUE A LA BASE ENEMIGA*/
 
         return aggresiveActions;
+    }
+
+    private void checkAlliesDownAndFill()
+    {
+        foreach(PersonajeBase ally in allies)
+        {
+            if(!ally.isAlive())
+            {
+                defensiveGroup.Remove(ally);
+                ofensiveGroup.Remove(ally);
+            }
+            else
+            {
+                unitsNotAsigned.Add(ally);
+            }
+        }
     }
 
     private THREAT_VALUE calculateThreat(int numberAttackers)
