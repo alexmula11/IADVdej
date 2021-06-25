@@ -36,12 +36,12 @@ public class NodoGrafoAStar : IHeapItem<NodoGrafoAStar>
 		if (compare == 0) {
 			compare = estimatedCost.CompareTo(nodeToCompare.estimatedCost);
 		}
+        Debug.Log(compare);
 		return -compare;
 	}
 
     public override bool Equals(object obj)
     {
-        Debug.Log("compruebo");
         if (obj.GetType() != typeof (NodoGrafoAStar)) return false;
         return ((NodoGrafoAStar)obj).posicionGrid == this.posicionGrid;
     }

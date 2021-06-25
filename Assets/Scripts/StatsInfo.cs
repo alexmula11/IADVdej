@@ -46,13 +46,23 @@ public class StatsInfo
      * 4 arena
      * 5 madera (puentes)
      */
-    public static float[][] velocidadUnidadPorTerreno =
+
+     /*public static float[][] velocidadUnidadPorTerreno =
     {
         new float[MAX_UNIT_TYPE] { 1, 1, 1, 1},
         new float[MAX_UNIT_TYPE] { 1.5f, 1.5f, 2, 2},
         new float[MAX_UNIT_TYPE] { 1, 1, 1, 1},
         new float[MAX_UNIT_TYPE] { 0.66f, 0.75f, 0.5f, 0.5f},
         new float[MAX_UNIT_TYPE] { 0.66f, 0.66f, 0.5f, 0.5f},
+        new float[MAX_UNIT_TYPE] { 1.5f, 1.5f, 1.5f, 1.5f},
+    };*/
+    public static float[][] velocidadUnidadPorTerreno =
+    {
+        new float[MAX_UNIT_TYPE] { 1, 1, 1, 1},
+        new float[MAX_UNIT_TYPE] { 1.5f, 1.5f, 2, 2},
+        new float[MAX_UNIT_TYPE] { 1, 1, 1, 1},
+        new float[MAX_UNIT_TYPE] { 0.5f, 0.75f, 0.5f, 0.5f},
+        new float[MAX_UNIT_TYPE] { 0.5f, 0.5f, 0.5f, 0.5f},
         new float[MAX_UNIT_TYPE] { 1.5f, 1.5f, 1.5f, 1.5f},
     };
     public static Color[] coloresUnidades = { Color.red, Color.blue, Color.black, Color.cyan };
