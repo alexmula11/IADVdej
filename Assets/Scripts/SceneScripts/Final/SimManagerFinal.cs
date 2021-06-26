@@ -518,17 +518,19 @@ public class SimManagerFinal : SimulationManager
                 }
                 //calculamos distancia al siguiente nodo desde el que estamos
                 float inversaVelocidad = 1 / StatsInfo.velocidadUnidadPorTerreno[(int)terrenos[(int)nodito.posicionGrid.x][(int)nodito.posicionGrid.y]][(int)tipo];
-                float newG = nodoActual.costFromOrigin + (nodoActual.posicionGrid - nodito.posicionGrid).magnitude * inversaVelocidad;
+                //float newG = nodoActual.costFromOrigin + (nodoActual.posicionGrid - nodito.posicionGrid).magnitude * inversaVelocidad;
+                float newG =  (int)(nodoActual.costFromOrigin + Mathf.RoundToInt((nodoActual.posicionGrid - nodito.posicionGrid).magnitude * inversaVelocidad));
 
                 if (newG < nodito.costFromOrigin || !openPositions.Contains(nodito)) {
 					nodito.costFromOrigin = newG;
-					nodito.estimatedCost = (end-nodito.posicionGrid).magnitude;
+					//nodito.estimatedCost = (end-nodito.posicionGrid).magnitude;
+                    nodito.estimatedCost = getDistance(nodito,end);
 					nodito.padre = nodoActual;
 
 					if (!openPositions.Contains(nodito))
 						openPositions.Add(nodito);
 					else {
-						//openPositions.UpdateItem(nodito);
+						openPositions.UpdateItem(nodito);
 					}
 				}
             }
@@ -583,6 +585,24 @@ public class SimManagerFinal : SimulationManager
         return listanodos;
     }
 
+    private static int getDistance(NodoGrafoAStar origin, NodoGrafoAStar destiny)
+    {
+        int dstX = (int)Mathf.Abs(origin.posicionGrid.x - destiny.posicionGrid.x);
+		int dstY = (int)Mathf.Abs(origin.posicionGrid.y - destiny.posicionGrid.y);
 
+		if (dstX > dstY)
+			return 14*dstY + 10* (dstX-dstY);           //el 14 y el 10 depende del tamaño de nuestro grid
+		return 14*dstX + 10 * (dstY-dstX);
+    }
+
+    private static int getDistance(NodoGrafoAStar origin, Vector2 destiny)
+    {
+        int dstX = (int)Mathf.Abs(origin.posicionGrid.x - destiny.x);
+		int dstY = (int)Mathf.Abs(origin.posicionGrid.y - destiny.y);
+
+		if (dstX > dstY)
+			return 14*dstY + 10* (dstX-dstY);           //el 14 y el 10 depende del tamaño de nuestro grid
+		return 14*dstX + 10 * (dstY-dstX);
+    }
 
 }

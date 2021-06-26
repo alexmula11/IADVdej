@@ -36,7 +36,6 @@ public class NodoGrafoAStar : IHeapItem<NodoGrafoAStar>
 		if (compare == 0) {
 			compare = estimatedCost.CompareTo(nodeToCompare.estimatedCost);
 		}
-        Debug.Log(compare);
 		return -compare;
 	}
 

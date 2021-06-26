@@ -18,7 +18,7 @@ public class Heap<T> where T : IHeapItem<T> {
 		items[currentItemCount] = item;
 		SortUp(item);
 		currentItemCount++;
-		//Debug.Log(currentItemCount + " maximo= "+maxheap);
+		Debug.Log(currentItemCount + " maximo= "+maxheap);
 	}
 
 	public T RemoveFirst() {

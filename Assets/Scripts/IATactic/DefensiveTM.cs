@@ -18,6 +18,10 @@ public class DefensiveTM : TacticalModule
 
         foreach(PersonajeBase ally in allies)
         {
+            if(!ally.isAlive())
+            {
+                continue;
+            }
             //1 -  COMPROBAR SI HAY UNIDADES QUE NECESITEN CURACION
             if(!ally.isFullHealth())
             {
