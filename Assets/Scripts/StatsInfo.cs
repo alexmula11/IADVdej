@@ -58,14 +58,14 @@ public class StatsInfo
         new float[MAX_UNIT_TYPE] { 1.5f, 1.5f, 1.5f, 1.5f},
     };*/
 
-    public static Vector2 [] puente_inferior =
+    public static Vector2 [] puente_superior =
     {
         new Vector2(74,19),
         new Vector2(74,24),
         new Vector2(89,19),
         new Vector2(89,24)
     };
-    public static Vector2 [] puente_superior =
+    public static Vector2 [] puente_inferior =
     {
         new Vector2(74,39),
         new Vector2(74,44),

@@ -56,13 +56,14 @@ public class AggresiveTM : TacticalModule
         Debug.Log(bridgesControlled);
         if(bridgesControlled == 0)                                                          //si no controlamos ninguno
         {
-            BridgeAttacked = changeBridgeAttack();                                          //selecionamos que puente atacar, vamos intercalando para despistar jeje
+            //BridgeAttacked = changeBridgeAttack();                                          //selecionamos que puente atacar, vamos intercalando para despistar jeje
             aggresiveActions.AddRange(orderGroupToAttackBridge(BridgeAttacked));            //creamos un grupo de ataque para el puente
         }
 
                         /*ATAQUE A LA BASE ENEMIGA*/
         if(bridgesControlled != 0)
         {
+            Debug.Log("Controlamos el puente: "+bridgesControlled);
             //si no tenemos los dos puentes, comprobamos si el enemigo controla el otro, en ese caso
             //vamos a darle mandanga
             if(bridgesControlled != allBridgedUP)aggresiveActions.AddRange(goToSpearHead(bridgesControlled));
@@ -309,7 +310,7 @@ public class AggresiveTM : TacticalModule
         return attackActions;
     }
 
-    private List<Accion> goToSpearHead(int bridgesControlled) //TODO
+    private List<Accion> goToSpearHead(int bridgesControlled) //TODO si el otro puenten no es del enemigo, reforzar el nuestro
     {
         List<Accion> regroupForAttack = new List<Accion>();
         float influenceTotAttack = 0;
@@ -351,6 +352,7 @@ public class AggresiveTM : TacticalModule
                 }
             }
         }
+
         return regroupForAttack;
     }
 
