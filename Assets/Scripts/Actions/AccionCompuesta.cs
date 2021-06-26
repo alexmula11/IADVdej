@@ -84,7 +84,7 @@ public class AccionCompuesta : Accion
 
     protected internal void actualizeAction()
     {
-        if(!allDone && (acciones[actionIndex].isDone() || !acciones[actionIndex].isPossible()))
+        if (!allDone && ((acciones[actionIndex].isDone() || !acciones[actionIndex].isPossible()) || acciones[actionIndex] is AccionAttack))
             doit();
     }
 }

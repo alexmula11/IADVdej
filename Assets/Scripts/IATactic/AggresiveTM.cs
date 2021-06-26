@@ -7,17 +7,15 @@ using UnityEngine;
 public class AggresiveTM : TacticalModule
 {
 
-    private List<PersonajeBase> defensiveGroup;
-    private List<PersonajeBase> ofensiveGroup;
+    private List<PersonajeBase> defensiveGroup = new List<PersonajeBase>();
+    private List<PersonajeBase> ofensiveGroup = new List<PersonajeBase>();
 
-    private List<PersonajeBase> unitsNotAsigned;                                            //unidades todavia no asignadas a una tarea
+    private List<PersonajeBase> unitsNotAsigned = new List<PersonajeBase>();                                            //unidades todavia no asignadas a una tarea
 
     private int BridgeAttacked;
 
     public AggresiveTM(Vector2 _baseCoords, List<PersonajeBase> _npcs, List<PersonajeBase> _players) : base(_baseCoords, _npcs, _players)
     {
-        defensiveGroup = new List<PersonajeBase>();
-        ofensiveGroup = new List<PersonajeBase>();
         BridgeAttacked = 1;
     }
 
@@ -37,7 +35,7 @@ public class AggresiveTM : TacticalModule
             int defenders = howManyDefendersWeNeed(defensePriority);                        //calculamos cuantos defensores necesitamos
             if(defensiveGroup.Count != defenders)                                           //si necesitamos mas defensores habra que buscarlos
             {
-                aggresiveActions = sendAlliesToDefend(defenders - defensiveGroup.Count);    //se iguala porque es lo primero que se hace
+                aggresiveActions = sendAlliesToDefend(defenders - defensiveGroup.Count, attackers);    //se iguala porque es lo primero que se hace
             }
         }
 
@@ -60,6 +58,7 @@ public class AggresiveTM : TacticalModule
 
     private void checkAlliesDownAndFill()
     {
+        unitsNotAsigned.Clear();
         foreach(PersonajeBase ally in allies)
         {
             if(!ally.isAlive())
@@ -69,7 +68,8 @@ public class AggresiveTM : TacticalModule
             }
             else
             {
-                unitsNotAsigned.Add(ally);
+                if (!defensiveGroup.Contains(ally) && !ofensiveGroup.Contains(ally))
+                    unitsNotAsigned.Add(ally);
             }
         }
     }
@@ -106,13 +106,44 @@ public class AggresiveTM : TacticalModule
         return defs;
     }
 
-    private List<Accion> sendAlliesToDefend(int defenders)                          //manda los defensores necesarios
+    private List<Accion> sendAlliesToDefend(int defenders, List<PersonajeBase> attackers)                          //manda los defensores necesarios
     {
         //comprobar si hay suficientes unidades que no esten peleando para mandarlas
         //sino mandar las que esten mas cerca hasta cumplir los requirimientos
         //o quedarnos sin unidades
         //añadimos a los elegidos al grupo de defensores
+
         List<Accion> defendActions = new List<Accion>();
+        float[] priorities = new float[unitsNotAsigned.Count];
+        float distancePriority = 1;
+        float velocityPriotiry = 10;
+        float dmgPriority = 5;
+        for (int i=0; i<unitsNotAsigned.Count; i++)
+        {
+            priorities[i] = -getClosestPointToBase(unitsNotAsigned[i], baseCoords).magnitude * distancePriority;
+            priorities[i] += unitsNotAsigned[i].maxMovSpeed * velocityPriotiry;
+            float dmgPower = 0;
+            foreach (PersonajeBase person in attackers)
+                dmgPower += StatsInfo.damageModifiers[(int)unitsNotAsigned[i].tipo][(int)person.tipo];
+            priorities[i] += dmgPower*dmgPriority;
+        }
+
+        for (int i=0; i<defenders; i++)
+        {
+            float higherPriority = float.MinValue;
+            int index = 0;
+            for (int j = 0; j < priorities.Length; j++)
+            {
+                if (priorities[j] > higherPriority)
+                {
+                    higherPriority = priorities[j];
+                    index = j;
+                }
+            }
+            defendActions.Add(createAttackingAction(unitsNotAsigned[index], getClosestEnemy(unitsNotAsigned[index], attackers)));
+            priorities[index] = float.MinValue;
+        }
+
         return defendActions;
     }
 
@@ -147,6 +178,7 @@ public class AggresiveTM : TacticalModule
     private List<Accion> attackEnemiesClose()
     {
         List<Accion> attackActions = new List<Accion>();
+        List<PersonajeBase> unidadKataka = new List<PersonajeBase>();
         foreach(PersonajeBase unit in unitsNotAsigned)
         {
             if(!defensiveGroup.Contains(unit))                                                                          //si no es alguien que deba defender
@@ -154,13 +186,21 @@ public class AggresiveTM : TacticalModule
                 foreach(PersonajeBase enemy in enemies)
                 {                
                     if((unit.posicion-enemy.posicion).magnitude <= StatsInfo.detectionRangePerClass[(int)unit.tipo])    //distancia de deteccion
-                    {
-                        unitsNotAsigned.Remove(unit);                                                                   //eliminamos de las unidades a mandar
-                        ofensiveGroup.Remove(unit);                                                                     //lo quitamos de grupo de ataque si estaba
+                    {                                                                                                   //lo quitamos de grupo de ataque si estaba
                         attackActions.Add(createAttackingAction(unit,enemy));                                           //añadimos accion de atacar
+                        unidadKataka.Add(unit);
                         break;
                     }
                 }
+            }
+        }
+        if (unidadKataka.Count > 0)
+        {
+            foreach (PersonajeBase person in unidadKataka)
+            {
+                unitsNotAsigned.Remove(person);                                                                         //eliminamos de las unidades a mandar
+                ofensiveGroup.Remove(person);
+                defensiveGroup.Add(person);
             }
         }
         return attackActions;

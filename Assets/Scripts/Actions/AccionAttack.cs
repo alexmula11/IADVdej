@@ -4,19 +4,33 @@ using UnityEngine;
 
 public class AccionAttack : AccionCombate
 {
-
-
+    float timer;
     public AccionAttack(PersonajeBase _sujeto, PersonajeBase _receptor) : base(_sujeto, _receptor)
     {
         this.nombreAccion = "ATACAR";
+        timer = 1 / StatsInfo.velocidadDeAtaquePorUnidad[(int)sujeto.tipo];
     }
 
     protected internal override void doit()
     {
         if(isInRange())                                                                         //si el receptor esta a rango de ataque del sujeto
         {
-            receptor.actualizeHealth(-calculateDamageOutput());                                 //le pasamos actualización de vida negativa
+            sujeto.newTask(new StopSteering());
+            if (timer <= 0)
+            {
+                receptor.actualizeHealth(-calculateDamageOutput());                                 //le pasamos actualización de vida negativa
+                timer = 1 / StatsInfo.velocidadDeAtaquePorUnidad[(int)sujeto.tipo];
+            }
+            else
+            {
+                timer -= Time.fixedDeltaTime;
+            }
         }
+        else
+        {
+            timer = 1 / StatsInfo.velocidadDeAtaquePorUnidad[(int)sujeto.tipo];
+        }
+        
     }
 
     protected internal override bool isDone()

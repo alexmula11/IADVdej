@@ -27,7 +27,7 @@ public class TacticIA
     {
         allies = allis;
         enemies = enemis;
-        playingMode = IA_MODE.DEFEND;
+        playingMode = IA_MODE.ATTACK;
         allyBasePos = allyBase;
         comander = factoryTM(playingMode);
     }

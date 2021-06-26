@@ -24,6 +24,10 @@ public class ActionGo : Accion
 
     protected internal override void doit()
     {
+        if (receptor)
+        {
+            destiny = SimManagerFinal.positionToGrid(receptor.posicion);
+        }
         List<Vector3> camino = SimManagerFinal.aStarPathV3(SimManagerFinal.positionToGrid(sujeto.posicion), destiny, sujeto.tipo);
         recorrer = new PathFollowEndSD(camino);
         sujeto.newTask(recorrer);
@@ -33,7 +37,7 @@ public class ActionGo : Accion
     {
         //if(receptor != null)Debug.Log("Distancia al enemigo "+ (receptor.posicion - sujeto.posicion).magnitude + " rango de ataque "+ StatsInfo.attackRangePerClass[(int)sujeto.tipo] + "receptor "+ receptor.posicion + "sujeto "+ sujeto.posicion);
         //if(receptor!=null && (receptor.posicion - sujeto.posicion).magnitude < StatsInfo.attackRangePerClass[(int)sujeto.tipo])Debug.Log("ya estoy a rango");
-        return (receptor && (receptor.posicion - sujeto.posicion).magnitude < StatsInfo.attackRangePerClass[(int)sujeto.tipo]) || (recorrer!=null && recorrer.finishedLinear);
+        return (receptor && (receptor.posicion - sujeto.posicion).magnitude < (StatsInfo.attackRangePerClass[(int)sujeto.tipo])-1f) || (recorrer!=null && recorrer.finishedLinear);
     }
 
     protected internal override bool isPossible()

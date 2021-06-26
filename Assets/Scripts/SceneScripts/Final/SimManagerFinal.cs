@@ -480,6 +480,12 @@ public class SimManagerFinal : SimulationManager
         LinkedList<Vector2> recorrido = new LinkedList<Vector2>();
         float estimatedCost = (end - origen).magnitude;
 
+        NodoGrafoAStar[][] nodos = new NodoGrafoAStar[165][];
+        for (int i=0; i<nodos.Length; i++)
+        {
+            nodos[i] = new NodoGrafoAStar[65];
+        }
+
         LinkedList<NodoGrafoAStar> closedPositions = new LinkedList<NodoGrafoAStar>();
 
         Heap<NodoGrafoAStar> openPositions = new Heap<NodoGrafoAStar>(maxHeapSize);
@@ -497,7 +503,7 @@ public class SimManagerFinal : SimulationManager
                 break;
             }
 
-            LinkedList<NodoGrafoAStar> adyacentes = calcularAdyacentes(nodoActual, end,tipo);
+            LinkedList<NodoGrafoAStar> adyacentes = calcularAdyacentes(nodoActual, end,nodos,tipo);
             //LinkedList<NodoGrafoAStar> adyacentesFiltrados 
             foreach (NodoGrafoAStar nodito in adyacentes)
             {
@@ -521,13 +527,13 @@ public class SimManagerFinal : SimulationManager
                 //float newG = nodoActual.costFromOrigin + (nodoActual.posicionGrid - nodito.posicionGrid).magnitude * inversaVelocidad;
                 float newG =  (int)(nodoActual.costFromOrigin + Mathf.RoundToInt((nodoActual.posicionGrid - nodito.posicionGrid).magnitude * inversaVelocidad));
 
-                if (newG < nodito.costFromOrigin || !openPositions.Contains(nodito)) {
+                if (newG < nodito.costFromOrigin || (nodos[(int)nodito.posicionGrid.x][(int)nodito.posicionGrid.y]!=null && !openPositions.Contains(nodito))) {
 					nodito.costFromOrigin = newG;
 					//nodito.estimatedCost = (end-nodito.posicionGrid).magnitude;
                     nodito.estimatedCost = getDistance(nodito,end);
 					nodito.padre = nodoActual;
 
-					if (!openPositions.Contains(nodito))
+					if (nodos[(int)nodito.posicionGrid.x][(int)nodito.posicionGrid.y] != null && !openPositions.Contains(nodito))
 						openPositions.Add(nodito);
 					else {
 						openPositions.UpdateItem(nodito);
@@ -558,7 +564,7 @@ public class SimManagerFinal : SimulationManager
         return caminoV3;
     }
 
-    private static LinkedList<NodoGrafoAStar> calcularAdyacentes(NodoGrafoAStar actual,Vector2 destino, StatsInfo.TIPO_PERSONAJE type)
+    private static LinkedList<NodoGrafoAStar> calcularAdyacentes(NodoGrafoAStar actual,Vector2 destino, NodoGrafoAStar[][] nodosUsados, StatsInfo.TIPO_PERSONAJE type)
     {
         LinkedList<NodoGrafoAStar> listanodos = new LinkedList<NodoGrafoAStar>();
 
@@ -574,9 +580,20 @@ public class SimManagerFinal : SimulationManager
                     Vector2 newPosi = new Vector2(actual.posicionGrid.x + i, actual.posicionGrid.y + j);
                     if (terrenos[(int)newPosi.x][(int)newPosi.y] != StatsInfo.TIPO_TERRENO.INFRANQUEABLE)
                     {
-                        float inversaVelocidad = 1 / StatsInfo.velocidadUnidadPorTerreno[(int)terrenos[(int)newPosi.x][(int)newPosi.y]][(int)type];
-                        float newG = actual.costFromOrigin + (destino - newPosi).magnitude * inversaVelocidad;
-                        listanodos.AddLast(new NodoGrafoAStar(newPosi, (destino - newPosi).magnitude, newG, actual));
+                        NodoGrafoAStar nodoActual = nodosUsados[(int)newPosi.x][(int)newPosi.y];
+                        if (nodoActual!=null)
+                        {
+                            listanodos.AddLast(nodoActual);
+                        }
+                        else
+                        {
+                            float inversaVelocidad = 1 / StatsInfo.velocidadUnidadPorTerreno[(int)terrenos[(int)newPosi.x][(int)newPosi.y]][(int)type];
+                            float newG = (int)(actual.costFromOrigin + Mathf.RoundToInt((actual.posicionGrid - newPosi).magnitude * inversaVelocidad));
+                            NodoGrafoAStar nuevoNodo = new NodoGrafoAStar(newPosi, getDistance(newPosi, destino), newG, actual);
+                            listanodos.AddLast(nuevoNodo);
+                            nodosUsados[(int)newPosi.x][(int)newPosi.y] = nuevoNodo;
+                        }
+
                     }
 
                 }
@@ -605,4 +622,13 @@ public class SimManagerFinal : SimulationManager
 		return 14*dstX + 10 * (dstY-dstX);
     }
 
+    private static int getDistance(Vector2 origin, Vector2 destiny)
+    {
+        int dstX = (int)Mathf.Abs(origin.x - destiny.x);
+        int dstY = (int)Mathf.Abs(origin.y - destiny.y);
+
+        if (dstX > dstY)
+            return 14 * dstY + 10 * (dstX - dstY);           //el 14 y el 10 depende del tamaño de nuestro grid
+        return 14 * dstX + 10 * (dstY - dstX);
+    }
 }

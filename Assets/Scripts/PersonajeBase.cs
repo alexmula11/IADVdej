@@ -76,9 +76,10 @@ public abstract class PersonajeBase : Bodi
     public void actualizeHealth(float healthInput)  //esto pide a gritos un mutex
     {
         this.health += healthInput;
-        float percent = this.health*100/StatsInfo.healthPerClass[(int)tipo];
+        if (health < 0) health = 0;
+        else if (health > StatsInfo.healthPerClass[(int)tipo]) health = StatsInfo.healthPerClass[(int)tipo];
+        float percent = health/StatsInfo.healthPerClass[(int)tipo];
         this.hPMarker.changeActualHP(percent);
-        Debug.Log("Mi vida es "+ this.health);
     }
 
     public bool isFullHealth()
@@ -135,12 +136,12 @@ public abstract class PersonajeBase : Bodi
         posiblesAcciones = StatsInfo.accionesDeUnidades[(int)tipo];
         if (this is PersonajePlayer)
         {
-            headMesh.material.color = StatsInfo.colorPlayerTeam;
+            //headMesh.material.color = StatsInfo.colorPlayerTeam;
             hPMarker.setHpColor(StatsInfo.colorPlayerTeam);
         }
         else
         {
-            headMesh.material.color = StatsInfo.colorIATeam;
+            //headMesh.material.color = StatsInfo.colorIATeam;
             hPMarker.setHpColor(StatsInfo.colorIATeam);
         }
     }
@@ -331,13 +332,13 @@ public abstract class PersonajeBase : Bodi
             //auxiliarmente elegimos el primero de la lista
             if (kinetic.Count > 0)
             {
-                steeringActual = kinetic[0].getSteering(this);
+                kinetic[0].getSteering(this);
                 if ((kinetic[0] as WallAvoidance3WhiswersSD).finishedLinear)
                 {
                     if (recalcularAccion)
                     {
                         recalcularAccion = false;
-                        //PathFollowingNOPathOffsetGridSD astar = (PathFollowingNOPathOffsetGridSD)kinetic[1];
+                        currentAction.doit();
                     }
                     selectedBehaviour = kinetic[1];
                 }
