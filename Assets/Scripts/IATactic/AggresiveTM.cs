@@ -53,7 +53,6 @@ public class AggresiveTM : TacticalModule
 
                         /*CONTROL DE UN PUENTE COMO PUNTA DE LANZA*/
         int bridgesControlled = bridgeUnderControl();                                       //comprobamos que puentes controlamos
-        Debug.Log(bridgesControlled);
         if(bridgesControlled == 0)                                                          //si no controlamos ninguno
         {
             //BridgeAttacked = changeBridgeAttack();                                          //selecionamos que puente atacar, vamos intercalando para despistar jeje
