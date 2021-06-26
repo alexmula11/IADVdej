@@ -479,6 +479,10 @@ public class SimManagerFinal : SimulationManager
         LinkedList<Vector2> recorrido = new LinkedList<Vector2>();
         float estimatedCost = (end - origen).magnitude;
 
+        /*if(origen == end || terrenos[(int)end.x][(int)end.y] == StatsInfo.TIPO_TERRENO.INFRANQUEABLE)
+        {
+        }
+        */
         NodoGrafoAStar[][] nodos = new NodoGrafoAStar[165][];
         for (int i=0; i<nodos.Length; i++)
         {
