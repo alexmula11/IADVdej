@@ -13,6 +13,7 @@ public class AggresiveTM : TacticalModule
     private List<PersonajeBase> unitsNotAsigned = new List<PersonajeBase>();                                            //unidades todavia no asignadas a una tarea
 
     private int BridgeAttacked;
+    private bool asd = false;
 
     public AggresiveTM(Vector2 _baseCoords, List<PersonajeBase> _npcs, List<PersonajeBase> _players) : base(_baseCoords, _npcs, _players)
     {
@@ -39,8 +40,7 @@ public class AggresiveTM : TacticalModule
             }
         }
 
-                        /*COMPROBACION DE ENEMIGOS CERCANOS*/
-        
+                        /*COMPROBACION DE ENEMIGOS CERCANOS*/  
         aggresiveActions.AddRange(attackEnemiesClose());
 
                         /*CONTROL DE UN PUENTE COMO PUNTA DE LANZA*/
@@ -52,6 +52,17 @@ public class AggresiveTM : TacticalModule
         }
 
                         /*ATAQUE A LA BASE ENEMIGA*/
+        if(bridgesControlled != 0)
+        {
+            //primero ir al puente que controlamos
+            aggresiveActions.AddRange(goToSpearHead(bridgesControlled));
+
+            //despues desde ahi ir a atacar la base
+            //en este punto ya solo quedan unidades que no estan haciendo todo lo demas,
+            //es decir, gente que esta en el puente esperando y sin luchar,
+            //por lo tanto, A POR LA BASE!
+            aggresiveActions.AddRange(createSiegeGroup());
+        }
 
         return aggresiveActions;
     }
@@ -141,13 +152,15 @@ public class AggresiveTM : TacticalModule
                 }
             }
             defendActions.Add(createAttackingAction(unitsNotAsigned[index], getClosestEnemy(unitsNotAsigned[index], attackers)));
+            defensiveGroup.Add(unitsNotAsigned[index]);
+            unitsNotAsigned.Remove(unitsNotAsigned[index]); //si falla algo, mirar aqui
             priorities[index] = float.MinValue;
         }
 
         return defendActions;
     }
 
-    private int bridgeUnderControl()                                               //comprobar si controlamos los puentes
+    private int bridgeUnderControl()             //TODO                                                             //comprobar si controlamos los puentes
     {
         //0 - ninguno
         //1 - el de arriba
@@ -167,7 +180,7 @@ public class AggresiveTM : TacticalModule
         }
     }
 
-    private List<Accion> orderGroupToAttackBridge(int bridge)
+    private List<Accion> orderGroupToAttackBridge(int bridge)   //TODO
     {
         //crear un grupo de unidades, cercanas entre ellas en el mapa de influencia
         //y mandarlas a por el puente
@@ -204,6 +217,38 @@ public class AggresiveTM : TacticalModule
             }
         }
         return attackActions;
+    }
+
+    private List<Accion> goToSpearHead(int whichBridgeToGo) //TODO
+    {
+        List<Accion> regroupForAttack = new List<Accion>();
+        foreach(PersonajeBase npc in unitsNotAsigned)
+        {
+            if(!defensiveGroup.Contains(npc))
+            {
+                if(!alreadyInBridge(npc,whichBridgeToGo))
+                {
+                    //mandarle ir al puente en cuestion
+                    // Algun punto concreto de el, maybe
+                    //cuidado mandar muchos matracas al mismo sitio 
+                }
+            }
+        }
+        return regroupForAttack;
+    }
+
+    private bool alreadyInBridge(PersonajeBase npc,int wichBridge) //TODO
+    {
+ 
+            //COMprobar que no esta en las coordenadas del puente en cuestion  
+
+        return false;
+    }
+
+    private List<Accion> createSiegeGroup()
+    {
+        List<Accion> siegeActions = new List<Accion>();
+        return siegeActions;
     }
 
 }

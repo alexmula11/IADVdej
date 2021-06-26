@@ -23,7 +23,7 @@ public class SimManagerFinal : SimulationManager
 
     protected Color [][] visibleTerrain;
 
-    static StatsInfo.TIPO_TERRENO[][] terrenos;
+    public static StatsInfo.TIPO_TERRENO[][] terrenos;
 
 
     protected enum MOUSE_ACTION_FINAL
@@ -81,7 +81,6 @@ public class SimManagerFinal : SimulationManager
         blocksize = new Vector2(widthStep, heightStep);
         minX = mapMinLimits.x;
         minY = mapMinLimits.y;
-        Debug.Log(gridDimensions.x + "  " + gridDimensions.y);
         maxHeapSize = ((int)gridDimensions.x) * ((int)gridDimensions.y);
         gm.initIAs();
     }
