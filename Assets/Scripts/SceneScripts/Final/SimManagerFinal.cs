@@ -19,7 +19,7 @@ public class SimManagerFinal : SimulationManager
     static float minX, minY;
 
     protected float mapsTimer = 2f;
-    protected float[][] influences;
+    public static float[][] influences;
 
     protected Color [][] visibleTerrain;
 

@@ -21,6 +21,7 @@ public class TacticIA
 
      private Vector2 allyBasePos, enemyBasePos;
      private bool baseUnderAttack = false;
+     private float baseHealth = StatsInfo.MAX_BASE_HEALTH;
 
 
     public TacticIA(List<PersonajeBase> allis, List<PersonajeBase> enemis, Vector2 allyBase, Vector2 enemyBase)

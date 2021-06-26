@@ -6,6 +6,7 @@ public class StatsInfo
 {
 
     private const int MAX_UNIT_TYPE = 4;
+    public const float MAX_BASE_HEALTH = 1000f;
 
     public enum TIPO_PERSONAJE
     {
@@ -56,6 +57,22 @@ public class StatsInfo
         new float[MAX_UNIT_TYPE] { 0.66f, 0.66f, 0.5f, 0.5f},
         new float[MAX_UNIT_TYPE] { 1.5f, 1.5f, 1.5f, 1.5f},
     };*/
+
+    public static Vector2 [] puente_inferior =
+    {
+        new Vector2(74,19),
+        new Vector2(74,24),
+        new Vector2(89,19),
+        new Vector2(89,24)
+    };
+    public static Vector2 [] puente_superior =
+    {
+        new Vector2(74,39),
+        new Vector2(74,44),
+        new Vector2(89,39),
+        new Vector2(89,44)
+    };
+
     public static float[][] velocidadUnidadPorTerreno =
     {
         new float[MAX_UNIT_TYPE] { 1, 1, 1, 1},
@@ -109,5 +126,14 @@ public class StatsInfo
     public static Color colorPlayerTeam = Color.blue;
     public static Color colorIATeam = Color.red;
 
+    /*Vector3 a1 = new Vector3(37.5f,0,-37.5f);
+            Vector3 a2 = new Vector3(62.5f,0,-37.5f);
+            Vector3 a3 = new Vector3(37.5f,0,37.5f);
+            Vector3 a4 = new Vector3(62.5f,0,37.5f);
+
+            Vector3 a5 = new Vector3(-62.5f,0,-37.5f);
+            Vector3 a6 = new Vector3(-37.5f,0,-37.5f);
+            Vector3 a7 = new Vector3(-62.5f,0,37.5f);
+            Vector3 a8 = new Vector3(-37.5f,0,37.5f);*/
 
 }
