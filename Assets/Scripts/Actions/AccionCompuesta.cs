@@ -8,9 +8,11 @@ public class AccionCompuesta : Accion
     protected List<Accion> acciones;
     protected bool loop, allDone;
 
+    protected internal new string nombre { get { return acciones[actionIndex].nombre; } }
 
     public AccionCompuesta(PersonajeBase _sujeto, List<Accion> acciones, bool loop) : base(_sujeto)
     {
+
         this.acciones = new List<Accion>(acciones);
         this.loop = loop;
     }

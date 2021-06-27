@@ -12,7 +12,7 @@ public class FormacionTriangulo : Formacion
     public FormacionTriangulo(PersonajeBase lider) :base(lider,4){
         for (int i = 0; i < maximoMiembros-1; i++)
         {
-            offsetPositions[i] = new Vector3((-7.5f + (i * 7.5f)), 0, -7.5f);//Valores de z para el segundo vector -> -5 0 5
+            offsetPositions[i] = new Vector3((-10f + (i * 10f)), 0, -10f);//Valores de z para el segundo vector -> -5 0 5
         }
         for (int i = 0; i < maximoMiembros-1; i++)
         {

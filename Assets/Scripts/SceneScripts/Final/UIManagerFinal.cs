@@ -13,11 +13,12 @@ public class UIManagerFinal : UIManager
     {
         debugAgentName.text = "Agent Name: " + character.nick;
 
-        if (character.accion != null) debugAgentAction.text = "Selected Action: " + character.accion.nombreAccion;
+        if (character.accion != null) debugAgentAction.text = "Selected Action: " + character.accion.nombre;
         else debugAgentAction.text = "Selected Action: No action";
 
         if (character.selectedBehaviour != null) debugAgentBehaviour.text = "Selected Behaviour: " + character.selectedBehaviour.GetType().Name;
         else debugAgentBehaviour.text = "Selected Behaviour: No behaviour";
+
         debugAgentLookingDirectionAngle.text = "Looking Direction Angle: " + character.orientacion;
         if (character.steeringActual != null)
         {

@@ -12,6 +12,8 @@ public class SimManagerFinal : SimulationManager
     protected Vector2 gridDimensions;
     protected internal static int maxHeapSize;
 
+    
+
     [SerializeField]
     protected GameManager gm;
 
@@ -108,7 +110,7 @@ public class SimManagerFinal : SimulationManager
                                 characterWithFocus = character;
                                 selectedUnits.Add(character);
                                 ui.showDebugInfo(true);
-                                ui.actualizeAgentDebugInfo(character);
+                                (ui as UIManagerFinal).actualizeAgentDebugInfo(characterWithFocus);
                             }
                             else
                             {
@@ -137,7 +139,7 @@ public class SimManagerFinal : SimulationManager
                             characterWithFocus = character;
                             selectedUnits.Add(character);
                             ui.showDebugInfo(true);
-                            ui.actualizeAgentDebugInfo(character);
+                            (ui as UIManagerFinal).actualizeAgentDebugInfo(characterWithFocus);
                         }
                         else
                         {
@@ -198,7 +200,7 @@ public class SimManagerFinal : SimulationManager
                                 if (person.currentFormacion != null)
                                 {
                                     formaciones.Remove(person.currentFormacion);
-                                    person.currentFormacion.disband();
+                                    person.currentFormacion.disbandGrid();
                                 }
                             }
                             //Asignamos el lider que clicamos
@@ -300,7 +302,13 @@ public class SimManagerFinal : SimulationManager
         {
             mapsTimer += Time.fixedDeltaTime;
         }
+
+        if (characterWithFocus != null)
+        {
+            (ui as UIManagerFinal).actualizeAgentDebugInfo(characterWithFocus);
+        }
     }
+    
 
     private void calculateInfluenceMap()
     {
@@ -606,6 +614,35 @@ public class SimManagerFinal : SimulationManager
         }
         return listanodos;
     }
+
+
+    protected new void setRouteOnUnits()
+    {
+        if (pathToSet.Count == 1)
+        {
+            foreach (PersonajeBase unit in selectedUnits)
+            {
+                List<Vector3> puntosDeRuta = new List<Vector3>(pathToSet);
+                GameObject mark = Instantiate(routeMarkPrefab, unit.routeMarks);
+                mark.transform.position = unit.posicion;
+                puntosDeRuta.Add(unit.posicion);
+                AccionPatrullar patrullera = new AccionPatrullar(unit, puntosDeRuta, terrenos);
+                unit.accion = patrullera;
+                patrullera.doit();
+            }
+        }
+        else
+        {
+            foreach (PersonajeBase unit in selectedUnits)
+            {
+                List<Vector3> puntosDeRuta = new List<Vector3>(pathToSet);
+                AccionPatrullar patrullera = new AccionPatrullar(unit, puntosDeRuta, terrenos);
+                unit.accion = patrullera;
+                patrullera.doit();
+            }
+        }
+    }
+
 
     private static int getDistance(NodoGrafoAStar origin, NodoGrafoAStar destiny)
     {

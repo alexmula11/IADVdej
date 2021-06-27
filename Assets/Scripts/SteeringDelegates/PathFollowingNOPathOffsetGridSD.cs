@@ -4,10 +4,11 @@ using UnityEngine;
 
 public class PathFollowingNOPathOffsetGridSD : SteeringBehaviour
 {
-    protected List<Vector2> path;
+    protected List<Vector2> path = new List<Vector2>();
     protected int currentPoint = 0;
     protected bool setup = false;
-    protected AStarSD aStar;
+    protected List<Vector3> ruta = new List<Vector3>();
+    protected PursueSD pursueSD = new PursueSD();
 
     public PathFollowingNOPathOffsetGridSD(List<Vector3> path, StatsInfo.TIPO_TERRENO[][] terrenos)
     {
@@ -21,26 +22,37 @@ public class PathFollowingNOPathOffsetGridSD : SteeringBehaviour
     {
         if (!setup)
         {
+            Vector3 puntoActual = path[0];
+            for (int i = 1; i < path.Count; i++)
+            {
+                List<Vector3> recorridoActual = SimManagerFinal.aStarPathV3(puntoActual, path[i], personaje.tipo);
+                ruta.AddRange(recorridoActual);
+                puntoActual = path[i];
+            }
+            List<Vector3> recorridoFinal = SimManagerFinal.aStarPathV3(path[path.Count-1], path[0], personaje.tipo);
+            ruta.AddRange(recorridoFinal);
+
             float minDist = Mathf.Infinity;
             int nearestPoint = -1;
-            for (int i = 0; i < path.Count; i++)
+            for (int i = 0; i < ruta.Count; i++)
             {
-                Vector2 personPos = SimManagerFinal.positionToGrid(personaje.posicion);
-                if ((path[i] - personPos).magnitude < minDist)
+                if ((ruta[i] - personaje.posicion).magnitude < minDist)
                 {
                     nearestPoint = i;
-                    minDist = (path[i] - personPos).magnitude;
+                    minDist = (ruta[i] - personaje.posicion).magnitude;
                 }
             }
             setup = true;
             currentPoint = nearestPoint;
         }
-        if (aStar.finishedLinear)
+        if (pursueSD.finishedLinear)
         {
-            currentPoint = (currentPoint + 1) % path.Count;
+            currentPoint = (currentPoint + 1) % ruta.Count;
         }
-        personaje.fakeMovement.posicion = path[currentPoint];
-        personaje.fakeMovement.moveTo(path[currentPoint]);
-        return aStar.getSteering(personaje);
+        personaje.fakeMovement.innerDetector = personaje.innerDetector;
+        personaje.fakeMovement.posicion = ruta[currentPoint];
+        personaje.fakeMovement.moveTo(ruta[currentPoint]);
+        pursueSD.target = personaje.fakeMovement;
+        return pursueSD.getSteering(personaje);
     }
 }

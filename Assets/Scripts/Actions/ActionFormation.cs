@@ -4,19 +4,19 @@ using UnityEngine;
 
 public class ActionFormation : Accion
 {
-    FormacionSD formacionSD;
+    FormacionGridSD formacionSD;
 
 
     public ActionFormation(PersonajeBase _sujeto, PersonajeBase lider, Vector3 offsetPos, float offsetRotation) : base(_sujeto)
     {
         nombreAccion = "FORMAR";
-        formacionSD = new FormacionSD(offsetPos, offsetRotation);
+        formacionSD = new FormacionGridSD(offsetPos, offsetRotation);
         formacionSD.target = lider;
     }
 
     protected internal override void doit()
     {
-        sujeto.newTask(formacionSD);
+        sujeto.newTaskGrid(formacionSD);
     }
 
     protected internal override bool isDone()

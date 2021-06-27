@@ -15,7 +15,9 @@ public class AccionAttack : AccionCombate
     {
         if(isInRange())                                                                         //si el receptor esta a rango de ataque del sujeto
         {
-            sujeto.newTask(new StopSteering());
+            FaceSD miraDondeAtakas = new FaceSD();
+            miraDondeAtakas.target = receptor;
+            sujeto.newTaskGrid(miraDondeAtakas);
             if (timer <= 0)
             {
                 receptor.actualizeHealth(-calculateDamageOutput());                                 //le pasamos actualización de vida negativa

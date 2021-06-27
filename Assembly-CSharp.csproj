@@ -135,6 +135,7 @@
     <Compile Include="Assets\Scripts\SteeringDelegates\PathFollowingNOPathOffsetSD.cs" />
     <Compile Include="Assets\Scripts\SteeringDelegates\PursueSD.cs" />
     <Compile Include="Assets\Scripts\SteeringDelegates\SeparationSD.cs" />
+    <Compile Include="Assets\Scripts\SteeringDelegates\WallAvoidance3WhiswersGridSD.cs" />
     <Compile Include="Assets\Scripts\SteeringDelegates\WallAvoidance3WhiswersSD.cs" />
     <Compile Include="Assets\Scripts\SteeringDelegates\WanderSD.cs" />
     <Compile Include="Assets\Scripts\UIManager.cs" />

@@ -22,10 +22,26 @@ public class PersonajeNPC : PersonajeBase
         kinetic.Add(new WanderSD(2 * (float)System.Math.PI, 5, 30 * GradosARadianes, 2));
     }
 
+    internal override void disbandAccion()
+    {
+        formacion = null;
+        currentAction = null;
+        kinetic.Clear();
+        kinetic.Add(new WallAvoidance3WhiswersGridSD());
+        kinetic.Add(new StopSteering());
+    }
+
     internal override void newTask(SteeringBehaviour st)
     {
         kinetic.Clear();
         kinetic.Add(new WallAvoidance3WhiswersSD());
+        kinetic.Add(st);
+    }
+
+    internal override void newTaskGrid(SteeringBehaviour st)
+    {
+        kinetic.Clear();
+        kinetic.Add(new WallAvoidance3WhiswersGridSD());
         kinetic.Add(st);
     }
 

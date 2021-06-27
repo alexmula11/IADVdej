@@ -13,7 +13,7 @@ public class AccionPatrullar : Accion
 
     protected internal override void doit()
     {
-        sujeto.newTask(patrullera);
+        sujeto.newTaskGrid(patrullera);
     }
 
     protected internal override bool isDone()

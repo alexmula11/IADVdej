@@ -4,7 +4,10 @@ using UnityEngine;
 
 public abstract class Accion
 {
-    protected internal string nombreAccion;
+    protected string nombreAccion;
+
+    protected internal string nombre { get { return nombreAccion; } }
+
     protected internal PersonajeBase sujeto;
 
     public Accion(PersonajeBase _sujeto)

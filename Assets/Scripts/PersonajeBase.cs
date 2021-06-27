@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -89,7 +90,7 @@ public abstract class PersonajeBase : Bodi
 
     public bool isInCombat()
     {
-        return (currentAction.nombreAccion != "ATACAR");
+        return (currentAction.nombre != "ATACAR");
     }
 
     public bool betterToRun()
@@ -110,6 +111,7 @@ public abstract class PersonajeBase : Bodi
         //newTask(new WanderSD(2 * (float)System.Math.PI, 5, 30 * GradosARadianes, 2));
         //newTask(new CohesionSD());
     }
+
 
     protected internal void applyTipo(StatsInfo.TIPO_PERSONAJE tipo)
     {
@@ -314,42 +316,46 @@ public abstract class PersonajeBase : Bodi
 
     private void arbitroEscenaFinal()
     {
-        if(currentAction != null && currentAction is AccionCompuesta)       //siguiente accion de la lista
+        if (isAlive())
         {
-           ((AccionCompuesta)currentAction).actualizeAction(); //aceder a currentaction 
-        } 
-        if (currentAction != null && currentAction.isDone())
-        {
-            kinetic.Clear();
-            accion = null;
-            selectedBehaviour = null;
-            steeringActual = new Steering();
-        }
-        else
-        {
-            //ESTO ESTA MAL DE ALGUNA FORMA
-
-            //auxiliarmente elegimos el primero de la lista
-            if (kinetic.Count > 0)
+            if (currentAction != null && currentAction is AccionCompuesta)       //siguiente accion de la lista
             {
-                kinetic[0].getSteering(this);
-                if ((kinetic[0] as WallAvoidance3WhiswersSD).finishedLinear)
+                ((AccionCompuesta)currentAction).actualizeAction(); //aceder a currentaction 
+            }
+            if (currentAction != null && currentAction.isDone())
+            {
+                kinetic.Clear();
+                currentAction = null;
+                selectedBehaviour = null;
+                steeringActual = new Steering();
+            }
+            else
+            {
+                //ESTO ESTA MAL DE ALGUNA FORMA
+
+                //auxiliarmente elegimos el primero de la lista
+                if (kinetic.Count > 0)
                 {
-                    if (recalcularAccion)
+                    kinetic[0].getSteering(this);
+                    if ((kinetic[0] as WallAvoidance3WhiswersGridSD).finishedLinear)
                     {
-                        recalcularAccion = false;
-                        currentAction.doit();
+                        if (recalcularAccion)
+                        {
+                            recalcularAccion = false;
+                            currentAction.doit();
+                        }
+                        selectedBehaviour = kinetic[1];
                     }
-                    selectedBehaviour = kinetic[1];
+                    else
+                    {
+                        recalcularAccion = true;
+                        selectedBehaviour = kinetic[0];
+                    }
+                    steeringActual = selectedBehaviour.getSteering(this);
                 }
-                else
-                {
-                    recalcularAccion = true;
-                    selectedBehaviour = kinetic[0];
-                }
-                steeringActual = selectedBehaviour.getSteering(this);
             }
         }
+        
     }
 
     private void checkTerrainBelow()
@@ -436,9 +442,12 @@ public abstract class PersonajeBase : Bodi
     internal abstract void addTask(SteeringBehaviour st);
     internal abstract void newTaskWOWA(SteeringBehaviour st);
     internal abstract void newTaskLowWA(SteeringBehaviour st);
+    internal abstract void newTaskGrid(SteeringBehaviour st);
 
 
     internal abstract void disband();
+
+    internal abstract void disbandAccion();
 
 
     internal void OnDrawGizmos()

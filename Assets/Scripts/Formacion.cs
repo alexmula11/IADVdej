@@ -11,7 +11,6 @@ public abstract class Formacion
     protected Vector3[] offsetPositions;
     protected float[] offsetRotations;
 
-
     protected internal PersonajeBase[] getMiembros { get { return miembros; } }
     protected internal Vector3[] getOffsetsPos { get { return offsetPositions; } }
     protected internal float[] getOffsetsRots { get { return offsetRotations; } }
@@ -32,6 +31,8 @@ public abstract class Formacion
         offsetRotations = new float[maximoMiembros - 1];
         stopwatch.Start();
     }
+
+
 
     internal virtual bool addMiembro(PersonajeBase nuevo){
          if (n_miembros < maximoMiembros)
@@ -99,6 +100,17 @@ public abstract class Formacion
             if (miembros[i] != null)
             {
                 miembros[i].disband();
+            }
+        }
+    }
+
+    internal void disbandGrid()
+    {
+        for (int i = 0; i < miembros.Length; i++)
+        {
+            if (miembros[i] != null)
+            {
+                miembros[i].disbandAccion();
             }
         }
     }

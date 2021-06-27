@@ -14,25 +14,32 @@ public class PathFollowEndSD : SteeringBehaviour
     public PathFollowEndSD(List<Vector3> path)
     {
         this.path = path;
-        pathEnd = path[path.Count - 1];
+        if (path.Count>0) pathEnd = path[path.Count - 1];
     }
 
     protected internal override Steering getSteering(PersonajeBase personaje)
     {
+        if (currentPoint >= path.Count)
+        {
+            _finishedAngular = _finishedLinear = true;
+            Vector3 cuadrao = SimManagerFinal.gridToPosition(SimManagerFinal.positionToGrid(personaje.posicion));
+            personaje.fakeAvoid.posicion = cuadrao;
+            personaje.fakeAvoid.moveTo(cuadrao);
+            personaje.fakeMovement.posicion = cuadrao;
+            personaje.fakeMovement.moveTo(cuadrao);
+            return new Steering();
+        }
         personaje.fakeAvoid.posicion = pathEnd;
         personaje.fakeAvoid.moveTo(pathEnd);
+        personaje.fakeMovement.posicion = path[currentPoint];
+        personaje.fakeMovement.moveTo(path[currentPoint]);
+
+        pursueSD.target = personaje.fakeMovement;
+        Steering movActual = pursueSD.getSteering(personaje);
         if (pursueSD.finishedLinear)
         {
             currentPoint++;
-            if (currentPoint>= path.Count)
-            {
-                _finishedAngular = _finishedLinear = true;
-                return new Steering();
-            }
         }
-        pursueSD.target = personaje.fakeMovement;
-        personaje.fakeMovement.posicion = path[currentPoint];
-        personaje.fakeMovement.moveTo(path[currentPoint]);
-        return pursueSD.getSteering(personaje);
+        return movActual;
     }
 }

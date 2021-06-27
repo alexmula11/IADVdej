@@ -19155,9 +19155,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   center: {x: 150, y: 150, z: 0}
-  lowerLimits: {x: 0, y: 50, z: -300}
-  higherLimits: {x: 300, y: 200, z: 300}
-  camSpeed: 50
+  lowerLimits: {x: -100, y: 30, z: -350}
+  higherLimits: {x: 300, y: 200, z: 350}
+  camSpeed: 75
 --- !u!1001 &963218118
 PrefabInstance:
   m_ObjectHideFlags: 0

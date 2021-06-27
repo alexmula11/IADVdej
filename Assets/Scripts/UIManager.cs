@@ -133,7 +133,7 @@ public class UIManager : MonoBehaviour
 
         Texture2D texture = new Texture2D(influences.Length,influences[0].Length);
         influenceMinimap.sizeDelta = new Vector2(influences.Length, influences[0].Length);
-        Material matirial = new Material(Shader.Find("Standard"));
+        Material matirial = new Material(Shader.Find("Sprites/Default"));
         for (int i=0; i<influences.Length; i++)
         {
             for (int j=0; j < influences[i].Length; j++)
@@ -141,12 +141,12 @@ public class UIManager : MonoBehaviour
                 int swapYAxis = influences[i].Length - 1 - j;
                 if (influences[i][swapYAxis] > 0)
                 {
-                    int intensity = (int)System.Math.Min(255,influences[i][swapYAxis] *255/StatsInfo.basePotenciaInfluencia);
+                    int intensity = (int)System.Math.Min(255,influences[i][swapYAxis] *255/(StatsInfo.basePotenciaInfluencia*2));
                     texture.SetPixel(i, j, new Color(0,0,intensity));
                 }
                 else if(influences[i][swapYAxis] < 0)
                 {
-                    int intensity = (int)System.Math.Max(-255, influences[i][swapYAxis] * 255 / StatsInfo.basePotenciaInfluencia);
+                    int intensity = (int)System.Math.Max(-255, influences[i][swapYAxis] * 255 / (StatsInfo.basePotenciaInfluencia * 2));
                     texture.SetPixel(i, j, new Color(-intensity, 0, 0));
                 }
                 else
@@ -168,7 +168,7 @@ public class UIManager : MonoBehaviour
         Texture2D texture = new Texture2D(visions.Length, visions[0].Length);
         visionMinimap.sizeDelta = new Vector2(visions.Length, visions[0].Length);
         visionMinimap.anchoredPosition = new Vector2(-influenceMinimap.sizeDelta.x-10, 0);
-        Material matirial = new Material(Shader.Find("Standard"));
+        Material matirial = new Material(Shader.Find("Sprites/Default"));
         for (int i = 0; i < visions.Length; i++)
         {
             for (int j = 0; j < visions[i].Length; j++)

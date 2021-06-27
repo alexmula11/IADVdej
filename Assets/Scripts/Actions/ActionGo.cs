@@ -30,7 +30,7 @@ public class ActionGo : Accion
         }
         List<Vector3> camino = SimManagerFinal.aStarPathV3(SimManagerFinal.positionToGrid(sujeto.posicion), destiny, sujeto.tipo);
         recorrer = new PathFollowEndSD(camino);
-        sujeto.newTask(recorrer);
+        sujeto.newTaskGrid(recorrer);
     }
 
     protected internal override bool isDone()

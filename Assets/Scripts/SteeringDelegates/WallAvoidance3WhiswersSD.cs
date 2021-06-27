@@ -31,9 +31,9 @@ public class WallAvoidance3WhiswersSD : SteeringBehaviour
             rightOri -= 2 * (float)System.Math.PI;
         else if (rightOri < -System.Math.PI)
             rightOri += 2 * (float)System.Math.PI;
-        bool midWhisker = Physics.Raycast(personaje.posicion, SimulationManager.DirectionToVector(personaje.orientacion), out midWHit, primaryWhiskerLenght, 1 << 9 | 1 << 8);
-        bool leftWhisker = Physics.Raycast(personaje.posicion, SimulationManager.DirectionToVector(leftOri), out leftWHit, secondaryWhiskersLength, 1 << 9 | 1 << 8);
-        bool rightWhisker = Physics.Raycast(personaje.posicion, SimulationManager.DirectionToVector(rightOri), out rightWHit, secondaryWhiskersLength, 1 << 9 | 1 << 8);
+        bool midWhisker = Physics.Raycast(personaje.posicion, SimulationManager.DirectionToVector(personaje.orientacion), out midWHit, primaryWhiskerLenght, 1 << 9 | 1 << 8 | 1<< 13);
+        bool leftWhisker = Physics.Raycast(personaje.posicion, SimulationManager.DirectionToVector(leftOri), out leftWHit, secondaryWhiskersLength, 1 << 9 | 1 << 8 | 1 << 13);
+        bool rightWhisker = Physics.Raycast(personaje.posicion, SimulationManager.DirectionToVector(rightOri), out rightWHit, secondaryWhiskersLength, 1 << 9 | 1 << 8 | 1 << 13);
         
 
         if (midWhisker)

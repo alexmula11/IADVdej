@@ -7,6 +7,7 @@ public class FormacionGridSD : SteeringBehaviour
     private Vector3 offsetPosition;
     private float offsetOrientation;
     private PathFollowEndSD followPath;
+    private StopSteering parada = new StopSteering();
     private AlignSteering faceSD = new AlignSteering();
     private Vector2 lastDestiny;
 
@@ -41,6 +42,7 @@ public class FormacionGridSD : SteeringBehaviour
             }
             personaje.fakeAlign.transform.eulerAngles = new Vector3(0, (_target.orientacion + offsetOrientation) * Bodi.RadianesAGrados, 0);
             faceSD.target = personaje.fakeAlign;
+            parada.getSteering(personaje);
             return faceSD.getSteering(personaje);
         }
         else return followPath.getSteering(personaje);
