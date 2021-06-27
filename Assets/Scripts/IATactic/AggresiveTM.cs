@@ -345,7 +345,7 @@ public class AggresiveTM : TacticalModule
                         {
                             break;
                         }
-                        influenceTotAttack += StatsInfo.potenciaInfluenciaUnidades[(int)npc.tipo];
+                        influenceTotAttack += StatsInfo.influenciaMaximaGeneradaPorUnidad[(int)npc.tipo];
                         regroupForAttack.Add(new ActionGo(npc,randomPointInBridge(bridge,npc),null));
                     }
                 }
@@ -361,14 +361,14 @@ public class AggresiveTM : TacticalModule
         switch(wichBridge)
         {
             case 1:
-                return pos.x > StatsInfo.puente_superior[0].x && pos.x < StatsInfo.puente_superior[2].x && pos.y > StatsInfo.puente_superior[0].y && pos.y < StatsInfo.puente_superior[1].y;
+                return pos.x >= StatsInfo.puente_superior[0].x && pos.x <= StatsInfo.puente_superior[2].x && pos.y >= StatsInfo.puente_superior[0].y && pos.y <= StatsInfo.puente_superior[1].y;
             case 2:
-                return pos.x > StatsInfo.puente_inferior[0].x && pos.x < StatsInfo.puente_inferior[2].x && pos.y > StatsInfo.puente_inferior[0].y && pos.y < StatsInfo.puente_inferior[1].y;
+                return pos.x >= StatsInfo.puente_inferior[0].x && pos.x <= StatsInfo.puente_inferior[2].x && pos.y >= StatsInfo.puente_inferior[0].y && pos.y <= StatsInfo.puente_inferior[1].y;
             case 3:
                 return
-                (pos.x > StatsInfo.puente_superior[0].x && pos.x < StatsInfo.puente_superior[2].x && pos.y > StatsInfo.puente_superior[0].y && pos.y < StatsInfo.puente_superior[1].y)
+                (pos.x >= StatsInfo.puente_superior[0].x && pos.x <= StatsInfo.puente_superior[2].x && pos.y >= StatsInfo.puente_superior[0].y && pos.y <= StatsInfo.puente_superior[1].y)
                 ||
-                (pos.x > StatsInfo.puente_inferior[0].x && pos.x < StatsInfo.puente_inferior[2].x && pos.y > StatsInfo.puente_inferior[0].y && pos.y < StatsInfo.puente_inferior[1].y);
+                (pos.x >= StatsInfo.puente_inferior[0].x && pos.x <= StatsInfo.puente_inferior[2].x && pos.y >= StatsInfo.puente_inferior[0].y && pos.y <= StatsInfo.puente_inferior[1].y);
         } 
         return false;
     }

@@ -84,10 +84,11 @@ public class StatsInfo
     };
     public static Color[] coloresUnidades = { Color.red, Color.blue, Color.black, Color.cyan };
     public static float[] potenciaInfluenciaUnidades = { 10f, 20f, 30f, 40f };
-    public static float[] distanciaInfluenciaUnidades = { 5f, 10f, 5f, 5f };
+    public static float[] distanciaInfluenciaUnidades = { 5f, 5f, 5f, 5f };
     public static float basePotenciaInfluencia = 75f;
     public static float baseDistanciaInfluencia = 15f;
     public static float baseDistaciaCuracion = 37.5f;
+    public static float[] influenciaMaximaGeneradaPorUnidad = { 260f, 520f,780f,1040f};
 
     public static float[] velocidadDeAtaquePorUnidad = { 1f, 1.5f, 0.5f, 0.5f };
 
@@ -96,9 +97,9 @@ public class StatsInfo
     public static Vector2 RED_TEAM_BASE_POS = new Vector2(10f,10f);
 
     /*COMBAT STATS*/
-    public static float [] healthPerClass = {100f,80f,200f,130f};         //INF - ARQ - PES - MAG
-    public static float [] damagePerClass = {10f,12f,10f,30f};
-    public static float [] attackRangePerClass = {2f,10f,2f,12f};
+    public static float [] healthPerClass = {100f,80f,300f,80f};         //INF - ARQ - PES - MAG
+    public static float [] damagePerClass = {10f,5f,10f,30f};
+    public static float [] attackRangePerClass = {2f,12f,2f,10f};
     public static float [] detectionRangePerClass = {5f,15f,5f,15f};
     public static float BASEHEALING = 5f;
     public static float [][] damageModifiers =

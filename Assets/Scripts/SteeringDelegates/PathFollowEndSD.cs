@@ -9,16 +9,18 @@ public class PathFollowEndSD : SteeringBehaviour
     protected int currentPoint = 0;
     protected bool setup = false;
     protected PursueSD pursueSD = new PursueSD();
+    protected Vector3 pathEnd;
 
     public PathFollowEndSD(List<Vector3> path)
     {
         this.path = path;
+        pathEnd = path[path.Count - 1];
     }
 
     protected internal override Steering getSteering(PersonajeBase personaje)
     {
-        personaje.fakeAvoid.posicion = path[path.Count - 1];
-        personaje.fakeAvoid.moveTo(path[path.Count-1]);
+        personaje.fakeAvoid.posicion = pathEnd;
+        personaje.fakeAvoid.moveTo(pathEnd);
         if (pursueSD.finishedLinear)
         {
             currentPoint++;

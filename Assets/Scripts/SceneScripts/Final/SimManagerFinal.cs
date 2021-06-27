@@ -55,6 +55,8 @@ public class SimManagerFinal : SimulationManager
             }
         }
 
+
+
         terrenos = new StatsInfo.TIPO_TERRENO[(int)gridDimensions.x][];
         influences = new float[(int)gridDimensions.x][];
         visibleTerrain = new Color[(int)gridDimensions.x][];
