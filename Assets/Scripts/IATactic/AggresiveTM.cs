@@ -18,7 +18,7 @@ public class AggresiveTM : TacticalModule
     private float influenceBridgeInf;
 
 
-    public AggresiveTM(Vector2 _baseCoords, List<PersonajeBase> _npcs, List<PersonajeBase> _players) : base(_baseCoords, _npcs, _players)
+    public AggresiveTM(Vector2 _baseCoords,  Vector2 _enemyBaseCoords ,List<PersonajeBase> _npcs, List<PersonajeBase> _players) : base(_baseCoords,_enemyBaseCoords ,_npcs, _players)
     {
         BridgeAttacked = Mathf.RoundToInt(Random.Range(1,2));
     }
@@ -315,7 +315,7 @@ public class AggresiveTM : TacticalModule
     {
         List<Accion> regroupForAttack = new List<Accion>();
         float influenceTotAttack = 0;
-        int bridge = 0;
+        int bridgeToAttack = 0;
         float influenceToBeat = 0;
         switch(bridgesControlled)
         {
@@ -323,7 +323,7 @@ public class AggresiveTM : TacticalModule
             case 1:
                 if(influenceBridgeInf > 0)
                 {
-                    bridge = 2;
+                    bridgeToAttack = 2;
                     influenceToBeat = influenceBridgeInf;
                 }
             break;
@@ -331,13 +331,13 @@ public class AggresiveTM : TacticalModule
             case 2:
                 if(influenceBridgeSup > 0)
                 {
-                    bridge = 1;
+                    bridgeToAttack = 1;
                     influenceToBeat = influenceBridgeSup;
                 }    
             break;
         }
 
-        if(bridge != 0)         //si el enemigo tiene un puente tratamos de recuperarlo
+        if(bridgeToAttack != 0)         //si el enemigo tiene un puente tratamos de recuperarlo
         {
             foreach(PersonajeBase npc in unitsNotAsigned)
             {
@@ -350,8 +350,8 @@ public class AggresiveTM : TacticalModule
                             break;
                         }
                         influenceTotAttack += StatsInfo.influenciaMaximaGeneradaPorUnidad[(int)npc.tipo];
-                        if(!alreadyGoingToBridge(npc,bridge))
-                            regroupForAttack.Add(new ActionGo(npc,randomPointInBridge(bridge,npc),null));
+                        if(!alreadyGoingToBridge(npc,bridgeToAttack))
+                            regroupForAttack.Add(new ActionGo(npc,randomPointInBridge(bridgeToAttack,npc),null));
                         if(!ofensiveGroup.Contains(npc))
                             ofensiveGroup.Add(npc);
                     }
@@ -369,8 +369,8 @@ public class AggresiveTM : TacticalModule
                             break;
                         }
                         influenceTotAttack += StatsInfo.influenciaMaximaGeneradaPorUnidad[(int)npc.tipo];
-                        if(!alreadyGoingToBridge(npc,bridge))
-                            regroupForAttack.Add(new ActionGo(npc,randomPointInBridge(bridge,npc),null));
+                        if(!alreadyGoingToBridge(npc,bridgeToAttack))
+                            regroupForAttack.Add(new ActionGo(npc,randomPointInBridge(bridgeToAttack,npc),null));
                         if(!ofensiveGroup.Contains(npc))
                             ofensiveGroup.Add(npc);
                     }  

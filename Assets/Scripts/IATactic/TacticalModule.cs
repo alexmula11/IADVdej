@@ -18,6 +18,7 @@ public abstract class TacticalModule
   protected internal const int HIGHDANGER = 10;
 
   protected internal Vector2 baseCoords;
+  protected internal Vector2 enemyBaseCoords;
   protected internal List<PersonajeBase> allies;
   protected internal List<PersonajeBase> enemies;
 
@@ -25,9 +26,10 @@ public abstract class TacticalModule
 
 
 
-    public TacticalModule(Vector2 _baseCoords, List<PersonajeBase> alice, List<PersonajeBase> nemy)
+    public TacticalModule(Vector2 _baseCoords, Vector2 _enemyBaseCoords ,List<PersonajeBase> alice, List<PersonajeBase> nemy)
     {
         baseCoords = _baseCoords;
+        enemyBaseCoords = _enemyBaseCoords;
         allies = alice;
         enemies = nemy;
     }
@@ -89,5 +91,16 @@ public abstract class TacticalModule
       List<Accion> orders = new List<Accion>{goToEnemy,attackEnemy};
       AccionCompuesta ac = new AccionCompuesta(sujeto,orders,true);
       return ac;
+    }
+
+    protected internal ActionGo createBaseAttackAction(PersonajeBase sujeto)
+    {
+        ActionGo goToEnemyBase = new ActionGo(sujeto,getClosestPointToBase(sujeto,enemyBaseCoords),null);
+        return goToEnemyBase;
+    }
+
+    protected internal bool isGoingToAttack(PersonajeBase unit)
+    {
+      return (unit.currentAction is AccionCompuesta);
     }
 }

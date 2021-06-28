@@ -45,12 +45,11 @@ public class TacticIA
         baseUnderAttack = comander.ourBaseIsUnderAttack();
         if(!baseUnderAttack)                                        //si no estamos siendo atacados las curaciones y respawn estan activos
         {
-            //respawn de unidades muertas
-             //TODO realizar curaciones
+            //TODO respawn de unidades muertas
+
+            healUnitsOnBaseRange();
         }     
     }
-
-    //private 
 
      public void change_IA_Mode(IA_MODE new_mode)
      {
@@ -67,15 +66,26 @@ public class TacticIA
          switch(mode)
         {
             case IA_MODE.ATTACK:
-                 tm = new AggresiveTM(allyBasePos,allies,enemies);
+                 tm = new AggresiveTM(allyBasePos,enemyBasePos,allies,enemies);
             break;
             case IA_MODE.DEFEND:
-                 tm = new DefensiveTM(allyBasePos,allies,enemies);
+                 tm = new DefensiveTM(allyBasePos,enemyBasePos,allies,enemies);
             break;
             case IA_MODE.TOTAL_WAR:
-                tm = new TotalWarTM(allyBasePos,allies,enemies);
+                tm = new TotalWarTM(allyBasePos,enemyBasePos,allies,enemies);
             break;
         }
         return tm;
+     }
+
+     private void healUnitsOnBaseRange()
+     {
+         foreach(PersonajeBase unit in allies)
+         {
+            if(unit.isAlive())
+                if(!unit.isFullHealth())
+                    if(comander.isInBaseRange(unit))
+                        unit.actualizeHealth(StatsInfo.BASE_HEALING_POWER);
+         }
      }
 }
