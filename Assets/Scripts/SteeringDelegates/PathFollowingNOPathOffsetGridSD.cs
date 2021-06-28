@@ -25,11 +25,11 @@ public class PathFollowingNOPathOffsetGridSD : SteeringBehaviour
             Vector3 puntoActual = path[0];
             for (int i = 1; i < path.Count; i++)
             {
-                List<Vector3> recorridoActual = SimManagerFinal.aStarPathV3(puntoActual, path[i], personaje.tipo);
+                List<Vector3> recorridoActual = SimManagerFinal.aStarPathV3(puntoActual, path[i], personaje.tipo, personaje is PersonajePlayer);
                 ruta.AddRange(recorridoActual);
                 puntoActual = path[i];
             }
-            List<Vector3> recorridoFinal = SimManagerFinal.aStarPathV3(path[path.Count-1], path[0], personaje.tipo);
+            List<Vector3> recorridoFinal = SimManagerFinal.aStarPathV3(path[path.Count-1], path[0], personaje.tipo, personaje is PersonajePlayer);
             ruta.AddRange(recorridoFinal);
 
             float minDist = Mathf.Infinity;

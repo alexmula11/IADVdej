@@ -582,7 +582,7 @@ public class SimManagerFinal : SimulationManager
     }
 
 
-    internal static List<Vector2> aStarPath(Vector2 origen, Vector2 end, StatsInfo.TIPO_PERSONAJE tipo)
+    internal static List<Vector2> aStarPath(Vector2 origen, Vector2 end, StatsInfo.TIPO_PERSONAJE tipo, bool team)
     {
         NodoGrafoAStar nodoOrigen = new NodoGrafoAStar(origen, (end - origen).magnitude, 0f, null);
         LinkedList<Vector2> recorrido = new LinkedList<Vector2>();
@@ -615,7 +615,7 @@ public class SimManagerFinal : SimulationManager
                 break;
             }
 
-            LinkedList<NodoGrafoAStar> adyacentes = calcularAdyacentes(nodoActual, end,nodos,tipo);
+            LinkedList<NodoGrafoAStar> adyacentes = calcularAdyacentes(nodoActual, end,nodos,tipo,team);
             //LinkedList<NodoGrafoAStar> adyacentesFiltrados 
             foreach (NodoGrafoAStar nodito in adyacentes)
             {
@@ -635,7 +635,10 @@ public class SimManagerFinal : SimulationManager
                 if (newG < nodito.costFromOrigin || (nodos[(int)nodito.posicionGrid.x][(int)nodito.posicionGrid.y]!=null && !openPositions.Contains(nodito))) {
 					nodito.costFromOrigin = newG;
 					//nodito.estimatedCost = (end-nodito.posicionGrid).magnitude;
-                    nodito.estimatedCost = getDistance(nodito,end);
+                    float influencePenalty = calculateInfluencePenalty(team,nodito.posicionGrid);
+                    
+                    float terrainPenalty = inversaVelocidad * 70;
+                    nodito.estimatedCost = getDistance(nodito,end) + influencePenalty + terrainPenalty;
 					nodito.padre = nodoActual;
 
 					if (nodos[(int)nodito.posicionGrid.x][(int)nodito.posicionGrid.y] != null && !openPositions.Contains(nodito))
@@ -658,9 +661,22 @@ public class SimManagerFinal : SimulationManager
         return new List<Vector2>(recorrido);
     }
 
-    internal static List<Vector3> aStarPathV3(Vector2 origen, Vector2 end, StatsInfo.TIPO_PERSONAJE tipo)
+    private static float calculateInfluencePenalty(bool team, Vector2 nodito)
     {
-        List<Vector2> camino = aStarPath(origen, end, tipo);
+        float penalty = 0;
+        if(team && influences[(int)nodito.x][(int)nodito.y] < 0)
+        {
+            penalty = Mathf.Abs(influences[(int)nodito.x][(int)nodito.y]);
+        }
+        if(!team && influences[(int)nodito.x][(int)nodito.y] > 0)
+        {
+            penalty = influences[(int)nodito.x][(int)nodito.y];
+        }
+        return penalty;
+    }
+    internal static List<Vector3> aStarPathV3(Vector2 origen, Vector2 end, StatsInfo.TIPO_PERSONAJE tipo, bool team)
+    {
+        List<Vector2> camino = aStarPath(origen, end, tipo, team);
         List<Vector3> caminoV3 = new List<Vector3>();
         foreach (Vector2 pos in camino)
         {
@@ -669,7 +685,7 @@ public class SimManagerFinal : SimulationManager
         return caminoV3;
     }
 
-    private static LinkedList<NodoGrafoAStar> calcularAdyacentes(NodoGrafoAStar actual,Vector2 destino, NodoGrafoAStar[][] nodosUsados, StatsInfo.TIPO_PERSONAJE type)
+    private static LinkedList<NodoGrafoAStar> calcularAdyacentes(NodoGrafoAStar actual,Vector2 destino, NodoGrafoAStar[][] nodosUsados, StatsInfo.TIPO_PERSONAJE type, bool team)
     {
         LinkedList<NodoGrafoAStar> listanodos = new LinkedList<NodoGrafoAStar>();
 
@@ -694,7 +710,9 @@ public class SimManagerFinal : SimulationManager
                         {
                             float inversaVelocidad = 1 / StatsInfo.velocidadUnidadPorTerreno[(int)terrenos[(int)newPosi.x][(int)newPosi.y]][(int)type];
                             float newG = (int)(actual.costFromOrigin + Mathf.RoundToInt((actual.posicionGrid - newPosi).magnitude * inversaVelocidad));
-                            NodoGrafoAStar nuevoNodo = new NodoGrafoAStar(newPosi, getDistance(newPosi, destino), newG, actual);
+                            float influencePenalty = calculateInfluencePenalty(team,newPosi);                 
+                            float terrainPenalty = inversaVelocidad * 70;
+                            NodoGrafoAStar nuevoNodo = new NodoGrafoAStar(newPosi, getDistance(newPosi, destino)+influencePenalty+terrainPenalty, newG, actual);
                             listanodos.AddLast(nuevoNodo);
                             nodosUsados[(int)newPosi.x][(int)newPosi.y] = nuevoNodo;
                         }

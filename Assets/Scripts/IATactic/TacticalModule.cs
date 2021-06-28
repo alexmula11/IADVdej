@@ -95,8 +95,14 @@ public abstract class TacticalModule
 
     protected internal ActionGo createBaseAttackAction(PersonajeBase sujeto)
     {
-        ActionGo goToEnemyBase = new ActionGo(sujeto,getClosestPointToBase(sujeto,enemyBaseCoords),null);
-        return goToEnemyBase;
+      ActionGo goToEnemyBase = new ActionGo(sujeto,getClosestPointToBase(sujeto,enemyBaseCoords),null);
+      return goToEnemyBase;
+    }
+
+    protected internal ActionGo goingToRecover(PersonajeBase sujeto)
+    {
+      ActionGo goToMyBase = new ActionGo(sujeto,getClosestPointToBase(sujeto,baseCoords),null);
+      return goToMyBase;
     }
 
     protected internal bool isGoingToAttack(PersonajeBase unit)

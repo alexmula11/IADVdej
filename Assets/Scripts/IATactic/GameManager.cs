@@ -127,7 +127,7 @@ public class GameManager : MonoBehaviour
     {
         if (respawnTimer <= 0)
         {
-            if (muertosAllys.Count > 0)
+            if (!playerIA.getBaseUnderAttack() && muertosAllys.Count > 0)
             {
                 PersonajePlayer person = muertosAllys.First.Value;
                 muertosAllys.RemoveFirst();
@@ -139,7 +139,7 @@ public class GameManager : MonoBehaviour
                     person2.revive(allySpawnPoints[1].position);
                 }
             }
-            if (muertosEnemys.Count > 0)
+            if (!enemyIA.getBaseUnderAttack() && muertosEnemys.Count > 0)
             {
                 PersonajeNPC person = muertosEnemys.First.Value;
                 muertosEnemys.RemoveFirst();

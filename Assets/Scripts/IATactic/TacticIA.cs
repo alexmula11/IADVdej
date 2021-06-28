@@ -45,9 +45,6 @@ public class TacticIA
         baseUnderAttack = comander.ourBaseIsUnderAttack();
         if(!baseUnderAttack)                                        //si no estamos siendo atacados las curaciones y respawn estan activos
         {
-            //TODO respawn de unidades muertas
-            respawnUnits();
-
             healUnitsOnBaseRange();
         }     
     }
@@ -90,8 +87,8 @@ public class TacticIA
          }
      }
 
-     private void respawnUnits()
-     {
-
-     }
+    public bool getBaseUnderAttack()
+    {
+        return baseUnderAttack;
+    }
 }

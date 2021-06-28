@@ -28,7 +28,7 @@ public class ActionGo : Accion
         {
             destiny = SimManagerFinal.positionToGrid(receptor.posicion);
         }
-        List<Vector3> camino = SimManagerFinal.aStarPathV3(SimManagerFinal.positionToGrid(sujeto.posicion), destiny, sujeto.tipo);
+        List<Vector3> camino = SimManagerFinal.aStarPathV3(SimManagerFinal.positionToGrid(sujeto.posicion), destiny, sujeto.tipo, sujeto is PersonajePlayer);
         recorrer = new PathFollowEndSD(camino);
         sujeto.newTaskGrid(recorrer);
     }

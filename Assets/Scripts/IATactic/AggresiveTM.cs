@@ -8,8 +8,11 @@ public class AggresiveTM : TacticalModule
 {
 
     private const int allBridgedUP = 3;
+    private const int MIN_UNIT_TO_ATTACK = 5;
     private List<PersonajeBase> defensiveGroup = new List<PersonajeBase>();
     private List<PersonajeBase> ofensiveGroup = new List<PersonajeBase>();
+    private List<PersonajeBase> siegeGroup = new List<PersonajeBase>();
+    private List<PersonajeBase> recoveringGroup = new List<PersonajeBase>();
 
     private List<PersonajeBase> unitsNotAsigned = new List<PersonajeBase>();                                            //unidades todavia no asignadas a una tarea
 
@@ -42,12 +45,19 @@ public class AggresiveTM : TacticalModule
             {
                 aggresiveActions = sendAlliesToDefend(defenders - defensiveGroup.Count, attackers);    //se iguala porque es lo primero que se hace
             }
+            else
+            {
+                aggresiveActions = continueDefending(attackers);
+            }
         }
         else
         {
             unitsNotAsigned.AddRange(defensiveGroup);
             defensiveGroup.Clear();
         }
+
+                        /*COMPROBACION DE RETIRARSE A LA BASE SI NO ESTAMOS ASEDIANDO Y ESTAMOS BAJOS DE VIDA*/
+        aggresiveActions.AddRange(sendBackAllies());
 
                         /*COMPROBACION DE ENEMIGOS CERCANOS*/  
         aggresiveActions.AddRange(attackEnemiesClose());
@@ -88,9 +98,16 @@ public class AggresiveTM : TacticalModule
             {
                 defensiveGroup.Remove(ally);
                 ofensiveGroup.Remove(ally);
+                siegeGroup.Remove(ally);
             }
             else
             {
+                if(recoveringGroup.Contains(ally) && ally.isFullHealth())
+                {
+                    recoveringGroup.Remove(ally);
+                    unitsNotAsigned.Add(ally);
+                    continue;
+                }
                 if (!defensiveGroup.Contains(ally))
                     unitsNotAsigned.Add(ally);
             }
@@ -344,7 +361,7 @@ public class AggresiveTM : TacticalModule
         {
             foreach(PersonajeBase npc in unitsNotAsigned)
             {
-                if(!defensiveGroup.Contains(npc))
+                if(!defensiveGroup.Contains(npc) && !siegeGroup.Contains(npc))
                 {
                     if(!alreadyInBridge(npc,bridgesControlled))
                     {
@@ -365,23 +382,20 @@ public class AggresiveTM : TacticalModule
             {
                 foreach(PersonajeBase npc in unitsNotAsigned)
                 {
-                    if(!defensiveGroup.Contains(npc))
+                    if(influenceTotAttack > influenceToBeat)
                     {
-                        if(influenceTotAttack > influenceToBeat)
-                        {
-                            break;
-                        }
-                        influenceTotAttack += StatsInfo.influenciaMaximaGeneradaPorUnidad[(int)npc.tipo];
-                        if(!alreadyGoingToBridge(npc,bridgeToAttack))
-                            regroupForAttack.Add(new ActionGo(npc,randomPointInBridge(bridgeToAttack,npc),null));
-                        if(!ofensiveGroup.Contains(npc))
-                            ofensiveGroup.Add(npc);
-                    }  
+                        break;
+                    }
+                    influenceTotAttack += StatsInfo.influenciaMaximaGeneradaPorUnidad[(int)npc.tipo];
+                    if(!alreadyGoingToBridge(npc,bridgeToAttack))
+                        regroupForAttack.Add(new ActionGo(npc,randomPointInBridge(bridgeToAttack,npc),null));
+                    if(!ofensiveGroup.Contains(npc))
+                        ofensiveGroup.Add(npc);                   
                 }
             }
 
         }
-        else                //si no, vamos la que tenemos conquistado
+        else                //si no, vamos al que tenemos conquistado
         {
             foreach(PersonajeBase npc in unitsNotAsigned)
             {
@@ -445,39 +459,54 @@ public class AggresiveTM : TacticalModule
             case 0:
                 return siegeActions;
             case 1:
-                if (puenteArriba.Count > 1)
+                if (puenteArriba.Count > MIN_UNIT_TO_ATTACK)
                 {
                     for (int i = 0; i < puenteArriba.Count - 1; i++)
                     {
                         siegeActions.Add(createBaseAttackAction(puenteArriba[i]));
+                        siegeGroup.Add(puenteArriba[i]);
                     }
                 }
                 break;
             case 2:
-                if (puenteAbajo.Count > 1)
+                if (puenteAbajo.Count > MIN_UNIT_TO_ATTACK)
                 {
                     for (int i = 0; i < puenteAbajo.Count - 1; i++)
                     {
                         siegeActions.Add(createBaseAttackAction(puenteAbajo[i]));
+                        siegeGroup.Add(puenteAbajo[i]);
                     }
                 }
                 break;
             case 3:
-                if (puenteArriba.Count > 1)
+                if (puenteArriba.Count > MIN_UNIT_TO_ATTACK)
                 {
                     for (int i = 0; i < puenteArriba.Count - 1; i++)
                     {
                         siegeActions.Add(createBaseAttackAction(puenteArriba[i]));
+                        siegeGroup.Add(puenteArriba[i]);
                     }
                 }
-                if (puenteAbajo.Count > 1)
+                if (puenteAbajo.Count > MIN_UNIT_TO_ATTACK)
                 {
                     for (int i = 0; i < puenteAbajo.Count - 1; i++)
                     {
                         siegeActions.Add(createBaseAttackAction(puenteAbajo[i]));
+                        siegeGroup.Add(puenteAbajo[i]);
                     }
                 }
                 break;
+        }
+
+        foreach(PersonajeBase unit in siegeGroup)
+        {
+            if(!isGoingToAttack(unit))
+            {
+                if(!isGoingToEnemyBase(unit))
+                {
+                    siegeActions.Add(createBaseAttackAction(unit));
+                }
+            }
         }
         return siegeActions;
     }
@@ -539,5 +568,40 @@ public class AggresiveTM : TacticalModule
             }
         }
         return false;
+    }
+
+    private List<Accion> sendBackAllies()
+    {
+        List <Accion> regroupInBase = new List<Accion>();
+        foreach(PersonajeBase unit in unitsNotAsigned)
+        {
+            if(!siegeGroup.Contains(unit))
+            {
+                if(unit.betterToRun())
+                {
+                    regroupInBase.Add(goingToRecover(unit));
+                    ofensiveGroup.Remove(unit);
+                    recoveringGroup.Add(unit);
+
+                }
+            }
+        }
+        foreach(PersonajeBase unit in recoveringGroup)
+        {
+            unitsNotAsigned.Remove(unit);
+        }
+        return regroupInBase;
+    }
+
+    private List<Accion> continueDefending(List<PersonajeBase> attackers)
+    {
+        List<Accion> defs = new List<Accion>();
+
+        foreach(PersonajeBase unit in defensiveGroup)
+        {
+            if(unit.currentAction == null)
+                defs.Add(TacticalModule.createAttackingAction(unit,getClosestEnemy(unit,attackers)));
+        }
+        return defs;
     }
 }

@@ -82,6 +82,7 @@ public class StatsInfo
         new float[MAX_UNIT_TYPE] { 0.5f, 0.5f, 0.5f, 0.5f},
         new float[MAX_UNIT_TYPE] { 1f, 1f, 1f, 1f},
     };
+
     public static Color[] coloresUnidades = { Color.red, Color.blue, Color.black, Color.cyan };
     public static float[] potenciaInfluenciaUnidades = { 10f, 20f, 30f, 40f };
     public static float[] distanciaInfluenciaUnidades = { 5f, 5f, 5f, 5f };
@@ -94,7 +95,7 @@ public class StatsInfo
     public static float basePotenciaInfluencia = 75f;
     public static float baseDistanciaInfluencia = 15f;
     public static float baseDistaciaCuracion = 37.5f;
-    public static float BASE_HEALING_POWER = 5f;
+    public static float BASE_HEALING_POWER = 20f;
      public const float MAX_BASE_HEALTH = 1000f;
 
     /*COMBAT STATS*/
@@ -110,7 +111,7 @@ public class StatsInfo
        /*INF*/ new float[MAX_UNIT_TYPE] {1f,    1.5f,   0.5f,   1f},
        /*ARQ*/ new float[MAX_UNIT_TYPE] {1.5f,  1.5f,   0.5f,   1f},
        /*PES*/ new float[MAX_UNIT_TYPE] {1f,    1f,     1f,     1f},
-       /*MAG*/ new float[MAX_UNIT_TYPE] {1f,    1f,     1.5f,   0.5f},
+       /*MAG*/ new float[MAX_UNIT_TYPE] {1f,    1f,     1.5f,   1.5f},
 
     };
 

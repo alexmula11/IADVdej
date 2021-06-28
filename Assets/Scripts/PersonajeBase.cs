@@ -55,6 +55,7 @@ public abstract class PersonajeBase : Bodi
 
     protected List<SteeringBehaviour> kinetic = new List<SteeringBehaviour>();
     protected internal SteeringBehaviour selectedBehaviour = null;
+    protected internal SteeringBehaviour antiDorifto = null;
     protected internal Steering steeringActual = null;
 
     protected internal SteeringBehaviour defaultSteering = new WanderSD(2 * (float)System.Math.PI, 5, 30 * GradosARadianes, 2);
@@ -85,6 +86,7 @@ public abstract class PersonajeBase : Bodi
             bodyMesh.enabled = false;
             GetComponent<BoxCollider>().enabled = false;
             hPMarker.gameObject.SetActive(false);
+            disbandAccion();
         }
         else if (health > StatsInfo.healthPerClass[(int)tipo]) health = StatsInfo.healthPerClass[(int)tipo];
         float percent = health/StatsInfo.healthPerClass[(int)tipo];
@@ -350,9 +352,10 @@ public abstract class PersonajeBase : Bodi
                         if (recalcularAccion)
                         {
                             recalcularAccion = false;
-                            currentAction.doit();
+                            if(currentAction != null)currentAction.doit();
                         }
                         selectedBehaviour = kinetic[1];
+                        actuadorHumanoNoDriftin();
                     }
                     else
                     {
@@ -362,8 +365,16 @@ public abstract class PersonajeBase : Bodi
                     steeringActual = selectedBehaviour.getSteering(this);
                 }
             }
+        }   
+    }
+
+    private void actuadorHumanoNoDriftin()
+    {
+        if(selectedBehaviour != antiDorifto)
+        {
+            this.velocidad = Vector3.zero;
+            antiDorifto = selectedBehaviour;
         }
-        
     }
 
     private void checkTerrainBelow()
@@ -376,30 +387,6 @@ public abstract class PersonajeBase : Bodi
             maxMovementSpeed = StatsInfo.velocidadUnidades[(int)tipo] * StatsInfo.velocidadUnidadPorTerreno[(int)terrenoQuePiso][(int)tipo];
         }
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

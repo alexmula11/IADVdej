@@ -21,7 +21,7 @@ MonoBehaviour:
   m_ShowMode: 4
   m_Title: 
   m_RootView: {fileID: 6}
-  m_MinSize: {x: 875, y: 300}
+  m_MinSize: {x: 875, y: 392}
   m_MaxSize: {x: 10000, y: 10000}
   m_Maximized: 1
 --- !u!114 &2
@@ -48,7 +48,7 @@ MonoBehaviour:
   m_MinSize: {x: 678, y: 342}
   m_MaxSize: {x: 12003, y: 8042}
   vertical: 0
-  controlID: 57
+  controlID: 78
 --- !u!114 &3
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -94,8 +94,8 @@ MonoBehaviour:
     y: 0
     width: 236
     height: 676
-  m_MinSize: {x: 201, y: 221}
-  m_MaxSize: {x: 4001, y: 4021}
+  m_MinSize: {x: 200, y: 200}
+  m_MaxSize: {x: 4000, y: 4000}
   m_ActualView: {fileID: 15}
   m_Panes:
   - {fileID: 15}
@@ -120,8 +120,8 @@ MonoBehaviour:
     y: 676
     width: 1610
     height: 271
-  m_MinSize: {x: 101, y: 121}
-  m_MaxSize: {x: 4001, y: 4021}
+  m_MinSize: {x: 100, y: 100}
+  m_MaxSize: {x: 4000, y: 4000}
   m_ActualView: {fileID: 18}
   m_Panes:
   - {fileID: 13}
@@ -219,7 +219,7 @@ MonoBehaviour:
   m_MinSize: {x: 403, y: 342}
   m_MaxSize: {x: 8003, y: 8042}
   vertical: 1
-  controlID: 58
+  controlID: 51
 --- !u!114 &10
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -244,7 +244,7 @@ MonoBehaviour:
   m_MinSize: {x: 403, y: 221}
   m_MaxSize: {x: 8003, y: 4021}
   vertical: 0
-  controlID: 59
+  controlID: 52
 --- !u!114 &11
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -338,20 +338,20 @@ MonoBehaviour:
     m_SkipHidden: 0
     m_SearchArea: 1
     m_Folders:
-    - Assets/Scripts/IATactic
+    - Assets/Scripts/SteeringDelegates
   m_ViewMode: 1
   m_StartGridSize: 64
   m_LastFolders:
-  - Assets/Scripts/IATactic
+  - Assets/Scripts/SteeringDelegates
   m_LastFoldersGridSize: -1
-  m_LastProjectPath: P:\Documentos\UnityProjects\TacticsLegends\WarIARep\WarIA
+  m_LastProjectPath: C:\Users\jandr\Desktop\Universidad\CUARTO 2 CUATRI\IA\IADVdej
   m_LockTracker:
     m_IsLocked: 0
   m_FolderTreeState:
     scrollPos: {x: 0, y: 126}
-    m_SelectedIDs: 10490000
-    m_LastClickedID: 18704
-    m_ExpandedIDs: 00000000f2480000f4480000f64800001249000000ca9a3b
+    m_SelectedIDs: 56490000
+    m_LastClickedID: 18774
+    m_ExpandedIDs: 000000002e490000304900003249000000ca9a3b
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -379,7 +379,7 @@ MonoBehaviour:
     scrollPos: {x: 0, y: 0}
     m_SelectedIDs: 
     m_LastClickedID: 0
-    m_ExpandedIDs: 00000000f2480000f4480000f6480000
+    m_ExpandedIDs: 000000002e4900003049000032490000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -404,8 +404,8 @@ MonoBehaviour:
       m_Icon: {fileID: 0}
       m_ResourceFile: 
   m_ListAreaState:
-    m_SelectedInstanceIDs: d43d0000
-    m_LastClickedInstanceID: 15828
+    m_SelectedInstanceIDs: b0c3ffff
+    m_LastClickedInstanceID: -15440
     m_HadKeyboardFocusLastEvent: 1
     m_ExpandedInstanceIDs: c6230000
     m_RenameOverlay:
@@ -501,10 +501,10 @@ MonoBehaviour:
   m_ViewDataDictionary: {fileID: 0}
   m_SceneHierarchy:
     m_TreeViewState:
-      scrollPos: {x: 0, y: 2558}
-      m_SelectedIDs: b224ffff
-      m_LastClickedID: -56142
-      m_ExpandedIDs: 8c64feff9e78feff5a7dfeffc47dfeff42b2feff68b2feff36f7feffc224fffffad9ffff8c3c00002c3d0000923f00001e400000c6400000f64100006a42000062440000
+      scrollPos: {x: 0, y: 2390}
+      m_SelectedIDs: d89bffff
+      m_LastClickedID: -25640
+      m_ExpandedIDs: 50c1feff20f0feff204effff1470ffffb897ffffb29bffffc0abffff8ac3ffff42cdffffcccdfffff2d2ffff02d3fffff8d9ffff363d0000a63f00003a400000da400000224200009a4200005e43000096440000
       m_RenameOverlay:
         m_UserAcceptedRename: 0
         m_Name: 
@@ -564,9 +564,9 @@ MonoBehaviour:
   m_PlayAudio: 0
   m_AudioPlay: 0
   m_Position:
-    m_Target: {x: -57.186806, y: 30.28659, z: 106.43211}
+    m_Target: {x: 1.2180634, y: 8.500572, z: -184.74501}
     speed: 2
-    m_Value: {x: -57.186806, y: 30.28659, z: 106.43211}
+    m_Value: {x: 1.2180634, y: 8.500572, z: -184.74501}
   m_RenderMode: 0
   m_CameraMode:
     drawMode: 0
@@ -612,13 +612,13 @@ MonoBehaviour:
     m_GridAxis: 1
     m_gridOpacity: 0.5
   m_Rotation:
-    m_Target: {x: -0.2101074, y: 0.6663234, z: -0.2041538, w: -0.68573505}
+    m_Target: {x: -0.28352356, y: 0.64256245, z: -0.27798933, w: -0.6553573}
     speed: 2
-    m_Value: {x: -0.21010284, y: 0.66630894, z: -0.20414938, w: -0.68572015}
+    m_Value: {x: -0.28351742, y: 0.6425485, z: -0.2779833, w: -0.65534306}
   m_Size:
-    m_Target: 69.69927
+    m_Target: 76.11138
     speed: 2
-    m_Value: 69.69927
+    m_Value: 72.833855
   m_Ortho:
     m_Target: 0
     speed: 2

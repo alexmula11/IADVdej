@@ -25,7 +25,7 @@ public class FormacionGridSD : SteeringBehaviour
         if (destino != lastDestiny)
         {
             Vector2 origen = SimManagerFinal.positionToGrid(personaje.posicion);
-            List<Vector3> recorrido = SimManagerFinal.aStarPathV3(origen, destino, personaje.tipo);
+            List<Vector3> recorrido = SimManagerFinal.aStarPathV3(origen, destino, personaje.tipo, personaje is PersonajePlayer);
             lastDestiny = destino;
             followPath = new PathFollowEndSD(recorrido);
         }
