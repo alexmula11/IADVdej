@@ -684,4 +684,9 @@ public class SimManagerFinal : SimulationManager
             return 14 * dstY + 10 * (dstX - dstY);           //el 14 y el 10 depende del tamaño de nuestro grid
         return 14 * dstX + 10 * (dstY - dstX);
     }
+
+    public static void setWinner(int winner)
+    {
+
+    }
 }

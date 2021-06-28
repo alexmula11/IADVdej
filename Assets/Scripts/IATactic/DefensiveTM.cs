@@ -27,7 +27,7 @@ public class DefensiveTM : TacticalModule
             {
                 if(!ally.isInCombat())               //Si no esta en combate
                 {
-                    if (!isInBaseRange(ally))
+                    if (!isInBaseRange(ally,baseCoords))
                     {
                         Vector2 closestPoint = getClosestPointToBase(ally, baseCoords);
                         ActionGo goToBase = new ActionGo(ally, closestPoint, null);
@@ -38,7 +38,7 @@ public class DefensiveTM : TacticalModule
                 {
                     if(ally.betterToRun())           //vida por debajo del 30%
                     {
-                        if (!isInBaseRange(ally))
+                        if (!isInBaseRange(ally,baseCoords))
                         {
                             Vector2 closestPoint = getClosestPointToBase(ally, baseCoords);
                             ActionGo goToBase = new ActionGo(ally, closestPoint, null);
@@ -64,7 +64,7 @@ public class DefensiveTM : TacticalModule
                 else
                 {
                     //3 -  COMPROBAR UNIDADES FUERA DEL PERIMETRO DE LA BASE
-                    if(!isInBaseRange(ally))
+                    if(!isInBaseRange(ally,baseCoords))
                     {
                         Vector2 closestPoint = getClosestPointToBase(ally, baseCoords);
                         ActionGo goToBase = new ActionGo(ally, closestPoint, null);

@@ -6,7 +6,7 @@ public class StatsInfo
 {
 
     private const int MAX_UNIT_TYPE = 4;
-    public const float MAX_BASE_HEALTH = 1000f;
+
 
     public enum TIPO_PERSONAJE
     {
@@ -95,7 +95,7 @@ public class StatsInfo
     public static float baseDistanciaInfluencia = 15f;
     public static float baseDistaciaCuracion = 37.5f;
     public static float BASE_HEALING_POWER = 5f;
-
+     public const float MAX_BASE_HEALTH = 1000f;
 
     /*COMBAT STATS*/
     public static float[] velocidadDeAtaquePorUnidad = { 1f, 1.5f, 0.5f, 0.5f };
@@ -103,7 +103,7 @@ public class StatsInfo
     public static float [] damagePerClass = {10f,5f,10f,30f};
     public static float [] attackRangePerClass = {1.5f,3.5f,1.5f,3.5f};
     public static float [] detectionRangePerClass = {2f,5f,2f,3.5f};
-    public static float BASEHEALING = 5f;
+   
     public static float [][] damageModifiers =
     {
                                     //  INF     ARQ     PES     MAG

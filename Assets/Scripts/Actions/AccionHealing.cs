@@ -39,6 +39,6 @@ public class AccionHealing : AccionCombate
 
     private float calculateHealingOutput()
     {
-        return StatsInfo.BASEHEALING;
+        return StatsInfo.BASE_HEALING_POWER;
     }
 }

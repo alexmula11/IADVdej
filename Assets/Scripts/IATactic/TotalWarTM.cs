@@ -27,7 +27,6 @@ public class TotalWarTM : TacticalModule
 
         //3 - mandar a por la base enemiga
         totalWarActions.AddRange(attackEnemyBase());
-
         return totalWarActions;
     }
 
@@ -41,6 +40,10 @@ public class TotalWarTM : TacticalModule
                 if(!isGoingToAttack(unit))
                 {
                     unitsNotAsigned.Add(unit);   
+                }
+                else
+                {
+                    attackGroup.Remove(unit);
                 }                        
             }  
             else
@@ -63,7 +66,7 @@ public class TotalWarTM : TacticalModule
                 if(enemy.isAlive() && (mipos -  supos).magnitude <= StatsInfo.detectionRangePerClass[(int)unit.tipo])                   
                 {                                                                                                                       
                     attackActions.Add(createAttackingAction(unit,enemy));                                                               
-                    attackGroup.Remove(unit);
+                    //attackGroup.Remove(unit);
                     break;
                 }
             }
@@ -80,7 +83,9 @@ public class TotalWarTM : TacticalModule
         {
             if(!attackGroup.Contains(unit))                                 //para no volver a mandarla si ya la he mandado
             {
-                attackBaseActions.Add(createBaseAttackAction(unit));             
+                Debug.Log("mando atacar la base");
+                attackBaseActions.Add(createBaseAttackAction(unit));  
+                attackGroup.Add(unit);           
             }
         }
 

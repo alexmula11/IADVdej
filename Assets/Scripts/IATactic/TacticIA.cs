@@ -19,7 +19,7 @@ public class TacticIA
      private TacticalModule comander;
      private IA_MODE playingMode;
 
-     private Vector2 allyBasePos, enemyBasePos;
+     protected Vector2 allyBasePos, enemyBasePos;
      private bool baseUnderAttack = false;
      private float baseHealth = StatsInfo.MAX_BASE_HEALTH;
 
@@ -30,6 +30,7 @@ public class TacticIA
         enemies = enemis;
         playingMode = IA_MODE.ATTACK;
         allyBasePos = allyBase;
+        enemyBasePos = enemyBase;
         comander = factoryTM(playingMode);
     }
 
@@ -46,6 +47,7 @@ public class TacticIA
         if(!baseUnderAttack)                                        //si no estamos siendo atacados las curaciones y respawn estan activos
         {
             //TODO respawn de unidades muertas
+            respawnUnits();
 
             healUnitsOnBaseRange();
         }     
@@ -84,8 +86,13 @@ public class TacticIA
          {
             if(unit.isAlive())
                 if(!unit.isFullHealth())
-                    if(comander.isInBaseRange(unit))
+                    if(TacticalModule.isInBaseRange(unit,allyBasePos))
                         unit.actualizeHealth(StatsInfo.BASE_HEALING_POWER);
          }
+     }
+
+     private void respawnUnits()
+     {
+
      }
 }

@@ -34,9 +34,9 @@ public abstract class TacticalModule
         enemies = nemy;
     }
 
-      protected internal bool isInBaseRange(PersonajeBase person)                                                          
+      protected static internal bool isInBaseRange(PersonajeBase person, Vector2 baseCoord)                                                          
         {
-            return (person.posicion - SimManagerFinal.gridToPosition(baseCoords)).magnitude <= StatsInfo.baseDistaciaCuracion;
+            return (person.posicion - SimManagerFinal.gridToPosition(baseCoord)).magnitude <= StatsInfo.baseDistaciaCuracion;
         }
 
       protected internal List<PersonajeBase> enemiesOnBase()                                                        //comprobar si hay enemigos en la base atacando
