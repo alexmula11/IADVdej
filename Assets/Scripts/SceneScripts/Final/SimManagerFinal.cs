@@ -161,9 +161,31 @@ public class SimManagerFinal : SimulationManager
                     if (Input.GetMouseButton(0))
                     {
                         RaycastHit hit;
-                        if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit, 10000f, 1 << 9))
+                        /*if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit, 10000f, 1 << 9))
                         {
                             return;
+                        }
+                        else */if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit, 10000f, 1 << 13))
+                        {
+                            Debug.Log("ataco a matraco");
+                            PersonajeBase enemigo = hit.collider.GetComponent<PersonajeBase>();
+                            foreach (PersonajeBase person in selectedUnits)
+                            {
+                                AccionCompuesta ac = TacticalModule.createAttackingAction(person, enemigo);
+                                person.accion = ac;
+                                person.accion.doit();
+                            }
+                        }
+                        else if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit, 10000f, 1 << 14))
+                        {
+                            Debug.Log("ataco a basesica");
+                            Vector2 baseToGo = positionToGrid(hit.collider.transform.parent.position);
+                            foreach (PersonajeBase person in selectedUnits)
+                            {
+                                ActionGo gotobase = new ActionGo(person, TacticalModule.getClosestPointToBase(person, baseToGo), null);
+                                person.accion = gotobase;
+                                person.accion.doit();
+                            }
                         }
                         else if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit, 10000f, 1 << 10))
                         {
@@ -174,27 +196,6 @@ public class SimManagerFinal : SimulationManager
 
                                 ActionGo moverse = new ActionGo(person, posicionDestino,null);
                                 person.accion = moverse;
-                                person.accion.doit();
-                            }
-                        }
-                        else if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit, 10000f, 1 << 13))
-                        {
-                            Debug.Log("ataco a amtracao");
-                            PersonajeBase enemigo = hit.collider.GetComponent<PersonajeBase>();
-                            foreach (PersonajeBase person in selectedUnits)
-                            {
-                                AccionCompuesta ac =  TacticalModule.createAttackingAction(person,enemigo);
-                                person.accion = ac;
-                                person.accion.doit();
-                            }
-                        }
-                        else if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit, 10000f, 1 << 14))
-                        {
-                            Vector2 baseToGo = positionToGrid(hit.collider.transform.parent.position);
-                            foreach (PersonajeBase person in selectedUnits)
-                            {
-                                ActionGo gotobase = new ActionGo(person,TacticalModule.getClosestPointToBase(person,baseToGo),null);
-                                person.accion = gotobase;
                                 person.accion.doit();
                             }
                         }
@@ -506,10 +507,10 @@ public class SimManagerFinal : SimulationManager
         LinkedList<Vector2> recorrido = new LinkedList<Vector2>();
         float estimatedCost = (end - origen).magnitude;
 
-        /*if(origen == end || terrenos[(int)end.x][(int)end.y] == StatsInfo.TIPO_TERRENO.INFRANQUEABLE)
+        if(origen == end || terrenos[(int)end.x][(int)end.y] == StatsInfo.TIPO_TERRENO.INFRANQUEABLE)
         {
+            return new List<Vector2>();
         }
-        */
         NodoGrafoAStar[][] nodos = new NodoGrafoAStar[165][];
         for (int i=0; i<nodos.Length; i++)
         {

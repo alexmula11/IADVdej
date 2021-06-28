@@ -54,4 +54,9 @@ public class ActionGo : Accion
     {
         return destiny;
     }
+
+    protected internal override bool hasToRecalculate()
+    {
+        return (receptor && destiny!= SimManagerFinal.positionToGrid(receptor.posicion));
+    }
 }

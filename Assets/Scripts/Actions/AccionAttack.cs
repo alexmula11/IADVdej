@@ -61,4 +61,9 @@ public class AccionAttack : AccionCombate
         float damage = StatsInfo.damagePerClass[(int)sujeto.tipo];                              //daño base
         return damage*modifier;
     }
+
+    protected internal override bool hasToRecalculate()
+    {
+        return true;
+    }
 }

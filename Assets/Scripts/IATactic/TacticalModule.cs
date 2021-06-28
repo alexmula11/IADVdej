@@ -49,7 +49,7 @@ public abstract class TacticalModule
       protected internal bool ourBaseIsUnderAttack()
         {
           foreach(PersonajeBase pp in enemies)
-            if(pp.isAlive() && ((SimManagerFinal.positionToGrid(pp.posicion)-baseCoords).magnitude <= StatsInfo.baseDistaciaCuracion))
+            if(pp.isAlive() && ((pp.posicion-SimManagerFinal.gridToPosition(baseCoords)).magnitude <= StatsInfo.baseDistaciaCuracion))
                 return true;    
           return false;
         }

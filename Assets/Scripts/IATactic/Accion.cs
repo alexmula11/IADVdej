@@ -7,6 +7,7 @@ public abstract class Accion
     protected string nombreAccion;
 
     protected internal string nombre { get { return nombreAccion; } }
+    
 
     protected internal PersonajeBase sujeto;
 
@@ -20,4 +21,9 @@ public abstract class Accion
     protected internal abstract bool isDone();
 
     protected internal abstract bool isPossible();
+
+    protected internal virtual bool hasToRecalculate()
+    {
+        return false;
+    }
 }
