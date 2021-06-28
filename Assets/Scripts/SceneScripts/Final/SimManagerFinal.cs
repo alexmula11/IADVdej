@@ -165,14 +165,44 @@ public class SimManagerFinal : SimulationManager
                         {
                             return;
                         }
-                        else */if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit, 10000f, 1 << 13))
+                        else */
+                        
+                        if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit, 10000f, 1 << 13))
                         {
                             PersonajeBase enemigo = hit.collider.GetComponent<PersonajeBase>();
                             foreach (PersonajeBase person in selectedUnits)
                             {
                                 AccionCompuesta ac = TacticalModule.createAttackingAction(person, enemigo);
-                                person.accion = ac;
-                                person.accion.doit();
+                                if (person.currentFormacion!=null)
+                                {
+                                    Formacion formation = person.currentFormacion;
+                                    if (person.currentFormacion.lider == person)
+                                    {
+                                        formation.disbandGrid();
+                                        for (int i = 0; i < formation.getMiembros.Length; i++)
+                                        {
+                                            if (formation.getMiembros[i] != null)
+                                            {
+                                                AccionCompuesta attackMachaka = TacticalModule.createAttackingAction(formation.getMiembros[i], enemigo);
+                                                formation.getMiembros[i].accion = attackMachaka;
+                                                formation.getMiembros[i].accion.doit();
+                                            }
+                                        }
+                                        formaciones.Remove(formation);
+                                    }
+                                    else
+                                    {
+                                        formation.removeMiembro(person);
+                                        person.currentFormacion = null;
+                                        person.accion = ac;
+                                        person.accion.doit();
+                                    }
+                                }
+                                else
+                                {
+                                    person.accion = ac;
+                                    person.accion.doit();
+                                }
                             }
                         }
                         else if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit, 10000f, 1 << 14))
@@ -181,8 +211,36 @@ public class SimManagerFinal : SimulationManager
                             foreach (PersonajeBase person in selectedUnits)
                             {
                                 ActionGo gotobase = new ActionGo(person, TacticalModule.getClosestPointToBase(person, baseToGo), null);
-                                person.accion = gotobase;
-                                person.accion.doit();
+                                if (person.currentFormacion != null)
+                                {
+                                    Formacion formation = person.currentFormacion;
+                                    if (person.currentFormacion.lider == person)
+                                    {
+                                        formation.disbandGrid();
+                                        for (int i = 0; i< formation.getMiembros.Length;i++) 
+                                        {
+                                            if (formation.getMiembros[i] != null)
+                                            {
+                                                ActionGo gotobaseMachakas = new ActionGo(formation.getMiembros[i], TacticalModule.getClosestPointToBase(formation.getMiembros[i], baseToGo), null);
+                                                formation.getMiembros[i].accion = gotobaseMachakas;
+                                                formation.getMiembros[i].accion.doit();
+                                            }
+                                        }
+                                        formaciones.Remove(formation);
+                                    }
+                                    else
+                                    {
+                                        formation.removeMiembro(person);
+                                        person.currentFormacion = null;
+                                        person.accion = gotobase;
+                                        person.accion.doit();
+                                    }
+                                }
+                                else
+                                {
+                                    person.accion = gotobase;
+                                    person.accion.doit();
+                                }
                             }
                         }
                         else if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit, 10000f, 1 << 10))
@@ -193,8 +251,23 @@ public class SimManagerFinal : SimulationManager
                                 Vector2 posicionOrigen = positionToGrid(person.posicion);
 
                                 ActionGo moverse = new ActionGo(person, posicionDestino,null);
-                                person.accion = moverse;
-                                person.accion.doit();
+
+                                if (person.currentFormacion != null)
+                                {
+                                    Formacion formation = person.currentFormacion;
+                                    if (person.currentFormacion.lider != person)
+                                    {
+                                        formation.removeMiembro(person);
+                                        person.currentFormacion = null;
+                                        person.accion = moverse;
+                                        person.accion.doit();
+                                    }
+                                }
+                                else
+                                {
+                                    person.accion = moverse;
+                                    person.accion.doit();
+                                }
                             }
                         }
                     }
@@ -239,11 +312,9 @@ public class SimManagerFinal : SimulationManager
                             foreach (PersonajeBase person in selectedUnits)
                             {
                                 person.currentFormacion = formacion;
-                                if (person != lider)
-                                {
-                                    formacion.addMiembro(person);
-                                }
+                                formacion.addMiembro(person);
                             }
+                            lider.currentFormacion = formacion;
                             formacion.formacionASusPuestosAccion();
                             //formacion.formacionASusPuestos();
                             formaciones.Add(formacion);
@@ -272,14 +343,6 @@ public class SimManagerFinal : SimulationManager
                             pathToSet.Clear();
                             setMouseBehaviour(0);
                             ui.selectMouseOption(0);
-                            /*foreach (PersonajeBase person in selectedUnits)
-                            {
-                                if (person.currentFormacion != null)
-                                {
-                                    formationManager.removeFormacion(person.currentFormacion);
-                                    person.currentFormacion.disband();
-                                }
-                            }*/
                         }
                         else if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit, 10000f, 1 << 10))
                         {
@@ -330,6 +393,18 @@ public class SimManagerFinal : SimulationManager
         if (characterWithFocus != null)
         {
             (ui as UIManagerFinal).actualizeAgentDebugInfo(characterWithFocus);
+            if (!characterWithFocus.isAlive())
+            {
+                ui.showDebugInfo(false);
+            }
+        }
+        foreach (PersonajePlayer machaka in GameManager.muertosAllys)
+        {
+            if (selectedUnits.Contains(machaka))
+            {
+                selectedUnits.Remove(machaka);
+                machaka.selected = false;
+            }
         }
     }
     

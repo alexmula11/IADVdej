@@ -115,6 +115,20 @@ public abstract class Formacion
         }
     }
 
+
+    internal void removeMiembro(PersonajeBase person)
+    {
+        for (int i = 0; i < miembros.Length; i++)
+        {
+            if (miembros[i] != person)
+            {
+                miembros[i] = null;
+            }
+        }
+    }
+
+
+
     internal void checkWaitForFormation()
     {
         //Para detener al lider cada 5 segundos

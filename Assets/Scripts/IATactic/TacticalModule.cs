@@ -103,4 +103,9 @@ public abstract class TacticalModule
     {
       return (unit.currentAction is AccionCompuesta);
     }
+
+    protected internal bool isGoingToEnemyBase(PersonajeBase person)
+    {
+        return (person.currentAction is ActionGo && (enemyBaseCoords - (person.currentAction as ActionGo).getDestiny()).magnitude <= StatsInfo.baseDistaciaCuracion);
+    }
 }

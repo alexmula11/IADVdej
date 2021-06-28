@@ -76,11 +76,19 @@ public abstract class PersonajeBase : Bodi
 
     public void actualizeHealth(float healthInput)  //esto pide a gritos un mutex
     {
-        this.health += healthInput;
-        if (health < 0) health = 0;
+        health += healthInput;
+        if (health <= 0)
+        {
+            health = 0;
+            GameManager.addMuerto(this);
+            headMesh.enabled = false;
+            bodyMesh.enabled = false;
+            GetComponent<BoxCollider>().enabled = false;
+            hPMarker.gameObject.SetActive(false);
+        }
         else if (health > StatsInfo.healthPerClass[(int)tipo]) health = StatsInfo.healthPerClass[(int)tipo];
         float percent = health/StatsInfo.healthPerClass[(int)tipo];
-        this.hPMarker.changeActualHP(percent);
+        hPMarker.changeActualHP(percent);
     }
 
     public bool isFullHealth()
@@ -488,6 +496,19 @@ public abstract class PersonajeBase : Bodi
         Gizmos.DrawLine(origin+Vector3.up/2, origin + Vector3.up / 2 + velocidad);
         Gizmos.color = Color.yellow;
         Gizmos.DrawLine(origin + Vector3.up / 2, origin + Vector3.up / 2 + aceleracion);
+    }
+
+
+    protected internal void revive(Vector3 spawnPoint)
+    {
+        headMesh.enabled = true;
+        bodyMesh.enabled = true;
+        GetComponent<BoxCollider>().enabled = true;
+        hPMarker.gameObject.SetActive(true);
+        actualizeHealth(StatsInfo.healthPerClass[(int)tipo]);
+
+        moveTo(spawnPoint);
+        posicion = spawnPoint;
     }
 
 }

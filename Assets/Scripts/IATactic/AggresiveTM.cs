@@ -16,6 +16,7 @@ public class AggresiveTM : TacticalModule
     private int BridgeAttacked;
     private float influenceBridgeSup;
     private float influenceBridgeInf;
+    private int howManyAreAttackingBase = 0;
 
 
     public AggresiveTM(Vector2 _baseCoords,  Vector2 _enemyBaseCoords ,List<PersonajeBase> _npcs, List<PersonajeBase> _players) : base(_baseCoords,_enemyBaseCoords ,_npcs, _players)
@@ -71,7 +72,7 @@ public class AggresiveTM : TacticalModule
             //en este punto ya solo quedan unidades que no estan haciendo todo lo demas,
             //es decir, gente que esta en el puente esperando y sin luchar,
             //por lo tanto, A POR LA BASE!
-            aggresiveActions.AddRange(createSiegeGroup());
+            aggresiveActions.AddRange(createSiegeGroup(bridgesControlled));
         }
 
         return aggresiveActions;
@@ -136,25 +137,27 @@ public class AggresiveTM : TacticalModule
         //añadimos a los elegidos al grupo de defensores
 
         List<Accion> defendActions = new List<Accion>();
-        float[] priorities = new float[unitsNotAsigned.Count];
+        List<float> priorities = new List<float>();
         float distancePriority = 1;
         float velocityPriotiry = 10;
         float dmgPriority = 5;
         for (int i=0; i<unitsNotAsigned.Count; i++)
         {
-            priorities[i] = -getClosestPointToBase(unitsNotAsigned[i], baseCoords).magnitude * distancePriority;
-            priorities[i] += unitsNotAsigned[i].maxMovSpeed * velocityPriotiry;
+            float prioridad = 0;
+            prioridad = -getClosestPointToBase(unitsNotAsigned[i], baseCoords).magnitude * distancePriority;
+            prioridad += unitsNotAsigned[i].maxMovSpeed * velocityPriotiry;
             float dmgPower = 0;
             foreach (PersonajeBase person in attackers)
                 dmgPower += StatsInfo.damageModifiers[(int)unitsNotAsigned[i].tipo][(int)person.tipo];
-            priorities[i] += dmgPower*dmgPriority;
+            prioridad += dmgPower*dmgPriority;
+            priorities.Add(prioridad);
         }
 
         for (int i=0; i<defenders; i++)
         {
             float higherPriority = float.MinValue;
             int index = 0;
-            for (int j = 0; j < priorities.Length; j++)
+            for (int j = 0; j < priorities.Count; j++)
             {
                 if (priorities[j] > higherPriority)
                 {
@@ -165,7 +168,7 @@ public class AggresiveTM : TacticalModule
             defendActions.Add(createAttackingAction(unitsNotAsigned[index], getClosestEnemy(unitsNotAsigned[index], attackers)));
             defensiveGroup.Add(unitsNotAsigned[index]);
             unitsNotAsigned.Remove(unitsNotAsigned[index]); //si falla algo, mirar aqui
-            priorities[index] = float.MinValue;
+            priorities.RemoveAt(index);
         }
 
         return defendActions;
@@ -384,7 +387,7 @@ public class AggresiveTM : TacticalModule
             {
                 if(!defensiveGroup.Contains(npc))
                 {
-                    if(!alreadyInBridge(npc,bridgesControlled))
+                    if(!alreadyInBridge(npc,bridgesControlled) && !isGoingToEnemyBase(npc))
                     {
                         if(!alreadyGoingToBridge(npc,bridgesControlled)){
                             Debug.Log("entro");
@@ -419,28 +422,63 @@ public class AggresiveTM : TacticalModule
         return false;
     }
 
-    private List<Accion> createSiegeGroup()
+    private List<Accion> createSiegeGroup(int bridges)
     {
         List<Accion> siegeActions = new List<Accion>();
+        
 
-        int offensiveMembers = ofensiveGroup.Count;
-        bool pesadoReady, arquerosReady, magoReady = false;
+        List<PersonajeBase> puenteArriba=new List<PersonajeBase>(), puenteAbajo = new List<PersonajeBase>();
 
-        int bridgeDefenders = 3;
-
-        List<PersonajeBase> formacionMembers = new List<PersonajeBase>();
-
-        foreach(PersonajeBase npc in ofensiveGroup)
+        foreach (PersonajeBase npc in unitsNotAsigned)
         {
-            if(!defensiveGroup.Contains(npc))
+            if (alreadyInBridge(npc, 1) && !isGoingToEnemyBase(npc))
             {
-                /*if(alreadyInBridge(npc,bridgesControlled) && npc.tipo == )
-                {
-                    formacionMembers
-                }*/
+                puenteArriba.Add(npc);
+            }else if (alreadyInBridge(npc, 2) && !isGoingToEnemyBase(npc))
+            {
+                puenteAbajo.Add(npc);
             }
         }
-
+        
+        switch (bridges)
+        {
+            case 0:
+                return siegeActions;
+            case 1:
+                if (puenteArriba.Count > 1)
+                {
+                    for (int i = 0; i < puenteArriba.Count - 1; i++)
+                    {
+                        siegeActions.Add(createBaseAttackAction(puenteArriba[i]));
+                    }
+                }
+                break;
+            case 2:
+                if (puenteAbajo.Count > 1)
+                {
+                    for (int i = 0; i < puenteAbajo.Count - 1; i++)
+                    {
+                        siegeActions.Add(createBaseAttackAction(puenteAbajo[i]));
+                    }
+                }
+                break;
+            case 3:
+                if (puenteArriba.Count > 1)
+                {
+                    for (int i = 0; i < puenteArriba.Count - 1; i++)
+                    {
+                        siegeActions.Add(createBaseAttackAction(puenteArriba[i]));
+                    }
+                }
+                if (puenteAbajo.Count > 1)
+                {
+                    for (int i = 0; i < puenteAbajo.Count - 1; i++)
+                    {
+                        siegeActions.Add(createBaseAttackAction(puenteAbajo[i]));
+                    }
+                }
+                break;
+        }
         return siegeActions;
     }
 
