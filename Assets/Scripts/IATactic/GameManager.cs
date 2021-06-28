@@ -29,6 +29,7 @@ public class GameManager : MonoBehaviour
 
     protected void FixedUpdate()
     {
+
         ActualizeBasesHealth();
 
         checkWinningCondition();
@@ -70,11 +71,20 @@ public class GameManager : MonoBehaviour
             {
                 if(TacticalModule.isInBaseRange(unit,SimManagerFinal.positionToGrid(enemyBase.position)))
                 {
-
+                    redBase -= StatsInfo.potenciaInfluenciaUnidades[(int)unit.tipo] * Time.fixedDeltaTime;
                 }
             }
         }
-
+        foreach(PersonajeBase unit in personajesNPC)
+        {
+            if(unit.isAlive())
+            {
+                if(TacticalModule.isInBaseRange(unit,SimManagerFinal.positionToGrid(allyBase.position)))
+                {
+                    blueBase -= StatsInfo.potenciaInfluenciaUnidades[(int)unit.tipo]  * Time.fixedDeltaTime;
+                }
+            }
+        }
     }
 
     protected internal void checkWinningCondition()

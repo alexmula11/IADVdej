@@ -422,6 +422,25 @@ public class AggresiveTM : TacticalModule
     private List<Accion> createSiegeGroup()
     {
         List<Accion> siegeActions = new List<Accion>();
+
+        int offensiveMembers = ofensiveGroup.Count;
+        bool pesadoReady, arquerosReady, magoReady = false;
+
+        int bridgeDefenders = 3;
+
+        List<PersonajeBase> formacionMembers = new List<PersonajeBase>();
+
+        foreach(PersonajeBase npc in ofensiveGroup)
+        {
+            if(!defensiveGroup.Contains(npc))
+            {
+                /*if(alreadyInBridge(npc,bridgesControlled) && npc.tipo == )
+                {
+                    formacionMembers
+                }*/
+            }
+        }
+
         return siegeActions;
     }
 

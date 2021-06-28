@@ -167,7 +167,6 @@ public class SimManagerFinal : SimulationManager
                         }
                         else */if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit, 10000f, 1 << 13))
                         {
-                            Debug.Log("ataco a matraco");
                             PersonajeBase enemigo = hit.collider.GetComponent<PersonajeBase>();
                             foreach (PersonajeBase person in selectedUnits)
                             {
@@ -178,7 +177,6 @@ public class SimManagerFinal : SimulationManager
                         }
                         else if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit, 10000f, 1 << 14))
                         {
-                            Debug.Log("ataco a basesica");
                             Vector2 baseToGo = positionToGrid(hit.collider.transform.parent.position);
                             foreach (PersonajeBase person in selectedUnits)
                             {
@@ -262,6 +260,14 @@ public class SimManagerFinal : SimulationManager
                         RaycastHit hit;
                         if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit, 10000f, 1 << 11))
                         {
+                            foreach(PersonajeBase person in selectedUnits)
+                            {
+                                if(person.currentFormacion != null)
+                                {
+                                    formaciones.Remove(person.currentFormacion);
+                                    person.currentFormacion.disbandGrid();
+                                }
+                            }
                             setRouteOnUnits();
                             pathToSet.Clear();
                             setMouseBehaviour(0);
