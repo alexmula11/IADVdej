@@ -60,16 +60,16 @@ public class StatsInfo
 
     public static Vector2 [] puente_superior =
     {
-        new Vector2(74,19),
-        new Vector2(74,24),
-        new Vector2(89,19),
+        new Vector2(75,20),
+        new Vector2(75,24),
+        new Vector2(89,20),
         new Vector2(89,24)
     };
     public static Vector2 [] puente_inferior =
     {
-        new Vector2(74,39),
-        new Vector2(74,44),
-        new Vector2(89,39),
+        new Vector2(75,40),
+        new Vector2(75,44),
+        new Vector2(89,40),
         new Vector2(89,44)
     };
 
@@ -99,8 +99,8 @@ public class StatsInfo
     /*COMBAT STATS*/
     public static float [] healthPerClass = {100f,80f,300f,80f};         //INF - ARQ - PES - MAG
     public static float [] damagePerClass = {10f,5f,10f,30f};
-    public static float [] attackRangePerClass = {2f,12f,2f,10f};
-    public static float [] detectionRangePerClass = {5f,15f,5f,15f};
+    public static float [] attackRangePerClass = {1.5f,3.5f,1.5f,3.5f};
+    public static float [] detectionRangePerClass = {2f,5f,2f,3.5f};
     public static float BASEHEALING = 5f;
     public static float [][] damageModifiers =
     {
@@ -112,7 +112,6 @@ public class StatsInfo
 
     };
 
-    public static float[] distanciaVisionUnidades = { 2f, 3f, 1f, 2f };
 
     public static ACCION[][] accionesDeUnidades =
     {

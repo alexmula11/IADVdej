@@ -179,7 +179,24 @@ public class SimManagerFinal : SimulationManager
                         }
                         else if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit, 10000f, 1 << 13))
                         {
-
+                            Debug.Log("ataco a amtracao");
+                            PersonajeBase enemigo = hit.collider.GetComponent<PersonajeBase>();
+                            foreach (PersonajeBase person in selectedUnits)
+                            {
+                                AccionCompuesta ac =  TacticalModule.createAttackingAction(person,enemigo);
+                                person.accion = ac;
+                                person.accion.doit();
+                            }
+                        }
+                        else if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit, 10000f, 1 << 14))
+                        {
+                            Vector2 baseToGo = positionToGrid(hit.collider.transform.parent.position);
+                            foreach (PersonajeBase person in selectedUnits)
+                            {
+                                ActionGo gotobase = new ActionGo(person,TacticalModule.getClosestPointToBase(person,baseToGo),null);
+                                person.accion = gotobase;
+                                person.accion.doit();
+                            }
                         }
                     }
                 }
@@ -337,11 +354,11 @@ public class SimManagerFinal : SimulationManager
                     {
                         if (person is PersonajePlayer)
                         {
-                            influences[i][j] = influences[i][j] + influenciaActual;
+                            if(person.isAlive())influences[i][j] = influences[i][j] + influenciaActual;
                         }
                         else if (person)
                         {
-                            influences[i][j] = influences[i][j] - influenciaActual;
+                            if(person.isAlive())influences[i][j] = influences[i][j] - influenciaActual;
                         }
                     }
                 }
@@ -399,7 +416,7 @@ public class SimManagerFinal : SimulationManager
         {
 
             Vector2 origenVision = positionToGrid(person.posicion);
-            float distanciaVision = StatsInfo.distanciaVisionUnidades[(int)person.tipo];
+            float distanciaVision = StatsInfo.detectionRangePerClass[(int)person.tipo];
 
             for (int i = (int)System.Math.Max((origenVision.x - distanciaVision), 0); i < (int)System.Math.Min((origenVision.x + distanciaVision), gridDimensions.x - 1); i++)
             {
@@ -499,7 +516,7 @@ public class SimManagerFinal : SimulationManager
             nodos[i] = new NodoGrafoAStar[65];
         }
 
-        LinkedList<NodoGrafoAStar> closedPositions = new LinkedList<NodoGrafoAStar>();
+        HashSet<Vector2> closedPositions = new HashSet<Vector2>();
 
         Heap<NodoGrafoAStar> openPositions = new Heap<NodoGrafoAStar>(maxHeapSize);
         openPositions.Add(nodoOrigen);
@@ -509,7 +526,7 @@ public class SimManagerFinal : SimulationManager
         while (openPositions.Count > 0)
         {
             nodoActual = openPositions.RemoveFirst();
-            closedPositions.AddFirst(nodoActual);
+            closedPositions.Add(nodoActual.posicionGrid);
 
             if(nodoActual.posicionGrid == end)
             {
@@ -521,20 +538,13 @@ public class SimManagerFinal : SimulationManager
             foreach (NodoGrafoAStar nodito in adyacentes)
             {
                 //if closed.contains(neighbour)
-                bool estaEnListaClosed = false;
-                foreach (NodoGrafoAStar noditoClosed in closedPositions)
-                {
-                    //Si el nodo ya está en la lista closed, no se considera
-                    if (noditoClosed.posicionGrid == nodito.posicionGrid)
-                    {
-                        estaEnListaClosed = true;
-                        break;
-                    }
-                }
+                bool estaEnListaClosed = closedPositions.Contains(nodito.posicionGrid);
+            
                 if (estaEnListaClosed)
                 {
                     continue;
                 }
+
                 //calculamos distancia al siguiente nodo desde el que estamos
                 float inversaVelocidad = 1 / StatsInfo.velocidadUnidadPorTerreno[(int)terrenos[(int)nodito.posicionGrid.x][(int)nodito.posicionGrid.y]][(int)tipo];
                 //float newG = nodoActual.costFromOrigin + (nodoActual.posicionGrid - nodito.posicionGrid).magnitude * inversaVelocidad;

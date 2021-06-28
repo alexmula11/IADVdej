@@ -55,7 +55,7 @@ public class AggresiveTM : TacticalModule
         int bridgesControlled = bridgeUnderControl();                                       //comprobamos que puentes controlamos
         if(bridgesControlled == 0)                                                          //si no controlamos ninguno
         {
-            //BridgeAttacked = changeBridgeAttack();                                          //selecionamos que puente atacar, vamos intercalando para despistar jeje
+            //BridgeAttacked = changeBridgeAttack();                                        //selecionamos que puente atacar, vamos intercalando para despistar jeje
             aggresiveActions.AddRange(orderGroupToAttackBridge(BridgeAttacked));            //creamos un grupo de ataque para el puente
         }
 
@@ -288,8 +288,10 @@ public class AggresiveTM : TacticalModule
             if(!defensiveGroup.Contains(unit))                                                                                              //si no es alguien que deba defender
             {
                 foreach(PersonajeBase enemy in enemies)
-                {                
-                    if(enemy.isAlive() && (unit.posicion-enemy.posicion).magnitude <= StatsInfo.detectionRangePerClass[(int)unit.tipo])    //distancia de deteccion
+                {               
+                    Vector2 mipos = SimManagerFinal.positionToGrid(unit.posicion);
+                    Vector2 supos = SimManagerFinal.positionToGrid(enemy.posicion); 
+                    if(enemy.isAlive() && (mipos -  supos).magnitude <= StatsInfo.detectionRangePerClass[(int)unit.tipo])                   //distancia de deteccion
                     {                                                                                                                       //lo quitamos de grupo de ataque si estaba
                         attackActions.Add(createAttackingAction(unit,enemy));                                                                //añadimos accion de atacar
                         unidadKataka.Add(unit);
@@ -317,6 +319,7 @@ public class AggresiveTM : TacticalModule
         float influenceToBeat = 0;
         switch(bridgesControlled)
         {
+            //si tengo el 1 ataco al 2
             case 1:
                 if(influenceBridgeInf > 0)
                 {
@@ -324,6 +327,7 @@ public class AggresiveTM : TacticalModule
                     influenceToBeat = influenceBridgeInf;
                 }
             break;
+            //si tengo el 2 ataco al 1
             case 2:
                 if(influenceBridgeSup > 0)
                 {
@@ -333,7 +337,7 @@ public class AggresiveTM : TacticalModule
             break;
         }
 
-        if(bridge != 0)
+        if(bridge != 0)         //si el enemigo tiene un puente tratamos de recuperarlo
         {
             foreach(PersonajeBase npc in unitsNotAsigned)
             {
@@ -341,12 +345,54 @@ public class AggresiveTM : TacticalModule
                 {
                     if(!alreadyInBridge(npc,bridgesControlled))
                     {
-                        if(influenceTotAttack >= influenceToBeat)
+                        if(influenceTotAttack > influenceToBeat)
                         {
                             break;
                         }
                         influenceTotAttack += StatsInfo.influenciaMaximaGeneradaPorUnidad[(int)npc.tipo];
-                        regroupForAttack.Add(new ActionGo(npc,randomPointInBridge(bridge,npc),null));
+                        if(!alreadyGoingToBridge(npc,bridge))
+                            regroupForAttack.Add(new ActionGo(npc,randomPointInBridge(bridge,npc),null));
+                        if(!ofensiveGroup.Contains(npc))
+                            ofensiveGroup.Add(npc);
+                    }
+                }
+            }
+
+            if(influenceTotAttack < influenceToBeat)
+            {
+                foreach(PersonajeBase npc in unitsNotAsigned)
+                {
+                    if(!defensiveGroup.Contains(npc))
+                    {
+                        if(influenceTotAttack > influenceToBeat)
+                        {
+                            break;
+                        }
+                        influenceTotAttack += StatsInfo.influenciaMaximaGeneradaPorUnidad[(int)npc.tipo];
+                        if(!alreadyGoingToBridge(npc,bridge))
+                            regroupForAttack.Add(new ActionGo(npc,randomPointInBridge(bridge,npc),null));
+                        if(!ofensiveGroup.Contains(npc))
+                            ofensiveGroup.Add(npc);
+                    }  
+                }
+            }
+
+        }
+        else                //si no, vamos la que tenemos conquistado
+        {
+            foreach(PersonajeBase npc in unitsNotAsigned)
+            {
+                if(!defensiveGroup.Contains(npc))
+                {
+                    if(!alreadyInBridge(npc,bridgesControlled))
+                    {
+                        if(!alreadyGoingToBridge(npc,bridgesControlled)){
+                            Debug.Log("entro");
+                            regroupForAttack.Add(new ActionGo(npc,randomPointInBridge(bridgesControlled,npc),null));
+                        }
+                            
+                        if(!ofensiveGroup.Contains(npc))
+                            ofensiveGroup.Add(npc);
                     }
                 }
             }
@@ -355,10 +401,10 @@ public class AggresiveTM : TacticalModule
         return regroupForAttack;
     }
 
-    private bool alreadyInBridge(PersonajeBase npc,int wichBridge) //hay que pasarlo 1 o 2 como valor de entrada
+    private bool alreadyInBridge(PersonajeBase npc,int whichBridge) //hay que pasarlo 1 o 2 como valor de entrada
     {
         Vector2 pos = SimManagerFinal.positionToGrid(npc.posicion);
-        switch(wichBridge)
+        switch(whichBridge)
         {
             case 1:
                 return pos.x >= StatsInfo.puente_superior[0].x && pos.x <= StatsInfo.puente_superior[2].x && pos.y >= StatsInfo.puente_superior[0].y && pos.y <= StatsInfo.puente_superior[1].y;
@@ -413,4 +459,28 @@ public class AggresiveTM : TacticalModule
         return new Vector2(whereToGoX,whereToGoY);
     }
 
+
+    private bool pointInBridge(Vector2 pos, int whichBridge)
+    {
+        switch(whichBridge)
+        {
+            case 1:
+                return pos.x >= StatsInfo.puente_superior[0].x && pos.x <= StatsInfo.puente_superior[2].x && pos.y >= StatsInfo.puente_superior[0].y && pos.y <= StatsInfo.puente_superior[1].y;
+            case 2:
+                return pos.x >= StatsInfo.puente_inferior[0].x && pos.x <= StatsInfo.puente_inferior[2].x && pos.y >= StatsInfo.puente_inferior[0].y && pos.y <= StatsInfo.puente_inferior[1].y;
+        } 
+        return false;
+    }
+
+    private bool alreadyGoingToBridge(PersonajeBase npc,int whichBridge)
+    {
+        if(npc.currentAction is ActionGo)
+        {
+            if(pointInBridge(((ActionGo)npc.currentAction).getDestiny(),whichBridge))
+            {
+                return true;
+            }
+        }
+        return false;
+    }
 }

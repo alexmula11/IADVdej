@@ -67,7 +67,7 @@ public abstract class TacticalModule
          return closestEnemy; 
         }
 
-    protected internal Vector2 getClosestPointToBase(PersonajeBase person, Vector2 basePos)
+    protected static internal Vector2 getClosestPointToBase(PersonajeBase person, Vector2 basePos)
     {
 
         Vector3 distance = SimManagerFinal.gridToPosition(basePos) - person.posicion;
@@ -82,7 +82,7 @@ public abstract class TacticalModule
         }
     }
 
-    protected internal AccionCompuesta createAttackingAction(PersonajeBase sujeto, PersonajeBase receptor)
+    protected static internal AccionCompuesta createAttackingAction(PersonajeBase sujeto, PersonajeBase receptor)
     {
       ActionGo goToEnemy = new ActionGo(sujeto,SimManagerFinal.positionToGrid(receptor.posicion),receptor);
       AccionAttack attackEnemy = new AccionAttack(sujeto,receptor);

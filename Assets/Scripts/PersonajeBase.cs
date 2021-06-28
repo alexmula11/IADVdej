@@ -350,7 +350,7 @@ public abstract class PersonajeBase : Bodi
                     {
                         recalcularAccion = true;
                         selectedBehaviour = kinetic[0];
-                    }
+                    }                     
                     steeringActual = selectedBehaviour.getSteering(this);
                 }
             }

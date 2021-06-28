@@ -35,13 +35,23 @@ public class ActionGo : Accion
 
     protected internal override bool isDone()
     {
-        //if(receptor != null)Debug.Log("Distancia al enemigo "+ (receptor.posicion - sujeto.posicion).magnitude + " rango de ataque "+ StatsInfo.attackRangePerClass[(int)sujeto.tipo] + "receptor "+ receptor.posicion + "sujeto "+ sujeto.posicion);
-        //if(receptor!=null && (receptor.posicion - sujeto.posicion).magnitude < StatsInfo.attackRangePerClass[(int)sujeto.tipo])Debug.Log("ya estoy a rango");
-        return (receptor && (receptor.posicion - sujeto.posicion).magnitude < (StatsInfo.attackRangePerClass[(int)sujeto.tipo])-1f) || (recorrer!=null && recorrer.finishedLinear);
+        bool aRango = false;
+        if(receptor != null){
+            Vector2 mipos = SimManagerFinal.positionToGrid(sujeto.posicion);
+            Vector2 supos = SimManagerFinal.positionToGrid(receptor.posicion);
+            aRango = (mipos - supos).magnitude <= (StatsInfo.attackRangePerClass[(int)sujeto.tipo]);
+        }
+        
+        return (aRango || (recorrer!=null && recorrer.finishedLinear));
     }
 
     protected internal override bool isPossible()
     {
         return (receptor && receptor.isAlive() && sujeto.isAlive()) || (receptor==null && sujeto.isAlive());
+    }
+
+    protected internal Vector2 getDestiny()
+    {
+        return destiny;
     }
 }

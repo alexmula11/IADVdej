@@ -13,11 +13,11 @@ public class AccionAttack : AccionCombate
 
     protected internal override void doit()
     {
-        if(isInRange())                                                                         //si el receptor esta a rango de ataque del sujeto
+        if(isPossible())                                                                         //si el receptor esta a rango de ataque del sujeto
         {
-            FaceSD miraDondeAtakas = new FaceSD();
-            miraDondeAtakas.target = receptor;
-            sujeto.newTaskGrid(miraDondeAtakas);
+            StopAndFaceSD ad = new StopAndFaceSD(); 
+            ad.target = receptor;
+            sujeto.newTaskGrid(ad);
             if (timer <= 0)
             {
                 receptor.actualizeHealth(-calculateDamageOutput());                                 //le pasamos actualización de vida negativa
@@ -42,9 +42,12 @@ public class AccionAttack : AccionCombate
 
     protected internal override bool isInRange()                                                //Comprobacion de rango de ataque
     {
-        return ((sujeto.posicion-receptor.posicion).magnitude 
-        < 
-        StatsInfo.attackRangePerClass[(int)sujeto.tipo]);
+        Vector2 mipos = SimManagerFinal.positionToGrid(sujeto.posicion);
+        Vector2 supos = SimManagerFinal.positionToGrid(receptor.posicion);
+        
+        return (((mipos - supos).magnitude 
+        <= 
+        StatsInfo.attackRangePerClass[(int)sujeto.tipo]));
     }
 
     protected internal override bool isPossible()
