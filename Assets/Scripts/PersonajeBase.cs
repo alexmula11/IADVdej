@@ -355,7 +355,7 @@ public abstract class PersonajeBase : Bodi
                             if(currentAction != null)currentAction.doit();
                         }
                         selectedBehaviour = kinetic[1];
-                        actuadorHumanoNoDriftin();
+                        if(!(currentAction is AccionCompuesta))actuadorHumanoNoDriftin();
                     }
                     else
                     {

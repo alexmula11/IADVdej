@@ -14,6 +14,8 @@ public class AggresiveTM : TacticalModule
     private List<PersonajeBase> siegeGroup = new List<PersonajeBase>();
     private List<PersonajeBase> recoveringGroup = new List<PersonajeBase>();
 
+    private PersonajeBase patrullero;
+
     private List<PersonajeBase> unitsNotAsigned = new List<PersonajeBase>();                                            //unidades todavia no asignadas a una tarea
 
     private int BridgeAttacked;
@@ -25,6 +27,7 @@ public class AggresiveTM : TacticalModule
     public AggresiveTM(Vector2 _baseCoords,  Vector2 _enemyBaseCoords ,List<PersonajeBase> _npcs, List<PersonajeBase> _players) : base(_baseCoords,_enemyBaseCoords ,_npcs, _players)
     {
         BridgeAttacked = Mathf.RoundToInt(Random.Range(1,2));
+        patrullero = allies[1];
     }
 
     protected internal override List<Accion> getStrategyActions()
@@ -55,6 +58,9 @@ public class AggresiveTM : TacticalModule
             unitsNotAsigned.AddRange(defensiveGroup);
             defensiveGroup.Clear();
         }
+
+                        /*SET PATROL*/
+        aggresiveActions.AddRange(setPatrol());
 
                         /*COMPROBACION DE RETIRARSE A LA BASE SI NO ESTAMOS ASEDIANDO Y ESTAMOS BAJOS DE VIDA*/
         aggresiveActions.AddRange(sendBackAllies());
@@ -113,6 +119,7 @@ public class AggresiveTM : TacticalModule
                     unitsNotAsigned.Add(ally);
             }
         }
+        unitsNotAsigned.Remove(patrullero);
     }
 
     private THREAT_VALUE calculateThreat(int numberAttackers)
@@ -189,6 +196,9 @@ public class AggresiveTM : TacticalModule
             unitsNotAsigned.Remove(unitsNotAsigned[index]); //si falla algo, mirar aqui
             priorities.RemoveAt(index);
         }
+
+        if(patrullero.isAlive())
+            defendActions.Add(createAttackingAction(patrullero, getClosestEnemy(patrullero, attackers)));
 
         return defendActions;
     }
@@ -606,4 +616,61 @@ public class AggresiveTM : TacticalModule
         }
         return defs;
     }
+
+    private List<Accion> setPatrol()
+    {
+        List<Accion> patrolActions = new List<Accion>();
+        bool notGoingToAttack = true;
+
+    
+        if(patrullero.isAlive())
+        {
+            if(!isGoingToAttack(patrullero))
+            {
+                foreach(PersonajeBase enemy in enemies)
+                {               
+                    Vector2 mipos = SimManagerFinal.positionToGrid(patrullero.posicion);
+                    Vector2 supos = SimManagerFinal.positionToGrid(enemy.posicion); 
+                    if(enemy.isAlive() && (mipos -  supos).magnitude <= StatsInfo.detectionRangePerClass[(int)patrullero.tipo])                   
+                    {                                                                                                                       
+                        patrolActions.Add(createAttackingAction(patrullero,enemy));  
+                        notGoingToAttack = false;                                                              
+                        break;
+                    }
+                }
+                if(notGoingToAttack)
+                {
+                    if(!(patrullero.currentAction is AccionPatrullar))
+                    {
+                        patrolActions.Add(new AccionPatrullar(patrullero,StatsInfo.patrolPathing,SimManagerFinal.terrenos));
+                    }
+                }
+            }
+            else if(tooFarAwayFromBase(patrullero))
+            {
+                patrolActions.Add(new AccionPatrullar(patrullero,StatsInfo.patrolPathing,SimManagerFinal.terrenos));
+            }
+        }
+        return patrolActions;
+    }
+
+    private bool tooFarAwayFromBase(PersonajeBase unit)
+    {
+        PersonajeBase enemyToAttack = null;
+        if(unit.currentAction != null && (unit.currentAction is AccionCompuesta))
+        {
+            AccionCompuesta ac = (AccionCompuesta)unit.currentAction;
+            ActionGo ag = (ActionGo) ac.acciones[0]; 
+            enemyToAttack =  ag.receptor;
+        }
+        if(enemyToAttack != null )
+        {
+            return (enemyToAttack.posicion - SimManagerFinal.gridToPosition(baseCoords)).magnitude > (StatsInfo.baseDistaciaCuracion*2);
+        }
+        else
+        {
+            return false;
+        }       
+    }
+
 }

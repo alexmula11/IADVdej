@@ -5,7 +5,7 @@ using UnityEngine;
 public class AccionCompuesta : Accion
 {
     protected internal int actionIndex = 0;
-    protected List<Accion> acciones;
+    protected internal List<Accion> acciones;
     protected bool loop, allDone;
 
     protected internal new string nombre { get { return acciones[actionIndex].nombre; } }

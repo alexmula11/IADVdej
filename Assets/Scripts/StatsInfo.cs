@@ -36,7 +36,7 @@ public class StatsInfo
 
     public static float[] velocidadUnidades =
     {
-        3, 4, 2, 2
+        1.5f, 2, 1, 1
     };
     /*
      * primer acceso tipo de terreno, segundo acceso tipo de unidad
@@ -79,7 +79,7 @@ public class StatsInfo
         new float[MAX_UNIT_TYPE] { 1.5f, 1.5f, 2, 2},
         new float[MAX_UNIT_TYPE] { 0.9f, 0.9f, 0.9f, 0.75f},
         new float[MAX_UNIT_TYPE] { 0.5f, 1.25f, 0.5f, 0.5f},    //el arquero es especialista en el bosque
-        new float[MAX_UNIT_TYPE] { 0.5f, 0.5f, 0.5f, 0.5f},
+        new float[MAX_UNIT_TYPE] { 0.75f, 0.75f, 0.75f, 0.75f},
         new float[MAX_UNIT_TYPE] { 1f, 1f, 1f, 1f},
     };
 
@@ -96,7 +96,15 @@ public class StatsInfo
     public static float baseDistanciaInfluencia = 15f;
     public static float baseDistaciaCuracion = 37.5f;
     public static float BASE_HEALING_POWER = 20f;
-     public const float MAX_BASE_HEALTH = 1000f;
+    public const float MAX_BASE_HEALTH = 1000f;
+
+    public static List<Vector3> patrolPathing = new List<Vector3>()
+    {
+        new Vector3(37.5f,0,262.5f),
+        new Vector3(-36.5f,0,262.5f),
+        new Vector3(-36.5f,0,337.5f),
+        new Vector3(37.5f,0,337.5f),
+    };
 
     /*COMBAT STATS*/
     public static float[] velocidadDeAtaquePorUnidad = { 1f, 1.5f, 0.5f, 0.5f };

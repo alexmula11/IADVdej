@@ -94,7 +94,7 @@ public class GameManager : MonoBehaviour
             {
                 if(TacticalModule.isInBaseRange(unit,SimManagerFinal.positionToGrid(enemyBase.position)))
                 {
-                    redBase -= StatsInfo.potenciaInfluenciaUnidades[(int)unit.tipo] * Time.fixedDeltaTime;
+                    redBase -= StatsInfo.damagePerClass[(int)unit.tipo] * Time.fixedDeltaTime;
                 }
             }
         }
@@ -104,7 +104,7 @@ public class GameManager : MonoBehaviour
             {
                 if(TacticalModule.isInBaseRange(unit,SimManagerFinal.positionToGrid(allyBase.position)))
                 {
-                    blueBase -= StatsInfo.potenciaInfluenciaUnidades[(int)unit.tipo]  * Time.fixedDeltaTime;
+                    blueBase -= StatsInfo.damagePerClass[(int)unit.tipo]  * Time.fixedDeltaTime;
                 }
             }
         }

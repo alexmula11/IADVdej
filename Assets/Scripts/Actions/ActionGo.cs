@@ -5,7 +5,7 @@ using UnityEngine;
 public class ActionGo : Accion
 {
     private PathFollowEndSD recorrer;
-    private PersonajeBase receptor;
+    protected internal  PersonajeBase receptor;
     private Vector2 destiny;
 
     public ActionGo(PersonajeBase _sujeto, Vector2 destiny, PersonajeBase receptor) : base( _sujeto)
