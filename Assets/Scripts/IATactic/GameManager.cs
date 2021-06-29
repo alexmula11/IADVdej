@@ -7,6 +7,10 @@ public class GameManager : MonoBehaviour
     [SerializeField]
     protected HPTeamBarController baseHPBars;
 
+    [SerializeField]
+    protected GameObject matchResultPanel, redWinsPanel, blueWinsPanel;
+
+
     protected List<PersonajePlayer> personajesPlayer = new List<PersonajePlayer>();
     protected List<PersonajeNPC> personajesNPC = new List<PersonajeNPC>();
 
@@ -114,12 +118,17 @@ public class GameManager : MonoBehaviour
 
     protected internal void checkWinningCondition()
     {
-        if(redBase == 0)
+        if (redBase <= 0)
         {
-            SimManagerFinal.setWinner(0);
+            Time.timeScale = 0;
+            matchResultPanel.SetActive(true);
+            blueWinsPanel.SetActive(true);
         }
-        else if(blueBase == 0) {
-            SimManagerFinal.setWinner(1);
+        else if (blueBase <= 0)
+        {
+            Time.timeScale = 0;
+            matchResultPanel.SetActive(true);
+            redWinsPanel.SetActive(true);
         }
     }
 
@@ -159,5 +168,23 @@ public class GameManager : MonoBehaviour
         }
     }
     
+    public void changeIaModeForIA(int ia)
+    {
+        enemyIA.change_IA_Mode((IA_MODE)ia);
+    }
+    public void changeIaModeForPlayer(int ia)
+    {
+        playerIA.change_IA_Mode((IA_MODE)ia);
+    }
 
+    internal void chutarLaIA()
+    {
+        playerIAActive = !playerIAActive;
+    }
+
+
+    public void exitGame()
+    {
+        Application.Quit();
+    }
 }

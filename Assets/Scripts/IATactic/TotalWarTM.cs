@@ -83,7 +83,6 @@ public class TotalWarTM : TacticalModule
         {
             if(!attackGroup.Contains(unit))                                 //para no volver a mandarla si ya la he mandado
             {
-                Debug.Log("mando atacar la base");
                 attackBaseActions.Add(createBaseAttackAction(unit));  
                 attackGroup.Add(unit);           
             }

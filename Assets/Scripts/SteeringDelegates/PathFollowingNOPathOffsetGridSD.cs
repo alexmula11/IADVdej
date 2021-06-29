@@ -52,38 +52,80 @@ public class PathFollowingNOPathOffsetGridSD : SteeringBehaviour
 
         if(!startingsetup)
         {
-            if (pursueSD.finishedLinear)
-            {               
-                if(currentPoint >= startingruta.Count)
+            if (startingruta.Count > 0)
+            {
+                //preguntar a alex si se acuerda
+                personaje.fakeMovement.innerDetector = personaje.innerDetector;
+                personaje.fakeMovement.posicion = startingruta[currentPoint];
+                personaje.fakeMovement.moveTo(startingruta[currentPoint]);
+                personaje.fakeAvoid.posicion = startingruta[startingruta.Count - 1];
+                personaje.fakeAvoid.moveTo(startingruta[startingruta.Count - 1]);
+                if (pursueSD.finishedLinear)
                 {
-                    startingsetup = true;
-                    currentPoint = currentStartingPoint;
-                    personaje.fakeMovement.innerDetector = personaje.innerDetector;
-                    personaje.fakeMovement.posicion = ruta[currentPoint];
-                    personaje.fakeMovement.moveTo(ruta[currentPoint]);
-                    pursueSD.target = personaje.fakeMovement;
-                    return pursueSD.getSteering(personaje); 
+                    currentPoint = (currentPoint + 1);
+                    if (currentPoint >= startingruta.Count)
+                    {
+                        startingsetup = true;
+                        currentPoint = currentStartingPoint;
+                        for (int i=currentPoint; i < ruta.Count; i++)
+                        {
+                            bool found = false;
+                            for (int j = 0; j < path.Count; j++)
+                            {
+                                if (ruta[i] == SimManagerFinal.gridToPosition(path[j]))
+                                {
+                                    personaje.fakeAvoid.posicion = ruta[i];
+                                    personaje.fakeAvoid.moveTo(ruta[i]);
+                                    found = true;
+                                    break;
+                                }
+                            }
+                            if (found) break;
+                        }
+                    }
                 }
-                currentPoint = (currentPoint + 1);
             }
-            personaje.fakeMovement.innerDetector = personaje.innerDetector;
-            personaje.fakeMovement.posicion = startingruta[currentPoint];
-            personaje.fakeMovement.moveTo(startingruta[currentPoint]);
+            else
+            {
+                startingsetup = true;
+                currentPoint = currentStartingPoint;
+                for (int i = currentPoint; i < ruta.Count; i++)
+                {
+                    bool found = false;
+                    for (int j = 0; j < path.Count; j++)
+                    {
+                        if (ruta[i] == SimManagerFinal.gridToPosition(path[j]))
+                        {
+                            personaje.fakeAvoid.posicion = ruta[i];
+                            personaje.fakeAvoid.moveTo(ruta[i]);
+                            found = true;
+                            break;
+                        }
+                    }
+                    if (found) break;
+                }
+            }
         }
         else
         {
             if (pursueSD.finishedLinear)
             {
+                for (int i = 0; i < path.Count; i++)
+                {
+                    if (path[i] == SimManagerFinal.positionToGrid(ruta[currentPoint]))
+                    {
+                        int next = (i + 1) % path.Count;
+                        Vector3 nextRoutePoint = SimManagerFinal.gridToPosition(path[next]);
+                        personaje.fakeAvoid.posicion = nextRoutePoint;
+                        personaje.fakeAvoid.moveTo(nextRoutePoint);
+                    }
+                }
                 currentPoint = (currentPoint + 1) % ruta.Count;
             }
             personaje.fakeMovement.innerDetector = personaje.innerDetector;
             personaje.fakeMovement.posicion = ruta[currentPoint];
             personaje.fakeMovement.moveTo(ruta[currentPoint]);
         }
-
-        personaje.fakeMovement.innerDetector = personaje.innerDetector;
-        personaje.fakeMovement.posicion = ruta[currentPoint];
-        personaje.fakeMovement.moveTo(ruta[currentPoint]);
         pursueSD.target = personaje.fakeMovement;
         return pursueSD.getSteering(personaje);
     }

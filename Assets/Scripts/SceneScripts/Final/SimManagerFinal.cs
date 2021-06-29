@@ -17,6 +17,9 @@ public class SimManagerFinal : SimulationManager
     [SerializeField]
     protected GameManager gm;
 
+    [SerializeField]
+    protected GameObject playerIAButtons;
+
     static protected Vector2 blocksize;
     static float minX, minY;
 
@@ -26,6 +29,8 @@ public class SimManagerFinal : SimulationManager
     protected Color [][] visibleTerrain;
 
     public static StatsInfo.TIPO_TERRENO[][] terrenos;
+
+    protected bool iaControlled = false;
 
 
     protected enum MOUSE_ACTION_FINAL
@@ -92,284 +97,386 @@ public class SimManagerFinal : SimulationManager
 
     protected new void Update()
     {
-        if (!mouseOverUI)
+        if (!iaControlled)
         {
-            if (mouseBehav == MOUSE_ACTION_FINAL.SELECT)
+            if (!mouseOverUI)
             {
-                if (Input.GetMouseButton(0))
+                if (mouseBehav == MOUSE_ACTION_FINAL.SELECT)
                 {
-                    if (Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift))
+                    if (Input.GetMouseButton(0))
                     {
-                        RaycastHit hit;
-                        if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit, 10000f, 1 << 8))
+                        if (Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift))
                         {
-                            PersonajePlayer character = hit.collider.gameObject.GetComponent<PersonajePlayer>();
-                            if (!selectedUnits.Contains(character))
+                            RaycastHit hit;
+                            if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit, 10000f, 1 << 8))
                             {
+                                PersonajePlayer character = hit.collider.gameObject.GetComponent<PersonajePlayer>();
+                                if (!selectedUnits.Contains(character))
+                                {
+                                    character.selected = true;
+                                    characterWithFocus = character;
+                                    selectedUnits.Add(character);
+                                    ui.showDebugInfo(true);
+                                    (ui as UIManagerFinal).actualizeAgentDebugInfo(characterWithFocus);
+                                }
+                                else
+                                {
+                                    character.selected = false;
+                                    if (character == characterWithFocus)
+                                    {
+                                        characterWithFocus = null;
+                                        ui.showDebugInfo(false);
+                                    }
+                                    selectedUnits.Remove(character);
+                                }
+                            }
+                            else if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit, 10000f, 1 << 13))
+                            {
+                                PersonajeNPC character = hit.collider.gameObject.GetComponent<PersonajeNPC>();
+                                if (character != characterWithFocus)
+                                {
+                                    characterWithFocus = character;
+                                    ui.showDebugInfo(true);
+                                    ui.actualizeAgentDebugInfo(character);
+                                }
+                            }
+                        }
+                        else
+                        {
+                            foreach (PersonajePlayer person in selectedUnits)
+                            {
+                                person.selected = false;
+                            }
+                            selectedUnits.Clear();
+                            RaycastHit hit;
+                            if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit, 10000f, 1 << 8))
+                            {
+                                PersonajePlayer character = hit.collider.gameObject.GetComponent<PersonajePlayer>();
                                 character.selected = true;
                                 characterWithFocus = character;
                                 selectedUnits.Add(character);
                                 ui.showDebugInfo(true);
                                 (ui as UIManagerFinal).actualizeAgentDebugInfo(characterWithFocus);
                             }
+                            else if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit, 10000f, 1 << 13))
+                            {
+                                PersonajeNPC character = hit.collider.gameObject.GetComponent<PersonajeNPC>();
+                                if (character != characterWithFocus)
+                                {
+                                    characterWithFocus = character;
+                                    ui.showDebugInfo(true);
+                                    ui.actualizeAgentDebugInfo(character);
+                                }
+                            }
                             else
                             {
-                                character.selected = false;
-                                if (character == characterWithFocus)
+                                if (characterWithFocus != null)
                                 {
                                     characterWithFocus = null;
                                     ui.showDebugInfo(false);
                                 }
-                                selectedUnits.Remove(character);
                             }
                         }
-                    }
-                    else
-                    {
-                        foreach (PersonajePlayer person in selectedUnits)
-                        {
-                            person.selected = false;
-                        }
-                        selectedUnits.Clear();
-                        RaycastHit hit;
-                        if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit, 10000f, 1 << 8))
-                        {
-                            PersonajePlayer character = hit.collider.gameObject.GetComponent<PersonajePlayer>();
-                            character.selected = true;
-                            characterWithFocus = character;
-                            selectedUnits.Add(character);
-                            ui.showDebugInfo(true);
-                            (ui as UIManagerFinal).actualizeAgentDebugInfo(characterWithFocus);
-                        }
-                        else
-                        {
-                            if (characterWithFocus != null)
-                            {
-                                characterWithFocus = null;
-                                ui.showDebugInfo(false);
-                            }
-                        }
-                    }
-                    ui.actualizeUserButtons(allPossibleActions());
+                        ui.actualizeUserButtons(allPossibleActions());
 
+                    }
                 }
-            }
-            else if (mouseBehav == MOUSE_ACTION_FINAL.MOVE)
-            {
-                if (selectedUnits.Count > 0)
+                else if (mouseBehav == MOUSE_ACTION_FINAL.MOVE)
                 {
-                    if (Input.GetMouseButton(0))
+                    if (selectedUnits.Count > 0)
                     {
-                        RaycastHit hit;
-                        /*if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit, 10000f, 1 << 9))
+                        if (Input.GetMouseButton(0))
                         {
-                            return;
-                        }
-                        else */
-                        
-                        if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit, 10000f, 1 << 13))
-                        {
-                            PersonajeBase enemigo = hit.collider.GetComponent<PersonajeBase>();
-                            foreach (PersonajeBase person in selectedUnits)
+                            RaycastHit hit;
+                            /*if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit, 10000f, 1 << 9))
                             {
-                                AccionCompuesta ac = TacticalModule.createAttackingAction(person, enemigo);
-                                if (person.currentFormacion!=null)
+                                return;
+                            }
+                            else */
+
+                            if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit, 10000f, 1 << 13))
+                            {
+                                PersonajeBase enemigo = hit.collider.GetComponent<PersonajeBase>();
+                                foreach (PersonajeBase person in selectedUnits)
                                 {
-                                    Formacion formation = person.currentFormacion;
-                                    if (person.currentFormacion.lider == person)
+                                    AccionCompuesta ac = TacticalModule.createAttackingAction(person, enemigo);
+                                    if (person.currentFormacion != null)
                                     {
-                                        formation.disbandGrid();
-                                        for (int i = 0; i < formation.getMiembros.Length; i++)
+                                        Formacion formation = person.currentFormacion;
+                                        if (person.currentFormacion.lider == person)
                                         {
-                                            if (formation.getMiembros[i] != null)
+                                            formation.disbandGrid();
+                                            for (int i = 0; i < formation.getMiembros.Length; i++)
                                             {
-                                                AccionCompuesta attackMachaka = TacticalModule.createAttackingAction(formation.getMiembros[i], enemigo);
-                                                formation.getMiembros[i].accion = attackMachaka;
-                                                formation.getMiembros[i].accion.doit();
+                                                if (formation.getMiembros[i] != null)
+                                                {
+                                                    AccionCompuesta attackMachaka = TacticalModule.createAttackingAction(formation.getMiembros[i], enemigo);
+                                                    formation.getMiembros[i].accion = attackMachaka;
+                                                    formation.getMiembros[i].accion.doit();
+                                                }
                                             }
+                                            formaciones.Remove(formation);
                                         }
-                                        formaciones.Remove(formation);
+                                        else
+                                        {
+                                            formation.removeMiembro(person);
+                                            person.currentFormacion = null;
+                                            person.accion = ac;
+                                            person.accion.doit();
+                                        }
                                     }
                                     else
                                     {
-                                        formation.removeMiembro(person);
-                                        person.currentFormacion = null;
                                         person.accion = ac;
                                         person.accion.doit();
                                     }
                                 }
-                                else
-                                {
-                                    person.accion = ac;
-                                    person.accion.doit();
-                                }
                             }
-                        }
-                        else if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit, 10000f, 1 << 14))
-                        {
-                            Vector2 baseToGo = positionToGrid(hit.collider.transform.parent.position);
-                            foreach (PersonajeBase person in selectedUnits)
+                            else if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit, 10000f, 1 << 14))
                             {
-                                ActionGo gotobase = new ActionGo(person, TacticalModule.getClosestPointToBase(person, baseToGo), null);
-                                if (person.currentFormacion != null)
+                                Vector2 baseToGo = positionToGrid(hit.collider.transform.parent.position);
+                                foreach (PersonajeBase person in selectedUnits)
                                 {
-                                    Formacion formation = person.currentFormacion;
-                                    if (person.currentFormacion.lider == person)
+                                    ActionGo gotobase = new ActionGo(person, TacticalModule.getClosestPointToBase(person, baseToGo), null);
+                                    if (person.currentFormacion != null)
                                     {
-                                        formation.disbandGrid();
-                                        for (int i = 0; i< formation.getMiembros.Length;i++) 
+                                        Formacion formation = person.currentFormacion;
+                                        if (person.currentFormacion.lider == person)
                                         {
-                                            if (formation.getMiembros[i] != null)
+                                            formation.disbandGrid();
+                                            for (int i = 0; i < formation.getMiembros.Length; i++)
                                             {
-                                                ActionGo gotobaseMachakas = new ActionGo(formation.getMiembros[i], TacticalModule.getClosestPointToBase(formation.getMiembros[i], baseToGo), null);
-                                                formation.getMiembros[i].accion = gotobaseMachakas;
-                                                formation.getMiembros[i].accion.doit();
+                                                if (formation.getMiembros[i] != null)
+                                                {
+                                                    ActionGo gotobaseMachakas = new ActionGo(formation.getMiembros[i], TacticalModule.getClosestPointToBase(formation.getMiembros[i], baseToGo), null);
+                                                    formation.getMiembros[i].accion = gotobaseMachakas;
+                                                    formation.getMiembros[i].accion.doit();
+                                                }
                                             }
+                                            formaciones.Remove(formation);
                                         }
-                                        formaciones.Remove(formation);
+                                        else
+                                        {
+                                            formation.removeMiembro(person);
+                                            person.currentFormacion = null;
+                                            person.accion = gotobase;
+                                            person.accion.doit();
+                                        }
                                     }
                                     else
                                     {
-                                        formation.removeMiembro(person);
-                                        person.currentFormacion = null;
                                         person.accion = gotobase;
                                         person.accion.doit();
                                     }
                                 }
-                                else
-                                {
-                                    person.accion = gotobase;
-                                    person.accion.doit();
-                                }
                             }
-                        }
-                        else if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit, 10000f, 1 << 10))
-                        {
-                            foreach (PersonajeBase person in selectedUnits)
+                            else if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit, 10000f, 1 << 10))
                             {
-                                Vector2 posicionDestino = positionToGrid(hit.point);
-                                Vector2 posicionOrigen = positionToGrid(person.posicion);
-
-                                ActionGo moverse = new ActionGo(person, posicionDestino,null);
-
-                                if (person.currentFormacion != null)
+                                foreach (PersonajeBase person in selectedUnits)
                                 {
-                                    Formacion formation = person.currentFormacion;
-                                    if (person.currentFormacion.lider != person)
+                                    Vector2 posicionDestino = positionToGrid(hit.point);
+                                    Vector2 posicionOrigen = positionToGrid(person.posicion);
+
+                                    ActionGo moverse = new ActionGo(person, posicionDestino, null);
+
+                                    if (person.currentFormacion != null)
                                     {
-                                        formation.removeMiembro(person);
-                                        person.currentFormacion = null;
+                                        Formacion formation = person.currentFormacion;
+                                        if (person.currentFormacion.lider != person)
+                                        {
+                                            formation.removeMiembro(person);
+                                            person.currentFormacion = null;
+                                            person.accion = moverse;
+                                            person.accion.doit();
+                                        }
+                                    }
+                                    else
+                                    {
                                         person.accion = moverse;
                                         person.accion.doit();
                                     }
                                 }
-                                else
-                                {
-                                    person.accion = moverse;
-                                    person.accion.doit();
-                                }
                             }
                         }
                     }
                 }
-            }
-            else if (mouseBehav == MOUSE_ACTION_FINAL.FORM_T || mouseBehav == MOUSE_ACTION_FINAL.FORM_S || mouseBehav == MOUSE_ACTION_FINAL.FORM_R)
-            {
-                if (selectedUnits.Count > 0)
+                else if (mouseBehav == MOUSE_ACTION_FINAL.FORM_T || mouseBehav == MOUSE_ACTION_FINAL.FORM_S || mouseBehav == MOUSE_ACTION_FINAL.FORM_R)
                 {
-                    if (Input.GetMouseButtonDown(0))
+                    if (selectedUnits.Count > 0)
                     {
-                        RaycastHit hit;
-                        if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit, 10000f, 1 << 8))
+                        if (Input.GetMouseButtonDown(0))
                         {
-
-                            // PARA FORMACIONES
-                            foreach (PersonajeBase person in selectedUnits)
+                            RaycastHit hit;
+                            if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit, 10000f, 1 << 8))
                             {
-                                if (person.currentFormacion != null)
+
+                                // PARA FORMACIONES
+                                foreach (PersonajeBase person in selectedUnits)
                                 {
-                                    formaciones.Remove(person.currentFormacion);
-                                    person.currentFormacion.disbandGrid();
+                                    if (person.currentFormacion != null)
+                                    {
+                                        formaciones.Remove(person.currentFormacion);
+                                        person.currentFormacion.disbandGrid();
+                                    }
                                 }
-                            }
-                            //Asignamos el lider que clicamos
-                            PersonajeBase lider = hit.collider.gameObject.GetComponent<PersonajeBase>();
+                                //Asignamos el lider que clicamos
+                                PersonajeBase lider = hit.collider.gameObject.GetComponent<PersonajeBase>();
 
-                            Formacion formacion = null;
+                                Formacion formacion = null;
 
-                            switch (mouseBehav)
-                            {
-                                case MOUSE_ACTION_FINAL.FORM_T:
-                                    formacion = new FormacionTriangulo(lider);
-                                    break;
-                                case MOUSE_ACTION_FINAL.FORM_S:
-                                    formacion = new FormacionCuadrado(lider);
-                                    break;
-                                case MOUSE_ACTION_FINAL.FORM_R:
-                                    formacion = new FormacionPorRoles(lider);
-                                    break;
+                                switch (mouseBehav)
+                                {
+                                    case MOUSE_ACTION_FINAL.FORM_T:
+                                        formacion = new FormacionTriangulo(lider);
+                                        break;
+                                    case MOUSE_ACTION_FINAL.FORM_S:
+                                        formacion = new FormacionCuadrado(lider);
+                                        break;
+                                    case MOUSE_ACTION_FINAL.FORM_R:
+                                        formacion = new FormacionPorRoles(lider);
+                                        break;
+                                }
+                                foreach (PersonajeBase person in selectedUnits)
+                                {
+                                    person.currentFormacion = formacion;
+                                    formacion.addMiembro(person);
+                                }
+                                lider.currentFormacion = formacion;
+                                formacion.formacionASusPuestosAccion();
+                                //formacion.formacionASusPuestos();
+                                formaciones.Add(formacion);
                             }
-                            foreach (PersonajeBase person in selectedUnits)
-                            {
-                                person.currentFormacion = formacion;
-                                formacion.addMiembro(person);
-                            }
-                            lider.currentFormacion = formacion;
-                            formacion.formacionASusPuestosAccion();
-                            //formacion.formacionASusPuestos();
-                            formaciones.Add(formacion);
                         }
                     }
                 }
-            }
-            else if (mouseBehav == MOUSE_ACTION_FINAL.ROUTE_SET)
-            {
-                if (selectedUnits.Count > 0)
+                else if (mouseBehav == MOUSE_ACTION_FINAL.ROUTE_SET)
                 {
-                    if (Input.GetMouseButtonDown(0))
+                    if (selectedUnits.Count > 0)
                     {
-                        RaycastHit hit;
-                        if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit, 10000f, 1 << 11))
+                        if (Input.GetMouseButtonDown(0))
                         {
-                            foreach(PersonajeBase person in selectedUnits)
+                            RaycastHit hit;
+                            if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit, 10000f, 1 << 11))
                             {
-                                if(person.currentFormacion != null)
+                                foreach (PersonajeBase person in selectedUnits)
                                 {
-                                    formaciones.Remove(person.currentFormacion);
-                                    person.currentFormacion.disbandGrid();
+                                    if (person.currentFormacion != null)
+                                    {
+                                        formaciones.Remove(person.currentFormacion);
+                                        person.currentFormacion.disbandGrid();
+                                    }
                                 }
+                                setRouteOnUnits();
+                                pathToSet.Clear();
+                                setMouseBehaviour(0);
+                                ui.selectMouseOption(0);
                             }
-                            setRouteOnUnits();
-                            pathToSet.Clear();
-                            setMouseBehaviour(0);
-                            ui.selectMouseOption(0);
-                        }
-                        else if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit, 10000f, 1 << 10))
-                        {
-                            if (pathToSet.Count == 0)
+                            else if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit, 10000f, 1 << 10))
                             {
+                                if (pathToSet.Count == 0)
+                                {
+                                    foreach (PersonajeBase unit in selectedUnits)
+                                    {
+                                        foreach (Transform routeElem in unit.routeMarks)
+                                        {
+                                            Destroy(routeElem.gameObject);
+                                        }
+                                    }
+                                }
+                                pathToSet.Add(hit.point);
                                 foreach (PersonajeBase unit in selectedUnits)
                                 {
-                                    foreach (Transform routeElem in unit.routeMarks)
+                                    GameObject routeMark = Instantiate(routeMarkPrefab, unit.routeMarks);
+                                    routeMark.transform.position = new Vector3(hit.point.x, 0.05f, hit.point.z);
+                                    if (pathToSet.Count > 1)
                                     {
-                                        Destroy(routeElem.gameObject);
+                                        GameObject routeLine = Instantiate(routeLinePrefab, unit.routeMarks);
+                                        routeLine.GetComponent<FlechaDeRutaDelegate>().setRouteDirection(pathToSet[pathToSet.Count - 2], pathToSet[pathToSet.Count - 1]);
                                     }
                                 }
                             }
-                            pathToSet.Add(hit.point);
-                            foreach (PersonajeBase unit in selectedUnits)
-                            {
-                                GameObject routeMark = Instantiate(routeMarkPrefab, unit.routeMarks);
-                                routeMark.transform.position = new Vector3(hit.point.x, 0.05f, hit.point.z);
-                                if (pathToSet.Count > 1)
-                                {
-                                    GameObject routeLine = Instantiate(routeLinePrefab, unit.routeMarks);
-                                    routeLine.GetComponent<FlechaDeRutaDelegate>().setRouteDirection(pathToSet[pathToSet.Count - 2], pathToSet[pathToSet.Count - 1]);
-                                }
-                            }
                         }
                     }
                 }
+            }
+        }
+        else
+        {
+            if (Input.GetMouseButton(0))
+            {
+                if (Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift))
+                {
+                    RaycastHit hit;
+                    if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit, 10000f, 1 << 8))
+                    {
+                        PersonajePlayer character = hit.collider.gameObject.GetComponent<PersonajePlayer>();
+                        if (!selectedUnits.Contains(character))
+                        {
+                            character.selected = true;
+                            characterWithFocus = character;
+                            selectedUnits.Add(character);
+                            ui.showDebugInfo(true);
+                            ui.actualizeAgentDebugInfo(character);
+                        }
+                        else
+                        {
+                            character.selected = false;
+                            if (character == characterWithFocus)
+                            {
+                                characterWithFocus = null;
+                                ui.showDebugInfo(false);
+                            }
+                            selectedUnits.Remove(character);
+                        }
+                    }
+                    else if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit, 10000f, 1 << 13))
+                    {
+                        PersonajeNPC character = hit.collider.gameObject.GetComponent<PersonajeNPC>();
+                        if (character != characterWithFocus)
+                        {
+                            characterWithFocus = character;
+                            ui.showDebugInfo(true);
+                            ui.actualizeAgentDebugInfo(character);
+                        }
+                    }
+                }
+                else
+                {
+                    foreach (PersonajePlayer person in selectedUnits)
+                    {
+                        person.selected = false;
+                    }
+                    selectedUnits.Clear();
+                    RaycastHit hit;
+                    if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit, 10000f, 1 << 8))
+                    {
+                        PersonajePlayer character = hit.collider.gameObject.GetComponent<PersonajePlayer>();
+                        character.selected = true;
+                        characterWithFocus = character;
+                        selectedUnits.Add(character);
+                        ui.showDebugInfo(true);
+                        ui.actualizeAgentDebugInfo(character);
+                    }
+                    else if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit, 10000f, 1 << 13))
+                    {
+                        PersonajeNPC character = hit.collider.gameObject.GetComponent<PersonajeNPC>();
+                        if (character != characterWithFocus)
+                        {
+                            characterWithFocus = character;
+                            ui.showDebugInfo(true);
+                            ui.actualizeAgentDebugInfo(character);
+                        }
+                    }
+                    else
+                    {
+                        if (characterWithFocus != null)
+                        {
+                            characterWithFocus = null;
+                            ui.showDebugInfo(false);
+                        }
+                    }
+                }
+
             }
         }
     }
@@ -709,7 +816,7 @@ public class SimManagerFinal : SimulationManager
                         else
                         {
                             float inversaVelocidad = 1 / StatsInfo.velocidadUnidadPorTerreno[(int)terrenos[(int)newPosi.x][(int)newPosi.y]][(int)type];
-                            float newG = (int)(actual.costFromOrigin + Mathf.RoundToInt((actual.posicionGrid - newPosi).magnitude * inversaVelocidad));
+                            float newG = (int)(actual.costFromOrigin + (actual.posicionGrid - newPosi).magnitude * inversaVelocidad);
                             float influencePenalty = calculateInfluencePenalty(team,newPosi);                 
                             float terrainPenalty = inversaVelocidad * 70;
                             NodoGrafoAStar nuevoNodo = new NodoGrafoAStar(newPosi, getDistance(newPosi, destino)+influencePenalty+terrainPenalty, newG, actual);
@@ -784,8 +891,20 @@ public class SimManagerFinal : SimulationManager
         return 14 * dstX + 10 * (dstY - dstX);
     }
 
-    public static void setWinner(int winner)
-    {
 
+    public void toogleIAController()
+    {
+        iaControlled = !iaControlled;
+        playerIAButtons.SetActive(iaControlled);
+        gm.chutarLaIA();
+        if (iaControlled)
+        {
+            ui.actualizeUserButtons(new HashSet<StatsInfo.ACCION>());
+        }
+        else
+        {
+            ui.actualizeUserButtons(allPossibleActions());
+        }
     }
+
 }

@@ -79,7 +79,6 @@ public class AggresiveTM : TacticalModule
                         /*ATAQUE A LA BASE ENEMIGA*/
         if(bridgesControlled != 0)
         {
-            Debug.Log("Controlamos el puente: "+bridgesControlled);
             
             //si no tenemos los dos puentes, comprobamos si el enemigo controla el otro, en ese caso
             //vamos a darle mandanga
@@ -416,7 +415,6 @@ public class AggresiveTM : TacticalModule
                     if(!alreadyInBridge(npc,bridgesControlled) && !isGoingToEnemyBase(npc))
                     {
                         if(!alreadyGoingToBridge(npc,bridgesControlled)){
-                            Debug.Log("entro");
                             regroupForAttack.Add(new ActionGo(npc,randomPointInBridge(bridgesControlled,npc),null));
                         }
                             
