@@ -27,7 +27,7 @@ public class DefensiveTM : TacticalModule
             {
                 if(!ally.isInCombat())               //Si no esta en combate
                 {
-                    if (!isInBaseRange(ally,baseCoords))
+                    if (!isInBaseRange(ally,baseCoords) && !alreadyComingToBase(ally) )
                     {
                         Vector2 closestPoint = getClosestPointToBase(ally, baseCoords);
                         ActionGo goToBase = new ActionGo(ally, closestPoint, null);
@@ -36,7 +36,7 @@ public class DefensiveTM : TacticalModule
                 } 
                 else
                 {
-                    if(ally.betterToRun())           //vida por debajo del 30%
+                    if(ally.betterToRun() && !alreadyComingToBase(ally))           //vida por debajo del 30%
                     {
                         if (!isInBaseRange(ally,baseCoords))
                         {
@@ -51,7 +51,7 @@ public class DefensiveTM : TacticalModule
             {
                 //2 - COMPROBAR SI HAY ENEMIGOS EN EL AREA DE LA BASE INTERRUMPIENDO SPAWN
                 List<PersonajeBase> enemies_attacking = enemiesOnBase();
-                if(enemies_attacking.Count > 0)
+                if(enemies_attacking.Count > 0 && !isGoingToAttack(ally))
                 {
                     PersonajeBase closestEnemy = getClosestEnemy(ally, enemies_attacking);
                     ActionGo goToEnemy = new ActionGo(ally,SimManagerFinal.positionToGrid(closestEnemy.posicion),closestEnemy);
@@ -64,7 +64,7 @@ public class DefensiveTM : TacticalModule
                 else
                 {
                     //3 -  COMPROBAR UNIDADES FUERA DEL PERIMETRO DE LA BASE
-                    if(!isInBaseRange(ally,baseCoords))
+                    if(!isInBaseRange(ally,baseCoords) && !alreadyComingToBase(ally))
                     {
                         Vector2 closestPoint = getClosestPointToBase(ally, baseCoords);
                         ActionGo goToBase = new ActionGo(ally, closestPoint, null);
@@ -76,5 +76,16 @@ public class DefensiveTM : TacticalModule
             }
         }
         return defensiveActions;
+    }
+
+    protected internal bool alreadyComingToBase(PersonajeBase unit)
+    {
+
+        Vector3 destino = Vector3.zero;
+        if(unit.currentAction != null && unit.currentAction is ActionGo)
+        {
+            destino = SimManagerFinal.gridToPosition(((ActionGo)unit.currentAction).getDestiny());
+        } 
+        return (destino - SimManagerFinal.gridToPosition(baseCoords)).magnitude <= StatsInfo.baseDistaciaCuracion;
     }
 }
