@@ -74,6 +74,7 @@ public class AggresiveTM : TacticalModule
         if(bridgesControlled != 0)
         {
             Debug.Log("Controlamos el puente: "+bridgesControlled);
+            
             //si no tenemos los dos puentes, comprobamos si el enemigo controla el otro, en ese caso
             //vamos a darle mandanga
             if(bridgesControlled != allBridgedUP)aggresiveActions.AddRange(goToSpearHead(bridgesControlled));
@@ -155,13 +156,14 @@ public class AggresiveTM : TacticalModule
 
         List<Accion> defendActions = new List<Accion>();
         List<float> priorities = new List<float>();
-        float distancePriority = 1;
-        float velocityPriotiry = 10;
+        float distancePriority = 7;
+        float velocityPriotiry = 5;
         float dmgPriority = 5;
         for (int i=0; i<unitsNotAsigned.Count; i++)
         {
             float prioridad = 0;
-            prioridad = -getClosestPointToBase(unitsNotAsigned[i], baseCoords).magnitude * distancePriority;
+            prioridad -=  (SimManagerFinal.positionToGrid(unitsNotAsigned[i].posicion) - getClosestPointToBase(unitsNotAsigned[i], baseCoords)).magnitude * distancePriority;
+            //prioridad = -getClosestPointToBase(unitsNotAsigned[i], baseCoords).magnitude * distancePriority;
             prioridad += unitsNotAsigned[i].maxMovSpeed * velocityPriotiry;
             float dmgPower = 0;
             foreach (PersonajeBase person in attackers)

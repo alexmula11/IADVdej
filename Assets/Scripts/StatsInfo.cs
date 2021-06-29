@@ -78,7 +78,7 @@ public class StatsInfo
         new float[MAX_UNIT_TYPE] { 1, 1, 1, 1},
         new float[MAX_UNIT_TYPE] { 1.5f, 1.5f, 2, 2},
         new float[MAX_UNIT_TYPE] { 0.9f, 0.9f, 0.9f, 0.75f},
-        new float[MAX_UNIT_TYPE] { 0.5f, 0.75f, 0.5f, 0.5f},
+        new float[MAX_UNIT_TYPE] { 0.5f, 1.25f, 0.5f, 0.5f},    //el arquero es especialista en el bosque
         new float[MAX_UNIT_TYPE] { 0.5f, 0.5f, 0.5f, 0.5f},
         new float[MAX_UNIT_TYPE] { 1f, 1f, 1f, 1f},
     };
