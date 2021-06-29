@@ -8,7 +8,7 @@ public class DefensiveTM : TacticalModule
 {
 
     private bool defended = false;
-    public DefensiveTM(Vector2 _baseCoords, Vector2 _enemyBaseCoords ,List<PersonajeBase> _npcs, List<PersonajeBase> _players) : base(_baseCoords,_enemyBaseCoords , _npcs, _players)
+    public DefensiveTM(Vector2 _baseCoords, Vector2 _enemyBaseCoords ,List<PersonajeBase> _npcs, List<PersonajeBase> _players, bool _team) : base(_baseCoords,_enemyBaseCoords , _npcs, _players, _team)
     {
     }
 

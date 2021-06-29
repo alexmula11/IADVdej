@@ -22,9 +22,12 @@ public class TacticIA
      protected Vector2 allyBasePos, enemyBasePos;
      private bool baseUnderAttack = false;
 
+    private bool team;
 
-    public TacticIA(List<PersonajeBase> allis, List<PersonajeBase> enemis, Vector2 allyBase, Vector2 enemyBase)
+
+    public TacticIA(List<PersonajeBase> allis, List<PersonajeBase> enemis, Vector2 allyBase, Vector2 enemyBase, bool _team)
     {
+        team = _team;
         allies = allis;
         enemies = enemis;
         playingMode = IA_MODE.ATTACK;
@@ -64,13 +67,13 @@ public class TacticIA
          switch(mode)
         {
             case IA_MODE.ATTACK:
-                 tm = new AggresiveTM(allyBasePos,enemyBasePos,allies,enemies);
+                 tm = new AggresiveTM(allyBasePos,enemyBasePos,allies,enemies,team);
             break;
             case IA_MODE.DEFEND:
-                 tm = new DefensiveTM(allyBasePos,enemyBasePos,allies,enemies);
+                 tm = new DefensiveTM(allyBasePos,enemyBasePos,allies,enemies,team);
             break;
             case IA_MODE.TOTAL_WAR:
-                tm = new TotalWarTM(allyBasePos,enemyBasePos,allies,enemies);
+                tm = new TotalWarTM(allyBasePos,enemyBasePos,allies,enemies,team);
             break;
         }
         return tm;

@@ -22,16 +22,19 @@ public abstract class TacticalModule
   protected internal List<PersonajeBase> allies;
   protected internal List<PersonajeBase> enemies;
 
+  protected internal bool team;
+
   protected internal abstract List<Accion> getStrategyActions();
 
 
 
-    public TacticalModule(Vector2 _baseCoords, Vector2 _enemyBaseCoords ,List<PersonajeBase> alice, List<PersonajeBase> nemy)
+    public TacticalModule(Vector2 _baseCoords, Vector2 _enemyBaseCoords ,List<PersonajeBase> alice, List<PersonajeBase> nemy, bool _team)
     {
-        baseCoords = _baseCoords;
-        enemyBaseCoords = _enemyBaseCoords;
-        allies = alice;
-        enemies = nemy;
+      team = _team;
+      baseCoords = _baseCoords;
+      enemyBaseCoords = _enemyBaseCoords;
+      allies = alice;
+      enemies = nemy;
     }
 
       protected static internal bool isInBaseRange(PersonajeBase person, Vector2 baseCoord)                                                          
@@ -113,5 +116,17 @@ public abstract class TacticalModule
     protected internal bool isGoingToEnemyBase(PersonajeBase person)
     {
         return (person.currentAction is ActionGo && (enemyBaseCoords - (person.currentAction as ActionGo).getDestiny()).magnitude <= StatsInfo.baseDistaciaCuracion);
+    }
+
+    protected internal  List<Vector3> getPatrolPathing(bool team)
+    {
+        if(team)
+        {
+            return StatsInfo.patrolPathingBLUE;
+        }
+        else
+        {
+            return StatsInfo.patrolPathingRED;
+        }
     }
 }

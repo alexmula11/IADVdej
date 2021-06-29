@@ -98,7 +98,15 @@ public class StatsInfo
     public static float BASE_HEALING_POWER = 20f;
     public const float MAX_BASE_HEALTH = 1000f;
 
-    public static List<Vector3> patrolPathing = new List<Vector3>()
+    public static List<Vector3> patrolPathingRED = new List<Vector3>()
+    {
+        new Vector3(37.5f,0,262.5f),
+        new Vector3(-36.5f,0,262.5f),
+        new Vector3(-36.5f,0,337.5f),
+        new Vector3(37.5f,0,337.5f),
+    };
+
+    public static List<Vector3> patrolPathingBLUE = new List<Vector3>()
     {
         new Vector3(37.5f,0,262.5f),
         new Vector3(-36.5f,0,262.5f),

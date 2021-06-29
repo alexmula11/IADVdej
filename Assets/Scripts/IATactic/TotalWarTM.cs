@@ -8,7 +8,7 @@ public class TotalWarTM : TacticalModule
 
     private List<PersonajeBase> unitsNotAsigned;
 
-    public TotalWarTM(Vector2 _baseCoords, Vector2 _enemyBaseCoords, List<PersonajeBase> _npcs, List<PersonajeBase> _players) : base(_baseCoords, _enemyBaseCoords ,_npcs, _players)
+    public TotalWarTM(Vector2 _baseCoords, Vector2 _enemyBaseCoords, List<PersonajeBase> _npcs, List<PersonajeBase> _players, bool _team) : base(_baseCoords, _enemyBaseCoords ,_npcs, _players, _team)
     {
         attackGroup = new List<PersonajeBase>();
         unitsNotAsigned = new List<PersonajeBase>();

@@ -86,8 +86,8 @@ public class GameManager : MonoBehaviour
     }
     protected internal void initIAs()
     {
-        playerIA = new TacticIA(new List<PersonajeBase>(personajesPlayer), new List<PersonajeBase>(personajesNPC), SimManagerFinal.positionToGrid(baseAliada.position), SimManagerFinal.positionToGrid(baseEnemiga.position));
-        enemyIA = new TacticIA(new List<PersonajeBase>(personajesNPC), new List<PersonajeBase>(personajesPlayer), SimManagerFinal.positionToGrid(baseEnemiga.position), SimManagerFinal.positionToGrid(baseAliada.position));
+        playerIA = new TacticIA(new List<PersonajeBase>(personajesPlayer), new List<PersonajeBase>(personajesNPC), SimManagerFinal.positionToGrid(baseAliada.position), SimManagerFinal.positionToGrid(baseEnemiga.position),true);
+        enemyIA = new TacticIA(new List<PersonajeBase>(personajesNPC), new List<PersonajeBase>(personajesPlayer), SimManagerFinal.positionToGrid(baseEnemiga.position), SimManagerFinal.positionToGrid(baseAliada.position),false);
     }
 
     protected internal void ActualizeBasesHealth()

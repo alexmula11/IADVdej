@@ -24,7 +24,7 @@ public class AggresiveTM : TacticalModule
     private int howManyAreAttackingBase = 0;
 
 
-    public AggresiveTM(Vector2 _baseCoords,  Vector2 _enemyBaseCoords ,List<PersonajeBase> _npcs, List<PersonajeBase> _players) : base(_baseCoords,_enemyBaseCoords ,_npcs, _players)
+    public AggresiveTM(Vector2 _baseCoords,  Vector2 _enemyBaseCoords ,List<PersonajeBase> _npcs, List<PersonajeBase> _players, bool _team) : base(_baseCoords,_enemyBaseCoords ,_npcs, _players, _team)
     {
         BridgeAttacked = Mathf.RoundToInt(Random.Range(1,2));
         patrullero = allies[1];
@@ -640,13 +640,13 @@ public class AggresiveTM : TacticalModule
                 {
                     if(!(patrullero.currentAction is AccionPatrullar))
                     {
-                        patrolActions.Add(new AccionPatrullar(patrullero,StatsInfo.patrolPathing,SimManagerFinal.terrenos));
+                        patrolActions.Add(new AccionPatrullar(patrullero,getPatrolPathing(this.team),SimManagerFinal.terrenos));
                     }
                 }
             }
             else if(tooFarAwayFromBase(patrullero))
             {
-                patrolActions.Add(new AccionPatrullar(patrullero,StatsInfo.patrolPathing,SimManagerFinal.terrenos));
+                patrolActions.Add(new AccionPatrullar(patrullero,getPatrolPathing(this.team),SimManagerFinal.terrenos));
             }
         }
         return patrolActions;
