@@ -17,7 +17,7 @@ public class TacticIA
      private List<PersonajeBase> enemies;
      
      private TacticalModule comander;
-     private IA_MODE playingMode;
+     protected internal IA_MODE playingMode;
 
      protected Vector2 allyBasePos, enemyBasePos;
      private bool baseUnderAttack = false;
@@ -94,4 +94,11 @@ public class TacticIA
     {
         return baseUnderAttack;
     }
+
+    protected internal void tioMuerto(PersonajeBase person)
+    {
+        comander.tioMuerto(person);
+    }
+
+
 }

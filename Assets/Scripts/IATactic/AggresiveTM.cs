@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 
@@ -21,12 +20,12 @@ public class AggresiveTM : TacticalModule
     private int BridgeAttacked;
     private float influenceBridgeSup;
     private float influenceBridgeInf;
-    private int howManyAreAttackingBase = 0;
 
 
     public AggresiveTM(Vector2 _baseCoords,  Vector2 _enemyBaseCoords ,List<PersonajeBase> _npcs, List<PersonajeBase> _players, bool _team) : base(_baseCoords,_enemyBaseCoords ,_npcs, _players, _team)
     {
-        BridgeAttacked = Mathf.RoundToInt(Random.Range(1,2));
+        Random rd = new Random();
+        BridgeAttacked = (int)System.Math.Ceiling(Random.value*2);
         patrullero = allies[1];
     }
 
@@ -91,8 +90,11 @@ public class AggresiveTM : TacticalModule
             aggresiveActions.AddRange(createSiegeGroup(bridgesControlled));
         }
 
+        aggresiveActions.AddRange(rezagadosAttack());
+
         return aggresiveActions;
     }
+
 
 
     private void checkAlliesDownAndFill()
@@ -105,6 +107,7 @@ public class AggresiveTM : TacticalModule
                 defensiveGroup.Remove(ally);
                 ofensiveGroup.Remove(ally);
                 siegeGroup.Remove(ally);
+                recoveringGroup.Remove(ally);
             }
             else
             {
@@ -168,7 +171,7 @@ public class AggresiveTM : TacticalModule
         for (int i=0; i<unitsNotAsigned.Count; i++)
         {
             float prioridad = 0;
-            prioridad -=  (SimManagerFinal.positionToGrid(unitsNotAsigned[i].posicion) - getClosestPointToBase(unitsNotAsigned[i], baseCoords)).magnitude * distancePriority;
+            prioridad -=  (SimManagerFinal.positionToGrid(unitsNotAsigned[i].posicion) - getUnitPointOnBase(unitsNotAsigned[i], baseCoords)).magnitude * distancePriority;
             //prioridad = -getClosestPointToBase(unitsNotAsigned[i], baseCoords).magnitude * distancePriority;
             prioridad += unitsNotAsigned[i].maxMovSpeed * velocityPriotiry;
             float dmgPower = 0;
@@ -216,10 +219,11 @@ public class AggresiveTM : TacticalModule
         {
             for(int j = (int)StatsInfo.puente_superior[0].y; j < StatsInfo.puente_superior[1].y; j++)
             {
-                influenceSup+=SimManagerFinal.influences[i][j];
+                influenceSup += SimManagerFinal.influences[i][j];
             }
         }
-        if(influenceSup<0){
+        if((influenceSup<0 && !team) || (influenceSup > 0 && team))
+        {
             supControlled = true;
             bridgesControlled = 1;
         }
@@ -229,16 +233,18 @@ public class AggresiveTM : TacticalModule
         {
             for(int j = (int)StatsInfo.puente_inferior[0].y; j < StatsInfo.puente_inferior[1].y; j++)
             {
-                influenceInf+=SimManagerFinal.influences[i][j];
+                influenceInf += SimManagerFinal.influences[i][j];
             }
         }
-        if(influenceInf<0){
+
+        if ((influenceInf < 0 && !team) || (influenceInf > 0 && team))
+        {
             infControlled = true;
             bridgesControlled = 2;
         }
 
         //3 - ambos
-        if(supControlled && infControlled) bridgesControlled = 3;
+        if (supControlled && infControlled) bridgesControlled = 3;
 
         influenceBridgeSup = influenceSup;
         influenceBridgeInf = influenceInf;
@@ -345,6 +351,7 @@ public class AggresiveTM : TacticalModule
     private List<Accion> goToSpearHead(int bridgesControlled) //TODO si el otro puenten no es del enemigo, reforzar el nuestro
     {
         List<Accion> regroupForAttack = new List<Accion>();
+        List<PersonajeBase> listadepena = new List<PersonajeBase>();
         float influenceTotAttack = 0;
         int bridgeToAttack = 0;
         float influenceToBeat = 0;
@@ -352,18 +359,18 @@ public class AggresiveTM : TacticalModule
         {
             //si tengo el 1 ataco al 2
             case 1:
-                if(influenceBridgeInf > 0)
+                if((influenceBridgeInf > 0 && !team) || (influenceBridgeInf <0 && team))
                 {
                     bridgeToAttack = 2;
-                    influenceToBeat = influenceBridgeInf;
+                    influenceToBeat = System.Math.Abs(influenceBridgeInf);
                 }
             break;
             //si tengo el 2 ataco al 1
             case 2:
-                if(influenceBridgeSup > 0)
+                if ((influenceBridgeSup > 0 && !team) || (influenceBridgeSup < 0 && team))
                 {
                     bridgeToAttack = 1;
-                    influenceToBeat = influenceBridgeSup;
+                    influenceToBeat = System.Math.Abs(influenceBridgeSup);
                 }    
             break;
         }
@@ -381,8 +388,11 @@ public class AggresiveTM : TacticalModule
                             break;
                         }
                         influenceTotAttack += StatsInfo.influenciaMaximaGeneradaPorUnidad[(int)npc.tipo];
-                        if(!alreadyGoingToBridge(npc,bridgeToAttack))
-                            regroupForAttack.Add(new ActionGo(npc,randomPointInBridge(bridgeToAttack,npc),null));
+                        if (!alreadyGoingToBridge(npc, bridgeToAttack))
+                        {
+                            regroupForAttack.Add(new ActionGo(npc, randomPointInBridge(bridgeToAttack, npc), null));
+                            listadepena.Add(npc);
+                        }
                         if(!ofensiveGroup.Contains(npc))
                             ofensiveGroup.Add(npc);
                     }
@@ -398,27 +408,50 @@ public class AggresiveTM : TacticalModule
                         break;
                     }
                     influenceTotAttack += StatsInfo.influenciaMaximaGeneradaPorUnidad[(int)npc.tipo];
-                    if(!alreadyGoingToBridge(npc,bridgeToAttack))
-                        regroupForAttack.Add(new ActionGo(npc,randomPointInBridge(bridgeToAttack,npc),null));
+                    if (!alreadyGoingToBridge(npc, bridgeToAttack))
+                    {
+                        regroupForAttack.Add(new ActionGo(npc, randomPointInBridge(bridgeToAttack, npc), null));
+                        listadepena.Add(npc);
+                    }
                     if(!ofensiveGroup.Contains(npc))
                         ofensiveGroup.Add(npc);                   
                 }
             }
 
         }
-        else                //si no, vamos al que tenemos conquistado
+        /*foreach (PersonajeBase npc in unitsNotAsigned)
         {
-            foreach(PersonajeBase npc in unitsNotAsigned)
+            if (!listadepena.Contains(npc))
             {
-                if(!defensiveGroup.Contains(npc))
+                if (!defensiveGroup.Contains(npc))
                 {
-                    if(!alreadyInBridge(npc,bridgesControlled) && !isGoingToEnemyBase(npc))
+                    if (!alreadyInBridge(npc, bridgesControlled) && !isGoingToEnemyBase(npc))
                     {
-                        if(!alreadyGoingToBridge(npc,bridgesControlled)){
-                            regroupForAttack.Add(new ActionGo(npc,randomPointInBridge(bridgesControlled,npc),null));
+                        if (!alreadyGoingToBridge(npc, bridgesControlled))
+                        {
+                            regroupForAttack.Add(new ActionGo(npc, randomPointInBridge(bridgesControlled, npc), null));
                         }
-                            
-                        if(!ofensiveGroup.Contains(npc))
+
+                        if (!ofensiveGroup.Contains(npc))
+                            ofensiveGroup.Add(npc);
+                    }
+                }
+            }
+        }*/
+        else                //si no, vamos al que tenemos conquistado
+        {        
+            foreach (PersonajeBase npc in unitsNotAsigned)
+            {
+                if (!defensiveGroup.Contains(npc))
+                {
+                    if (!alreadyInBridge(npc, bridgesControlled) && !isGoingToEnemyBase(npc))
+                    {
+                        if (!alreadyGoingToBridge(npc, bridgesControlled))
+                        {
+                            regroupForAttack.Add(new ActionGo(npc, randomPointInBridge(bridgesControlled, npc), null));
+                        }
+
+                        if (!ofensiveGroup.Contains(npc))
                             ofensiveGroup.Add(npc);
                     }
                 }
@@ -518,6 +551,7 @@ public class AggresiveTM : TacticalModule
                 }
             }
         }
+
         return siegeActions;
     }
 
@@ -587,7 +621,7 @@ public class AggresiveTM : TacticalModule
         {
             if(!siegeGroup.Contains(unit))
             {
-                if(unit.betterToRun())
+                if(unit.betterToRun() && !alreadyComingToBase(unit))
                 {
                     regroupInBase.Add(goingToRecover(unit));
                     ofensiveGroup.Remove(unit);
@@ -669,6 +703,30 @@ public class AggresiveTM : TacticalModule
         {
             return false;
         }       
+    }
+
+    protected internal override void tioMuerto(PersonajeBase tio)
+    {
+        recoveringGroup.Remove(tio);
+        siegeGroup.Remove(tio);
+        defensiveGroup.Remove(tio);
+        ofensiveGroup.Remove(tio);
+    }
+
+
+    protected List<Accion> rezagadosAttack()
+    {
+        List<Accion> accions = new List<Accion>();
+        // volver a por los restos
+        foreach (PersonajeBase unit in unitsNotAsigned)
+        {
+            if (unit.currentAction == null)
+            {
+                accions.Add(createBaseAttackAction(unit));
+                //if (!siegeGroup.Contains(unit)) siegeGroup.Add(unit);
+            }
+        }
+        return accions;
     }
 
 }

@@ -108,10 +108,10 @@ public class StatsInfo
 
     public static List<Vector3> patrolPathingBLUE = new List<Vector3>()
     {
-        new Vector3(37.5f,0,262.5f),
-        new Vector3(-36.5f,0,262.5f),
-        new Vector3(-36.5f,0,337.5f),
-        new Vector3(37.5f,0,337.5f),
+        new Vector3(37.5f,0,-262.5f),
+        new Vector3(-36.5f,0,-262.5f),
+        new Vector3(-36.5f,0,-337.5f),
+        new Vector3(37.5f,0,-337.5f),
     };
 
     /*COMBAT STATS*/

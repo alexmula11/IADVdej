@@ -27,6 +27,9 @@ public class TotalWarTM : TacticalModule
 
         //3 - mandar a por la base enemiga
         totalWarActions.AddRange(attackEnemyBase());
+
+        //4 - mandamos rezagados
+        totalWarActions.AddRange(rezagadosAttack());
         return totalWarActions;
     }
 
@@ -91,4 +94,23 @@ public class TotalWarTM : TacticalModule
         return attackBaseActions;
     }
 
+    protected internal override void tioMuerto(PersonajeBase tio)
+    {
+        attackGroup.Remove(tio);
+    }
+
+    protected List<Accion> rezagadosAttack()
+    {
+        List<Accion> accions = new List<Accion>();
+        // volver a por los restos
+        foreach (PersonajeBase unit in unitsNotAsigned)
+        {
+            if (unit.currentAction == null)
+            {
+                accions.Add(createBaseAttackAction(unit));
+                //if (!siegeGroup.Contains(unit)) siegeGroup.Add(unit);
+            }
+        }
+        return accions;
+    }
 }

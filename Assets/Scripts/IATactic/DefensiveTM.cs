@@ -29,7 +29,7 @@ public class DefensiveTM : TacticalModule
                 {
                     if (!isInBaseRange(ally,baseCoords) && !alreadyComingToBase(ally) )
                     {
-                        Vector2 closestPoint = getClosestPointToBase(ally, baseCoords);
+                        Vector2 closestPoint = getUnitPointOnBase(ally, baseCoords);
                         ActionGo goToBase = new ActionGo(ally, closestPoint, null);
                         defensiveActions.Add(goToBase);
                     }
@@ -40,7 +40,7 @@ public class DefensiveTM : TacticalModule
                     {
                         if (!isInBaseRange(ally,baseCoords))
                         {
-                            Vector2 closestPoint = getClosestPointToBase(ally, baseCoords);
+                            Vector2 closestPoint = getUnitPointOnBase(ally, baseCoords);
                             ActionGo goToBase = new ActionGo(ally, closestPoint, null);
                             defensiveActions.Add(goToBase);
                         }
@@ -66,7 +66,7 @@ public class DefensiveTM : TacticalModule
                     //3 -  COMPROBAR UNIDADES FUERA DEL PERIMETRO DE LA BASE
                     if(!isInBaseRange(ally,baseCoords) && !alreadyComingToBase(ally))
                     {
-                        Vector2 closestPoint = getClosestPointToBase(ally, baseCoords);
+                        Vector2 closestPoint = getUnitPointOnBase(ally, baseCoords);
                         ActionGo goToBase = new ActionGo(ally, closestPoint, null);
                         defensiveActions.Add(goToBase);
                     }
@@ -78,14 +78,8 @@ public class DefensiveTM : TacticalModule
         return defensiveActions;
     }
 
-    protected internal bool alreadyComingToBase(PersonajeBase unit)
+    protected internal override void tioMuerto(PersonajeBase tio)
     {
 
-        Vector3 destino = Vector3.zero;
-        if(unit.currentAction != null && unit.currentAction is ActionGo)
-        {
-            destino = SimManagerFinal.gridToPosition(((ActionGo)unit.currentAction).getDestiny());
-        } 
-        return (destino - SimManagerFinal.gridToPosition(baseCoords)).magnitude <= StatsInfo.baseDistaciaCuracion;
     }
 }

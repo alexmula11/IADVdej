@@ -16,7 +16,7 @@ public class GameManager : MonoBehaviour
 
     protected bool playerIAActive = false;
 
-    protected TacticIA playerIA, enemyIA;
+    protected static TacticIA playerIA, enemyIA;
 
 
     [SerializeField]
@@ -43,10 +43,12 @@ public class GameManager : MonoBehaviour
         if (muerto is PersonajePlayer)
         {
             muertosAllys.AddLast(muerto as PersonajePlayer);
+            playerIA.tioMuerto(muerto);
         }
         else
         {
             muertosEnemys.AddLast(muerto as PersonajeNPC);
+            enemyIA.tioMuerto(muerto);
         }
     }
 
@@ -170,21 +172,56 @@ public class GameManager : MonoBehaviour
     
     public void changeIaModeForIA(int ia)
     {
-        enemyIA.change_IA_Mode((IA_MODE)ia);
+        if (enemyIA.playingMode != (IA_MODE)ia)
+        {
+            enemyIA.change_IA_Mode((IA_MODE)ia);
+            resetAllBuddies(false);
+        }
     }
     public void changeIaModeForPlayer(int ia)
     {
-        playerIA.change_IA_Mode((IA_MODE)ia);
+        if (playerIA.playingMode != (IA_MODE)ia)
+        {
+            playerIA.change_IA_Mode((IA_MODE)ia);
+            resetAllBuddies(true);
+        }
     }
 
     internal void chutarLaIA()
     {
         playerIAActive = !playerIAActive;
+        if (playerIAActive)
+        {
+            resetAllBuddies(true);
+        }
     }
 
+    private void resetAllBuddies(bool team)
+    {
+        if (team)
+        {
+            foreach (PersonajePlayer person in personajesPlayer)
+            {
+                person.disbandAccion();
+            }
+        }
+        else
+        {
+            foreach (PersonajeNPC person in personajesNPC)
+            {
+                person.disbandAccion();
+            }
+        }
+    }
 
     public void exitGame()
     {
         Application.Quit();
+    }
+
+    protected internal List<PersonajeBase> getAllies()
+    {
+        return new List<PersonajeBase>(personajesPlayer);
+
     }
 }

@@ -237,7 +237,7 @@ public class SimManagerFinal : SimulationManager
                                 Vector2 baseToGo = positionToGrid(hit.collider.transform.parent.position);
                                 foreach (PersonajeBase person in selectedUnits)
                                 {
-                                    ActionGo gotobase = new ActionGo(person, TacticalModule.getClosestPointToBase(person, baseToGo), null);
+                                    ActionGo gotobase = new ActionGo(person, TacticalModule.getUnitPointOnBaseStatic(person, baseToGo,gm.getAllies()), null);
                                     if (person.currentFormacion != null)
                                     {
                                         Formacion formation = person.currentFormacion;
@@ -248,7 +248,7 @@ public class SimManagerFinal : SimulationManager
                                             {
                                                 if (formation.getMiembros[i] != null)
                                                 {
-                                                    ActionGo gotobaseMachakas = new ActionGo(formation.getMiembros[i], TacticalModule.getClosestPointToBase(formation.getMiembros[i], baseToGo), null);
+                                                    ActionGo gotobaseMachakas = new ActionGo(formation.getMiembros[i], TacticalModule.getUnitPointOnBaseStatic(formation.getMiembros[i], baseToGo, gm.getAllies()), null);
                                                     formation.getMiembros[i].accion = gotobaseMachakas;
                                                     formation.getMiembros[i].accion.doit();
                                                 }

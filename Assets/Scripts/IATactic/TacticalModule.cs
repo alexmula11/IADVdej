@@ -24,6 +24,8 @@ public abstract class TacticalModule
 
   protected internal bool team;
 
+  
+
   protected internal abstract List<Accion> getStrategyActions();
 
 
@@ -72,10 +74,28 @@ public abstract class TacticalModule
          return closestEnemy; 
         }
 
-    protected static internal Vector2 getClosestPointToBase(PersonajeBase person, Vector2 basePos)
-    {
 
-        Vector3 distance = SimManagerFinal.gridToPosition(basePos) - person.posicion;
+    protected internal Vector2 getUnitPointOnBase(PersonajeBase person, Vector2 basePos)
+    {
+        int index = 0;
+        foreach (PersonajeBase ppl in allies)
+        {
+            if (person == ppl)
+            {
+                break;
+            }
+            index++;
+        }
+        int angle = index *360/allies.Count;
+
+        Vector3 radio = new Vector3((float)System.Math.Cos(angle), 0,(float)System.Math.Sin(angle)) * StatsInfo.baseDistaciaCuracion*0.75f;
+
+        Vector3 destino = SimManagerFinal.gridToPosition(basePos) + radio;
+        return SimManagerFinal.positionToGrid(destino);
+        
+
+
+        /*Vector3 distance = SimManagerFinal.gridToPosition(basePos) - person.posicion;
         if (distance.magnitude < StatsInfo.baseDistaciaCuracion)
         {
             return SimManagerFinal.positionToGrid(person.posicion);
@@ -84,8 +104,27 @@ public abstract class TacticalModule
         {
             distance = distance.normalized* (distance.magnitude  - StatsInfo.baseDistaciaCuracion + 5);
             return SimManagerFinal.positionToGrid(person.posicion + distance);
-        }
+        }*/
     }
+    protected static internal Vector2 getUnitPointOnBaseStatic(PersonajeBase person, Vector2 basePos, List<PersonajeBase> alice)
+    {
+        int index = 0;
+        foreach (PersonajeBase ppl in alice)
+        {
+            if (person == ppl)
+            {
+                break;
+            }
+            index++;
+        }
+        int angle = index * 360 / alice.Count;
+
+        Vector3 radio = new Vector3((float)System.Math.Cos(angle), 0, (float)System.Math.Sin(angle)) * StatsInfo.baseDistaciaCuracion * 0.75f;
+
+        Vector3 destino = SimManagerFinal.gridToPosition(basePos) + radio;
+        return SimManagerFinal.positionToGrid(destino);
+    }
+
 
     protected static internal AccionCompuesta createAttackingAction(PersonajeBase sujeto, PersonajeBase receptor)
     {
@@ -98,13 +137,13 @@ public abstract class TacticalModule
 
     protected internal ActionGo createBaseAttackAction(PersonajeBase sujeto)
     {
-      ActionGo goToEnemyBase = new ActionGo(sujeto,getClosestPointToBase(sujeto,enemyBaseCoords),null);
+      ActionGo goToEnemyBase = new ActionGo(sujeto,getUnitPointOnBase(sujeto,enemyBaseCoords),null);
       return goToEnemyBase;
     }
 
     protected internal ActionGo goingToRecover(PersonajeBase sujeto)
     {
-      ActionGo goToMyBase = new ActionGo(sujeto,getClosestPointToBase(sujeto,baseCoords),null);
+      ActionGo goToMyBase = new ActionGo(sujeto,getUnitPointOnBase(sujeto,baseCoords),null);
       return goToMyBase;
     }
 
@@ -129,4 +168,19 @@ public abstract class TacticalModule
             return StatsInfo.patrolPathingRED;
         }
     }
+
+    protected internal bool alreadyComingToBase(PersonajeBase unit)
+    {
+
+        Vector3 destino = Vector3.zero;
+        if (unit.currentAction != null && unit.currentAction is ActionGo)
+        {
+            destino = SimManagerFinal.gridToPosition(((ActionGo)unit.currentAction).getDestiny());
+        }
+        return (destino - SimManagerFinal.gridToPosition(baseCoords)).magnitude <= StatsInfo.baseDistaciaCuracion;
+    }
+
+    protected abstract internal void tioMuerto(PersonajeBase tio);
+
+
 }

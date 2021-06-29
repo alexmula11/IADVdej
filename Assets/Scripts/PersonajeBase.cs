@@ -100,7 +100,7 @@ public abstract class PersonajeBase : Bodi
 
     public bool isInCombat()
     {
-        return (currentAction.nombre != "ATACAR");
+        return (currentAction is AccionCompuesta);
     }
 
     public bool betterToRun()
@@ -488,14 +488,16 @@ public abstract class PersonajeBase : Bodi
 
     protected internal void revive(Vector3 spawnPoint)
     {
+        moveTo(spawnPoint);
+        posicion = spawnPoint;
+
+
         headMesh.enabled = true;
         bodyMesh.enabled = true;
         GetComponent<BoxCollider>().enabled = true;
         hPMarker.gameObject.SetActive(true);
         actualizeHealth(StatsInfo.healthPerClass[(int)tipo]);
 
-        moveTo(spawnPoint);
-        posicion = spawnPoint;
     }
 
 }
