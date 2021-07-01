@@ -721,7 +721,7 @@ public class AggresiveTM : TacticalModule
         // volver a por los restos
         foreach (PersonajeBase unit in unitsNotAsigned)
         {
-            if(unit.currentAction == null){
+            if(unit.currentAction == null && !alreadyInBridge(unit,3)){
                 foreach(Accion acc in actionsSet)
                 {
                     if(acc.sujeto == unit)
