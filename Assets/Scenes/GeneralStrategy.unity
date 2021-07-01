@@ -21111,6 +21111,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c816445e44a83e9488e694be65e05b92, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  final: 1
   center: {x: 150, y: 150, z: 0}
   lowerLimits: {x: -100, y: 30, z: -350}
   higherLimits: {x: 300, y: 200, z: 350}

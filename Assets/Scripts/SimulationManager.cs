@@ -86,6 +86,7 @@ public class SimulationManager : MonoBehaviour
                                 selectedUnits.Remove(character);
                             }
                         }
+                        ui.actualizeUserButtons(allPossibleActions());
                     }
                     else
                     {
@@ -112,6 +113,7 @@ public class SimulationManager : MonoBehaviour
                                 ui.showDebugInfo(false);
                             }
                         }
+                        ui.actualizeUserButtons(allPossibleActions());
                     }
 
                 }

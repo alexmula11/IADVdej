@@ -4,7 +4,8 @@ using UnityEngine;
 
 public class TopDownCamera : MonoBehaviour
 {
-
+    [SerializeField]
+    private bool final=false;
     [SerializeField]
     private Vector3 center, lowerLimits, higherLimits;
 
@@ -47,20 +48,40 @@ public class TopDownCamera : MonoBehaviour
         hInput = 0;
         vInput = 0;
         xInput = 0;
-        if (Input.GetKey(KeyCode.A))
-            vInput = -1;
-        else if (Input.GetKey(KeyCode.D))
-            vInput = 1;
+        if (final)
+        {
+            if (Input.GetKey(KeyCode.A))
+                vInput = -1;
+            else if (Input.GetKey(KeyCode.D))
+                vInput = 1;
 
-        if (Input.GetKey(KeyCode.W))
-            hInput = -1;
-        else if (Input.GetKey(KeyCode.S))
-            hInput = 1;
+            if (Input.GetKey(KeyCode.W))
+                hInput = -1;
+            else if (Input.GetKey(KeyCode.S))
+                hInput = 1;
 
-        if (Input.GetKey(KeyCode.Q))
-            xInput = 1;
-        else if (Input.GetKey(KeyCode.E))
-            xInput = -1;
+            if (Input.GetKey(KeyCode.Q))
+                xInput = 1;
+            else if (Input.GetKey(KeyCode.E))
+                xInput = -1;
+        }
+        else
+        {
+            if (Input.GetKey(KeyCode.A))
+                hInput = -1;
+            else if (Input.GetKey(KeyCode.D))
+                hInput = 1;
+
+            if (Input.GetKey(KeyCode.W))
+                vInput = 1;
+            else if (Input.GetKey(KeyCode.S))
+                vInput = -1;
+
+            if (Input.GetKey(KeyCode.Q))
+                xInput = 1;
+            else if (Input.GetKey(KeyCode.E))
+                xInput = -1;
+        }
     }
 
     private void FixedUpdate()

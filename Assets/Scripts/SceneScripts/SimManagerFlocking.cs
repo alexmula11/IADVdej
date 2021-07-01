@@ -36,6 +36,77 @@ public class SimManagerFlocking : SimulationManager
         ui.showDebugInfo(true);
     }
 
+
+    protected new void Update()
+    {
+        //INPUT MANAGEMENT
+        //CAMERA INPUT HERE (AROUND THE MAP)
+
+
+        if (!mouseOverUI)
+        {
+            if (mouseBehav == MOUSE_ACTION.SELECT)
+            {
+                if (Input.GetMouseButton(0))
+                {
+                    if (Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift))
+                    {
+                        RaycastHit hit;
+                        if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit, 10000f, 1 << 8))
+                        {
+                            PersonajePlayer character = hit.collider.gameObject.GetComponent<PersonajePlayer>();
+                            if (!selectedUnits.Contains(character))
+                            {
+                                character.selected = true;
+                                characterWithFocus = character;
+                                selectedUnits.Add(character);
+                                ui.showDebugInfo(true);
+                                ui.actualizeAgentDebugInfo(character);
+                            }
+                            else
+                            {
+                                character.selected = false;
+                                if (character == characterWithFocus)
+                                {
+                                    characterWithFocus = null;
+                                    ui.showDebugInfo(false);
+                                }
+                                selectedUnits.Remove(character);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        foreach (PersonajePlayer person in selectedUnits)
+                        {
+                            person.selected = false;
+                        }
+                        selectedUnits.Clear();
+                        RaycastHit hit;
+                        if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit, 10000f, 1 << 8))
+                        {
+                            PersonajePlayer character = hit.collider.gameObject.GetComponent<PersonajePlayer>();
+                            character.selected = true;
+                            characterWithFocus = character;
+                            selectedUnits.Add(character);
+                            ui.showDebugInfo(true);
+                            ui.actualizeAgentDebugInfo(character);
+                        }
+                        else
+                        {
+                            if (characterWithFocus != null)
+                            {
+                                characterWithFocus = null;
+                                ui.showDebugInfo(false);
+                            }
+                        }
+                    }
+
+                }
+            }
+        }
+    }
+
     public void setChPercent(string percent)
     {
         if (percent != "")

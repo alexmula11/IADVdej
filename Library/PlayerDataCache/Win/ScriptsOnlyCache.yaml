@@ -59,45 +59,45 @@ ScriptsOnlyBuild:
     - Class: 108
       Script: {instanceID: 0}
     - Class: 114
-      Script: {instanceID: 11436}
+      Script: {instanceID: 11230}
     - Class: 114
-      Script: {instanceID: 11542}
+      Script: {instanceID: 11354}
     - Class: 114
-      Script: {instanceID: 11608}
+      Script: {instanceID: 11420}
     - Class: 114
-      Script: {instanceID: 11654}
+      Script: {instanceID: 11466}
     - Class: 114
-      Script: {instanceID: 11660}
+      Script: {instanceID: 11472}
     - Class: 114
-      Script: {instanceID: 11702}
+      Script: {instanceID: 11514}
     - Class: 114
-      Script: {instanceID: 12074}
+      Script: {instanceID: 11886}
     - Class: 114
-      Script: {instanceID: 12100}
+      Script: {instanceID: 11912}
     - Class: 114
-      Script: {instanceID: 12156}
+      Script: {instanceID: 11968}
+    - Class: 114
+      Script: {instanceID: 12114}
+    - Class: 114
+      Script: {instanceID: 12240}
     - Class: 114
       Script: {instanceID: 12302}
     - Class: 114
-      Script: {instanceID: 12428}
+      Script: {instanceID: 12326}
     - Class: 114
-      Script: {instanceID: 12490}
+      Script: {instanceID: 12494}
     - Class: 114
-      Script: {instanceID: 12514}
+      Script: {instanceID: 12820}
     - Class: 114
-      Script: {instanceID: 12682}
+      Script: {instanceID: 12944}
     - Class: 114
-      Script: {instanceID: 13008}
+      Script: {instanceID: 13052}
     - Class: 114
-      Script: {instanceID: 13132}
+      Script: {instanceID: 13084}
     - Class: 114
-      Script: {instanceID: 13240}
+      Script: {instanceID: 13160}
     - Class: 114
-      Script: {instanceID: 13272}
-    - Class: 114
-      Script: {instanceID: 13348}
-    - Class: 114
-      Script: {instanceID: 13390}
+      Script: {instanceID: 13202}
     - Class: 115
       Script: {instanceID: 0}
     - Class: 122
@@ -547,7 +547,7 @@ ScriptsOnlyBuild:
     className: SimulationManager
   - hash:
       serializedVersion: 2
-      Hash: af6f8cac81a8134b398593255d11c89f
+      Hash: 0cfee1f6f2825debdb1cb9bf4f6d41b0
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: TopDownCamera
@@ -656,4 +656,4 @@ ScriptsOnlyBuild:
   platform: 5
   scenePathNames:
   - Assets/Scenes/GeneralStrategy.unity
-  playerPath: "C:/Users/jandr/Desktop/Entrega Pr\xE1ctica IA/WarIA.exe"
+  playerPath: C:/Users/ACG/Desktop/Final/WarIA.exe

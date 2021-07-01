@@ -3607,7 +3607,7 @@ MonoBehaviour:
   unitSelectionMark: {fileID: 1160336282}
   debugInfo: {fileID: 1441478661}
   debugAgentName: {fileID: 521483531}
-  debugAgentAction: {fileID: 232111418}
+  debugAgentBehaviour: {fileID: 232111418}
   debugAgentLookingDirectionAngle: {fileID: 1428158648}
   debugAgentTargetLookingDirectionAngle: {fileID: 1272202536}
   debugAgentSteeringLinear: {fileID: 193251972}
@@ -3620,6 +3620,8 @@ MonoBehaviour:
   - {fileID: 76098615}
   - {fileID: 955404011}
   - {fileID: 1045513714}
+  influenceMinimap: {fileID: 0}
+  visionMinimap: {fileID: 0}
 --- !u!114 &211301749
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -18600,6 +18602,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c816445e44a83e9488e694be65e05b92, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  final: 0
   center: {x: 0, y: 150, z: -150}
   lowerLimits: {x: -300, y: 50, z: -200}
   higherLimits: {x: 300, y: 200, z: 0}
@@ -27155,7 +27158,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1441478662
 RectTransform:
   m_ObjectHideFlags: 0

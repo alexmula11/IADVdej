@@ -286,9 +286,9 @@ public class SimManagerFinal : SimulationManager
                                         {
                                             formation.removeMiembro(person);
                                             person.currentFormacion = null;
-                                            person.accion = moverse;
-                                            person.accion.doit();
                                         }
+                                        person.accion = moverse;
+                                        person.accion.doit();
                                     }
                                     else
                                     {

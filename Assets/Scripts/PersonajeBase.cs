@@ -112,15 +112,19 @@ public abstract class PersonajeBase : Bodi
     {
         escenaFinal = SceneManager.GetActiveScene().name == "GeneralStrategy";
         orientacion = transform.eulerAngles.y * GradosARadianes;
-        if (!fake) applyTipo(tipo);
-        
-        
-        //VARIAR COMO EMPIEZA EL PERSONAJE EN FUNCIÓN DE LA ESCENA
+        if (!fake)
+        {
+            applyTipo(tipo);
+            hPMarker.gameObject.SetActive(escenaFinal);
+        }
 
-        //actionList.AddFirst(new AgentActionStay(orientacion));
-        //newTask(new WanderSD(2 * (float)System.Math.PI, 5, 30 * GradosARadianes, 2));
-        //newTask(new CohesionSD());
-    }
+
+            //VARIAR COMO EMPIEZA EL PERSONAJE EN FUNCIÓN DE LA ESCENA
+
+            //actionList.AddFirst(new AgentActionStay(orientacion));
+            //newTask(new WanderSD(2 * (float)System.Math.PI, 5, 30 * GradosARadianes, 2));
+            //newTask(new CohesionSD());
+        }
 
 
     protected internal void applyTipo(StatsInfo.TIPO_PERSONAJE tipo)

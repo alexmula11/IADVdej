@@ -8805,7 +8805,7 @@ MonoBehaviour:
   unitSelectionMark: {fileID: 0}
   debugInfo: {fileID: 1441478661}
   debugAgentName: {fileID: 521483531}
-  debugAgentAction: {fileID: 232111418}
+  debugAgentBehaviour: {fileID: 232111418}
   debugAgentLookingDirectionAngle: {fileID: 1428158648}
   debugAgentTargetLookingDirectionAngle: {fileID: 1272202536}
   debugAgentSteeringLinear: {fileID: 1206697671}
@@ -8813,6 +8813,8 @@ MonoBehaviour:
   debugAgentSteeringCombination: {fileID: 1437506707}
   mouseButtons:
   - {fileID: 403845424}
+  influenceMinimap: {fileID: 0}
+  visionMinimap: {fileID: 0}
 --- !u!114 &211301749
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -23952,7 +23954,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &676546858
 RectTransform:
   m_ObjectHideFlags: 0
@@ -32889,6 +32891,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c816445e44a83e9488e694be65e05b92, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  final: 0
   center: {x: 0, y: 100, z: 0}
   lowerLimits: {x: -50, y: 80, z: -30}
   higherLimits: {x: 50, y: 120, z: 30}
@@ -48396,7 +48399,7 @@ RectTransform:
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.75}
-  m_AnchorMax: {x: 0.25, y: 1}
+  m_AnchorMax: {x: 0.35, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
