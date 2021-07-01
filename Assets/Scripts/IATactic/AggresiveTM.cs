@@ -90,7 +90,7 @@ public class AggresiveTM : TacticalModule
             aggresiveActions.AddRange(createSiegeGroup(bridgesControlled));
         }
 
-        aggresiveActions.AddRange(rezagadosAttack());
+        aggresiveActions.AddRange(rezagadosAttack(aggresiveActions));
 
         return aggresiveActions;
     }
@@ -714,16 +714,28 @@ public class AggresiveTM : TacticalModule
     }
 
 
-    protected List<Accion> rezagadosAttack()
+    protected List<Accion> rezagadosAttack(List<Accion> actionsSet)
     {
         List<Accion> accions = new List<Accion>();
+        bool alreadyDoing = false;
         // volver a por los restos
         foreach (PersonajeBase unit in unitsNotAsigned)
         {
-            if (unit.currentAction == null)
-            {
-                accions.Add(createBaseAttackAction(unit));
-                //if (!siegeGroup.Contains(unit)) siegeGroup.Add(unit);
+            if(unit.currentAction == null){
+                foreach(Accion acc in actionsSet)
+                {
+                    if(acc.sujeto == unit)
+                    {
+                        alreadyDoing = true;
+                        break;
+                    }
+                }
+                if (!alreadyDoing)
+                {
+                    alreadyDoing = false;
+                    accions.Add(createBaseAttackAction(unit));
+                    if (!siegeGroup.Contains(unit)) siegeGroup.Add(unit);
+                }
             }
         }
         return accions;
